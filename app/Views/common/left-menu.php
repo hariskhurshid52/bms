@@ -79,12 +79,12 @@ $current_route = isset($current_route['as']) ? $current_route['as'] : 'dashboard
                         </ul>
                     </div>
                 </li>
-                <li class="menu-title mt-2">Ads & Billboards</li>
+                <li class="menu-title mt-2">Ads & Hording</li>
                 <li>
                     <a href="#sidebarBillboards" data-bs-toggle="collapse" aria-expanded="false"
                         aria-controls="sidebarBillboards">
                         <i class="ri-signal-tower-fill"></i>
-                        <span> Billboards </span>
+                        <span> Hording </span>
                         <span class="menu-arrow"></span>
                     </a>
                     <div class="collapse" id="sidebarBillboards">

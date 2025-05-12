@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController;
 use App\Models\BillboardModel;
 use App\Models\CustomerModel;
 use App\Models\OrderModel;
@@ -17,6 +16,7 @@ class Orders extends BaseController
         parent::__construct();
         $this->userId = $this->session->get('loggedIn')['userId'];
     }
+
     public function create($param1 = null, $param2 = null)
     {
         $data = [];
@@ -39,6 +39,7 @@ class Orders extends BaseController
 
         return view("admin/orders/create", $data);
     }
+
     public function save()
     {
         $inputs = $this->request->getPost();
@@ -54,6 +55,14 @@ class Orders extends BaseController
         if (!$this->validate($rules)) {
             $error = ucfirst(strtolower(array_values($validation->getErrors())[0]));
             return redirect()->back()->withInput()->with('postBack', ['status' => 'error', 'message' => $error]);
+        }
+        $mdBillboard = new BillboardModel();
+        $billboard = $mdBillboard->find($inputs['billboard']);
+        if (empty($billboard)) {
+            return redirect()->back()->withInput()->with('postBack', ['status' => 'error', 'message' => 'Billboard not found']);
+        }
+        if ($inputs['totalCost'] < $billboard['booking_price']) {
+            return redirect()->back()->withInput()->with('postBack', ['status' => 'error', 'message' => 'Total cost cannot be less than minimum billing price']);
         }
         $mdOrder = new OrderModel();
         $insData = [
@@ -93,6 +102,7 @@ class Orders extends BaseController
         $data = [];
         return view("admin/orders/list", $data);
     }
+
     public function dtList()
     {
         $inputs = $this->request->getPost();
@@ -118,8 +128,6 @@ class Orders extends BaseController
                 ->like('customers.address_line_2', $searchValue)
                 ->like('customers.address_line_2', $searchValue)
                 ->like('customers.company_name', $searchValue)
-
-
                 ->groupEnd();
         }
         $totalRecords = $builder->countAllResults(false);
@@ -170,12 +178,101 @@ class Orders extends BaseController
         if (!$id) {
             return redirect()->back()->with('postBack', ['status' => 'danger', 'message' => 'Order not found']);
         }
+        helper(['form']);
         $data = [];
 
-        $data['order'] = (new OrderModel())->find($id);
+        $data['order'] = (new OrderModel())
+            ->join('payments', "payments.order_id = orders.id AND payments.addtional_info = 'Advance Payment'", 'left')
+            ->join('billboards', 'billboards.id = orders.billboard_id', 'left')
+            ->select('orders.*,payments.amount as advPayment,billboards.booking_price')
+            ->where('orders.id', $id)
+            ->first();
         if (empty($data['order'])) {
             return redirect()->back()->with('postBack', ['status' => 'danger', 'message' => 'Order not found']);
         }
+
+
+        $mdBillboards = new BillboardModel();
+        $list = $mdBillboards
+            ->join('billboard_types', 'billboard_types.id = billboards.billboard_type_id')
+            ->where('status', 'active')
+            ->select('billboards.id as id,billboards.name, billboard_types.name as typeName,billboards.area')
+            ->findAll();
+
+        $billboards = [];
+        foreach ($list as $key => $value) {
+            $billboards[$value['typeName']][] = $value;
+        }
+        $data['billboards'] = $billboards;
+
+        $mdCustomer = new CustomerModel();
+        $data['customers'] = $mdCustomer->findAll();
+
+
         return view("admin/orders/edit", $data);
+    }
+
+    public function update()
+    {
+        $inputs = $this->request->getPost();
+        $rules = [
+            'billboard' => 'required',
+            'order_id' => 'required',
+            'customer' => 'required',
+            'reservationStart' => 'required|date',
+            'reservationEnd' => 'required|date',
+            'totalCost' => 'required|numeric',
+            'paymentMethod' => 'required',
+        ];
+        $validation = \Config\Services::validation();
+        if (!$this->validate($rules)) {
+            $error = ucfirst(strtolower(array_values($validation->getErrors())[0]));
+            return redirect()->back()->withInput()->with('postBack', ['status' => 'error', 'message' => $error]);
+        }
+        $mdBillboard = new BillboardModel();
+        $billboard = $mdBillboard->find($inputs['billboard']);
+        if (empty($billboard)) {
+            return redirect()->back()->withInput()->with('postBack', ['status' => 'error', 'message' => 'Billboard not found']);
+        }
+        if ($inputs['totalCost'] < $billboard['booking_price']) {
+            return redirect()->back()->withInput()->with('postBack', ['status' => 'error', 'message' => 'Total cost cannot be less than minimum billing price']);
+        }
+        $mdOrder = new OrderModel();
+        $insData = [
+            'billboard_id' => $inputs['billboard'],
+            'customer_id' => $inputs['customer'],
+            'start_date' => $inputs['reservationStart'],
+            'end_date' => $inputs['reservationEnd'],
+            'amount' => $inputs['totalCost'],
+            'payment_method' => $inputs['paymentMethod'],
+            'status_id' => 1,
+            'addtional_info' => $inputs['addtionalInformatoin'],
+            'added_by' => $this->userId,
+
+        ];
+        $saved = $mdOrder->update($inputs['order_id'], $insData);
+        if (!$saved) {
+            return redirect()->back()->withInput()->with('postBack', ['status' => 'error', 'message' => 'Unable to update order']);
+        }
+
+        if (!is_null($inputs['advPayment'])) {
+            $mdPayments = new PaymentModel();
+            $advPayment = $mdPayments->where('order_id', $inputs['order_id'])->where('addtional_info', 'Advance Payment')->first();
+            if (!empty($advPayment)) {
+                $mdPayments->update($advPayment['id'], ['amount' => $inputs['advPayment']]);
+            } else {
+                $insData = [
+                    'order_id' => $inputs['order_id'],
+                    'amount' => $inputs['advPayment'],
+                    'addtional_info' => 'Advance Payment',
+                    'added_by' => $this->userId,
+                    'status_id' => 1
+                ];
+                $saved = $mdPayments->insert($insData);
+            }
+
+        }
+
+        return redirect()->route('admin.orders.list')->with('postBack', ['status' => 'success', 'message' => 'Order updated successfully']);
     }
 }

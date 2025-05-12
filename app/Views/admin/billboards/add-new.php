@@ -8,7 +8,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-body">
-                <h4 class="header-title">Add New BillBoard <a href="<?= route_to('admin.billboard.list') ?>"
+                <h4 class="header-title">Add New Hording <a href="<?= route_to('admin.billboard.list') ?>"
                         class="btn btn-primary btn-sm pull-right" role="button">Go to list</a></h4>
                 <hr />
                 <div class="row">
@@ -70,7 +70,14 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-md-6">
+                                <div class="mb-2 mt-2">
+                                    <label for="booking_price" class="form-label">Minimum Booking Price</label>
+
+                                    <input type="number" class="form-control" id="booking_price" name="booking_price"  value="<?= old('booking_price')?>" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
                                 <div class="mb-2 mt-2">
                                     <label for="city" class="form-label">City</label>
 
@@ -81,18 +88,18 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="mb-2 mt-2">
                                     <label for="city" class="form-label">Specify Area/Sector</label>
 
-                                   <input type="text" class="form-control" id="area" name="area" value="<?= old('area'); ?>">
+                                   <textarea type="text" class="form-control" id="area" name="area"><?= old('area'); ?></textarea>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="mb-2 mt-2">
                                     <label for="city" class="form-label">Complete Address</label>
 
-                                   <input type="text" class="form-control" id="address" name="address" value="<?= old('address'); ?>">
+                                   <textarea type="text" class="form-control" id="address" name="address"><?= old('address'); ?></textarea>
                                 </div>
                             </div>
 

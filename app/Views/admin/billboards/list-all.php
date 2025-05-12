@@ -8,7 +8,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-body">
-                <h4 class="header-title">Billboards Listing <a href="<?= route_to('admin.billboard.create') ?>"
+                <h4 class="header-title">Hording Listing <a href="<?= route_to('admin.billboard.create') ?>"
                         class="btn btn-primary btn-sm pull-right" role="button">Add New</a></h4>
                 <hr />
                 <div class="table-responsive">
@@ -17,6 +17,7 @@
                             <tr>
                                 <th>Name</th>
                                 <th>Type</th>
+                                <th>Booking Price</th>
                                 <th>City</th>
                                 <th>Area</th>
                                 <th>Dimension</th>

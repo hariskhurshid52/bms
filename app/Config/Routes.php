@@ -43,19 +43,21 @@ $routes->post('customers/listing', [Users::class, 'dtCustomersList'], ['as' => '
 $routes->get('customer/edit/(:num)', [Users::class, 'editCustomer'], ['as' => 'admin.customers.edit']);
 $routes->post('customer/update', [Users::class, 'updateCustomerInfo'], ['as' => 'admin.customer.update']);
 
-$routes->get('billboard/create', [Billboards::class, 'create'], ['as' => 'admin.billboard.create']);
-$routes->post('billboard/save', [Billboards::class, 'save'], ['as' => 'admin.billboard.store']);
-$routes->get('billboard/list-all', [Billboards::class, 'listAll'], ['as' => 'admin.billboard.list']);
-$routes->post('billboard/listing', [Billboards::class, 'dtBillboardList'], ['as' => 'admin.billboard.dtList']);
-$routes->get('billboard/edit/(:num)', [Billboards::class, 'editBillboard'], ['as' => 'admin.billboard.edit']);
-$routes->post('billboard/update', [Billboards::class, 'updateBillboardInfo'], ['as' => 'admin.billboard.update']);
+$routes->get('hording/create', [Billboards::class, 'create'], ['as' => 'admin.billboard.create']);
+$routes->post('hording/save', [Billboards::class, 'save'], ['as' => 'admin.billboard.store']);
+$routes->get('hording/list-all', [Billboards::class, 'listAll'], ['as' => 'admin.billboard.list']);
+$routes->post('hording/listing', [Billboards::class, 'dtBillboardList'], ['as' => 'admin.billboard.dtList']);
+$routes->get('hording/edit/(:num)', [Billboards::class, 'editBillboard'], ['as' => 'admin.billboard.edit']);
+$routes->post('hording/update', [Billboards::class, 'updateBillboardInfo'], ['as' => 'admin.billboard.update']);
+$routes->post('hording/get-data', [Billboards::class, 'getHordingDataAjax'], ['as' => 'admin.billboard.get.ajax']);
 
 
 
 $routes->get('order/create', [Orders::class, 'create'], ['as' => 'admin.order.create']);
 $routes->post('order/save', [Orders::class, 'save'], ['as' => 'admin.order.store']);
+$routes->post('order/update', [Orders::class, 'update'], ['as' => 'admin.order.update']);
 $routes->get('order/list', [Orders::class, 'listAll'], ['as' => 'admin.orders.list']);
 $routes->post('order/listing', [Orders::class, 'dtList'], ['as' => 'admin.orders.dtList']);
-$routes->post('order/edit/(:num)', [Orders::class, 'edit'], ['as' => 'admin.orders.edit']);
+$routes->get('order/edit/(:num)', [Orders::class, 'edit'], ['as' => 'admin.order.edit']);
 
 

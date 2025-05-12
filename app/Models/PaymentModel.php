@@ -26,7 +26,7 @@ class PaymentModel extends Model
     // Validation rules (if needed)
     protected $validationRules = [
         'order_id' => 'required|is_natural_no_zero',
-        'statusId' => 'required|integer',
+        'status_id' => 'required|integer',
         'added_by' => 'required|is_natural_no_zero',
     ];
 
@@ -35,7 +35,7 @@ class PaymentModel extends Model
             'required' => 'The order ID is required.',
             'is_natural_no_zero' => 'The order ID must be a positive integer.'
         ],
-        'statusId' => [
+        'status_id' => [
             'required' => 'The status ID is required.',
             'integer' => 'The status ID must be an integer.',
         ],
