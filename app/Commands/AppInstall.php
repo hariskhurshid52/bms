@@ -75,22 +75,12 @@ class AppInstall extends BaseCommand
         try {
             $seeder = \Config\Database::seeder();
             $seeder->call('RolesSeeder');
-            $seeder->call('CountriesSeeder');
-            $seeder->call('ChildRolesSeeder');
             $seeder->call('UsersSeeder');
-            $seeder->call('OperatorsSeeder');
-            $seeder->call('Aggregators');
-            $seeder->call('CountryAggregatorsSeeder');
-            $seeder->call('Csps');
-            $seeder->call('CountryCspsSeeder');
-            $seeder->call('AlertCycles2025');
-            $seeder->call('ServiceInitiations');
-            $seeder->call('ServiceNetopActions');
-            $seeder->call('MediaTypes');
-            $seeder->call('OrderStatus');
-            $seeder->call('ServiceRangesSeeder');
-            $seeder->call('AlertTemplates');
-            $seeder->call('PricePoints');
+            $seeder->call('CountriesTableSeeder');
+            $seeder->call('StatesTableSeeder');
+            $seeder->call('CitiesTableSeeder');
+            $seeder->call('BillboardTypes');
+
             CLI::write('Seeders executed successfully!', 'green');
         } catch (\Throwable $e) {
             CLI::error('Error during seeding: ' . $e->getMessage());
