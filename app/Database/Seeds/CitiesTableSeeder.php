@@ -48406,7 +48406,7 @@ class CitiesTableSeeder extends Seeder
             array('id'=>4,'name' => "Karachi", 'state_id' => 8),
         ];
 
-        $this->db->table('cities')->insertBatch($cities8);
+        $this->db->table('cities')->insertBatch($cities);
 
     }
 }
