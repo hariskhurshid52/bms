@@ -35,4 +35,12 @@ class CityModel extends Model
                         ->get()
                         ->getRow();
     }
+
+    public function getCities($countryId)
+    {
+        return $this->db->table('cities')
+            ->whereIn('id', [])
+            ->get()
+            ->getResult();
+    }
 }

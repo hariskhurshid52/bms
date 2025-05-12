@@ -26,6 +26,7 @@ $routes->get('/logout', 'Login::logout');
 $routes->post('/verify', 'Login::verify', ["as" => "login.verify"]);
 
 $routes->get('/', [Home::class, 'index'], ['filter' => 'auth', 'as' => 'dashboard'], );
+$routes->get('/', [Home::class, 'index'], ['filter' => 'auth', 'as' => 'home'], );
 
 $routes->get('users/create', [Users::class, 'index'], ['as' => 'admin.users.create']);
 $routes->get('users/list-all', [Users::class, 'listAll'], ['as' => 'admin.users.listAll']);

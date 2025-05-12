@@ -5,7 +5,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8"> <?= csrf_meta() ?>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title><?= $title ?> | MCP Sonic</title>
+    <title><?= $title ?> | Hording</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="<?= base_url('assets/vendors/iconfonts/mdi/css/materialdesignicons.min.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/vendors/iconfonts/flag-icon-css/css/flag-icon.min.css') ?>">

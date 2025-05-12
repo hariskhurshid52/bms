@@ -6,18 +6,9 @@
     <meta charset="utf-8">
     <meta property="og:locale" content="en_US"/>
     <meta property="og:type" content="Login"/>
-    <meta property="og:title" content="MCP Sonic By MCP Insight"/>
-    <meta property="og:url" content="https://mcpinsight.com/products/"/>
-    <meta property="og:site_name" content="MCP Insight"/>
-    <meta property="og:image" content="https://mcpinsight.com/wp-content/uploads/2017/05/MCPverify312X88.png"/>
-    <meta name="twitter:card" content="summary_large_image"/>
-    <meta name="twitter:title" content="MCP Sonic - MCP Insight"/>
-    <meta name="twitter:image" content="https://mcpinsight.com/wp-content/uploads/2017/05/MCPverify312X88.png"/>
+    <meta property="og:title" content="Hording"/>
 
-    <meta name="description"
-          content="MCP Sonic, Formerly, known as GoVerifyIt, MCP Sonic is a flexible and robust third-party verification solution providing our customers with a full audit trail of a users’ journey on your site, no matter the device. It logs the terms reviewed by the user along with proof of the user’s consent."/>
-    <meta name="keywords" content="MCP Sonic, MCP Insight"/>
-    <meta name="author" content="MCP Insight"/>
+
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <?= csrf_meta() ?>
     <title>Login | MCP Sonic</title>
@@ -81,14 +72,14 @@
                                 <button class="btn btn-success submit-btn">SIGN IN</button>
                             </div>
                             <div class="wrapper mt-5 text-gray">
-                                <p class="footer-text">Copyright © <?= date('Y') ?> MCP Insight. All rights reserved.
+                                <p class="footer-text">Copyright © <?= date('Y') ?> Hording. All rights reserved.
                                 </p>
                                 <ul class=" auth-footer text-gray
     ">
                                     <li><a rel="noreferrer noopener" target="_blank"
-                                           href="https://mcpinsight.com/privacy-policy/">Privacy Policy</a></li>
+                                           href="#">Privacy Policy</a></li>
                                     <li><a rel="noreferrer noopener" target="_blank"
-                                           href="https://mcpinsight.com/about-us/">About Us</a></li>
+                                           href="#">About Us</a></li>
                                 </ul>
                             </div>
                         </form>
