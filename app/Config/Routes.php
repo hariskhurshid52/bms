@@ -60,4 +60,6 @@ $routes->get('order/list', [Orders::class, 'listAll'], ['as' => 'admin.orders.li
 $routes->post('order/listing', [Orders::class, 'dtList'], ['as' => 'admin.orders.dtList']);
 $routes->get('order/edit/(:num)', [Orders::class, 'edit'], ['as' => 'admin.order.edit']);
 
+$routes->get('admin/dashboard', 'Dashboard::index');
+
 
