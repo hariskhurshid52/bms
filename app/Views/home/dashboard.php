@@ -290,7 +290,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <h6 class="text-white-50 mb-2">Total Revenue</h6>
-                            <h3 class="mb-0 text-white">$<?= number_format($totalRevenue, 2) ?></h3>
+                            <h3 class="mb-0 text-white">Rs.<?= number_format($totalRevenue, 2) ?></h3>
                             <div class="mt-2">
                                 <span class="trend-indicator <?= $revenueGrowth >= 0 ? 'bg-white text-success' : 'bg-white text-danger' ?>">
                                     <i class="bi <?= $revenueGrowth >= 0 ? 'bi-arrow-up' : 'bi-arrow-down' ?>"></i>
@@ -338,7 +338,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <h6 class="text-white-50 mb-2">Total Expenses</h6>
-                            <h3 class="mb-0 text-white">$<?= number_format($totalExpenses, 2) ?></h3>
+                            <h3 class="mb-0 text-white">Rs.<?= number_format($totalExpenses, 2) ?></h3>
                             <div class="mt-2">
                                 <span class="trend-indicator <?= $expenseGrowth >= 0 ? 'bg-white text-danger' : 'bg-white text-success' ?>">
                                     <i class="bi <?= $expenseGrowth >= 0 ? 'bi-arrow-up' : 'bi-arrow-down' ?>"></i>
@@ -423,7 +423,7 @@
                                         <span class="performance-indicator" style="background-color: <?= $category['color'] ?>"></span>
                                         <?= $category['name'] ?>
                                     </td>
-                                    <td>$<?= number_format($category['amount'], 2) ?></td>
+                                    <td>Rs.<?= number_format($category['amount'], 2) ?></td>
                                     <td><?= number_format($category['percentage'], 1) ?>%</td>
                                     <td>
                                         <span class="trend-indicator <?= $category['trend'] >= 0 ? 'bg-danger-subtle text-danger' : 'bg-success-subtle text-success' ?>">
@@ -437,7 +437,7 @@
                             <tfoot>
                                 <tr class="table-light">
                                     <th>Total Expenses</th>
-                                    <th>$<?= number_format($totalExpenses, 2) ?></th>
+                                    <th>Rs.<?= number_format($totalExpenses, 2) ?></th>
                                     <th>100%</th>
                                     <th>
                                         <span class="trend-indicator <?= $expenseGrowth >= 0 ? 'bg-danger-subtle text-danger' : 'bg-success-subtle text-success' ?>">
@@ -468,7 +468,7 @@
                             <div class="text-center">
                                 <h6 class="text-muted mb-2">Net Profit</h6>
                                 <h4 class="mb-0 <?= $netProfit >= 0 ? 'text-success' : 'text-danger' ?>">
-                                    $<?= number_format(abs($netProfit), 2) ?>
+                                    Rs.<?= number_format(abs($netProfit), 2) ?>
                                 </h4>
                             </div>
                         </div>
@@ -518,10 +518,10 @@
                                 <?php foreach ($billboardPerformance as $billboard): ?>
                                 <tr>
                                     <td><?= $billboard['name'] ?></td>
-                                    <td>$<?= number_format($billboard['revenue'], 2) ?></td>
-                                    <td>$<?= number_format($billboard['expenses'], 2) ?></td>
+                                    <td>Rs.<?= number_format($billboard['revenue'], 2) ?></td>
+                                    <td>Rs.<?= number_format($billboard['expenses'], 2) ?></td>
                                     <td class="<?= $billboard['net_profit'] >= 0 ? 'text-success' : 'text-danger' ?>">
-                                        $<?= number_format($billboard['net_profit'], 2) ?>
+                                        Rs.<?= number_format($billboard['net_profit'], 2) ?>
                                     </td>
                                     <td class="<?= $billboard['profit_margin'] >= 0 ? 'text-success' : 'text-danger' ?>">
                                         <?= number_format($billboard['profit_margin'], 1) ?>%
@@ -564,7 +564,7 @@
                                 <tr>
                                     <td><span class="performance-indicator bg-success"></span> Active</td>
                                     <td><?= number_format($activeBookings) ?></td>
-                                    <td>$<?= number_format($activeBookings * 1000, 2) ?></td>
+                                    <td>Rs.<?= number_format($activeBookings * 1000, 2) ?></td>
                                     <td>
                                         <span class="trend-indicator <?= $bookingGrowth >= 0 ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger' ?>">
                                             <?= $bookingGrowth ?>%
@@ -574,7 +574,7 @@
                                 <tr>
                                     <td><span class="performance-indicator bg-primary"></span> Pending</td>
                                     <td><?= number_format($pendingBookings ?? 0) ?></td>
-                                    <td>$<?= number_format(($pendingBookings ?? 0) * 1000, 2) ?></td>
+                                    <td>Rs.<?= number_format(($pendingBookings ?? 0) * 1000, 2) ?></td>
                                     <td>
                                         <span class="trend-indicator bg-secondary-subtle text-secondary">
                                             -
@@ -584,7 +584,7 @@
                                 <tr>
                                     <td><span class="performance-indicator bg-warning"></span> Under Review</td>
                                     <td><?= number_format($reviewBookings ?? 0) ?></td>
-                                    <td>$<?= number_format(($reviewBookings ?? 0) * 1000, 2) ?></td>
+                                    <td>Rs.<?= number_format(($reviewBookings ?? 0) * 1000, 2) ?></td>
                                     <td>
                                         <span class="trend-indicator bg-secondary-subtle text-secondary">
                                             -
@@ -669,7 +669,7 @@
                                     <tr>
                                         <td><?= $billboard['location'] ?></td>
                                         <td><?= number_format($billboard['bookings']) ?></td>
-                                        <td>$<?= number_format($billboard['revenue'], 2) ?></td>
+                                        <td>Rs.<?= number_format($billboard['revenue'], 2) ?></td>
                                         <td>
                                             <span class="badge bg-<?= $billboard['status_color'] ?>">
                                                 <?= $billboard['status'] ?>
@@ -731,7 +731,7 @@
                                     <?php foreach ($topClients as $client): ?>
                                     <tr>
                                         <td><?= $client['name'] ?></td>
-                                        <td>$<?= number_format($client['revenue'], 2) ?></td>
+                                        <td>Rs.<?= number_format($client['revenue'], 2) ?></td>
                                         <td><?= $client['bookings'] ?></td>
                                     </tr>
                                     <?php endforeach; ?>
@@ -816,7 +816,7 @@
                             <div>
                                 <h6 class="text-muted mb-1">Cash Flow</h6>
                                 <h4 class="mb-0 <?= $cashFlow >= 0 ? 'text-success' : 'text-danger' ?>">
-                                    $<?= number_format(abs($cashFlow), 2) ?>
+                                    Rs.<?= number_format(abs($cashFlow), 2) ?>
                                 </h4>
                             </div>
                             <div class="stat-icon bg-warning-subtle text-warning">
