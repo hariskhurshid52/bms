@@ -1330,6 +1330,13 @@ new Chart(budgetCtx, {
         plugins: {
             legend: {
                 position: 'top'
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return `${context.dataset.label}: Rs.${context.parsed.y.toLocaleString()}`;
+                    }
+                }
             }
         },
         scales: {
@@ -1337,7 +1344,7 @@ new Chart(budgetCtx, {
                 beginAtZero: true,
                 ticks: {
                     callback: function(value) {
-                        return '$' + value.toLocaleString();
+                        return 'Rs.' + value.toLocaleString();
                     }
                 }
             }
