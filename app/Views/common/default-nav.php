@@ -164,8 +164,6 @@ $current_route = isset($current_route['as']) ? $current_route['as'] : 'dashboard
 <script src="<?= $theme_url ?>libs/datatables.net-buttons/js/buttons.print.min.js"></script>
 <script src="<?= $theme_url ?>libs/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
 <script src="<?= $theme_url ?>libs/datatables.net-select/js/dataTables.select.min.js"></script>
-<script src="<?= $theme_url ?>libs/pdfmake/build/pdfmake.min.js"></script>
-<script src="<?= $theme_url ?>libs/pdfmake/build/vfs_fonts.js"></script>
 <script src="<?= $theme_url ?>libs/moment/min/moment.min.js"></script>
 <script src="<?= $theme_url ?>libs/jquery.scrollto/jquery.scrollTo.min.js"></script>
 <script src="<?= $theme_url ?>libs/jquery-toast-plugin/jquery.toast.min.js"></script>
