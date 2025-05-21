@@ -26,6 +26,8 @@ class BillboardModel extends Model
         'added_by',
         'updated_at',
         'booking_price',
+        'video_url',
+        'image_url',
     ];
 
     protected $useTimestamps = true;

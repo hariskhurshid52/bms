@@ -61,6 +61,9 @@ class Billboards extends BaseController
             'installation_date' => $inputs['installation_date'],
             'status' => $inputs['status'],
             'booking_price' => $inputs['booking_price'],
+            'image_url' => $inputs['image_url'],
+            'video_url' => $inputs['video_url'],
+            'booking_price' => $inputs['booking_price'],
             'added_by' => $this->userId,
         ];
         $save = $model->insert($insData);
@@ -124,7 +127,7 @@ class Billboards extends BaseController
                 '<span class="badge bg-' . $statusClass . '">' . ucfirst($value['status']) . '</span>',
                 date('d-m-Y', strtotime($value['installation_date'])),
                 date('d-m-Y', strtotime($value['created_at'])),
-                '<a href="' . route_to('admin.billboard.edit', $value['id']) . '" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a>',
+                '<a href="' . route_to('admin.billboard.edit', $value['id']) . '" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a><a href="' . route_to('admin.billboard.detail', $value['id']) . '" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>',
 
             ];
         }
@@ -153,6 +156,27 @@ class Billboards extends BaseController
         return view('admin/billboards/edit', $data);
     }
 
+    public function detailBillboard($id = false)
+    {
+        if (!$id) {
+            return redirect()->back()->with('postBack', ['status' => 'danger', 'message' => 'Billboard not found']);
+        }
+
+        $model = new BillboardModel();
+        $data = [];
+        $data['billboard'] = $model
+            ->select('billboards.*, cities.name as cityName, billboard_types.name as typeName')
+            ->join('billboard_types', 'billboard_types.id = billboards.billboard_type_id', 'left')
+            ->join('cities', 'cities.id = billboards.city_id', 'left')->where('billboards.id', $id)->first();
+        if (empty($data['billboard'])) {
+            return redirect()->back()->with('postBack', ['status' => 'danger', 'message' => 'Billboard not found']);
+        }
+        $data['billboardTypes'] = (new \App\Models\BillboardTypeModel())->findAll();
+        $data['cities'] = (new \App\Models\CityModel())->findAll();
+
+        return view('admin/billboards/details', $data);
+    }
+
     public function updateBillboardInfo()
     {
         $inputs = $this->request->getPost();
@@ -173,6 +197,8 @@ class Billboards extends BaseController
             'installation_date' => $inputs['installation_date'],
             'booking_price' => $inputs['booking_price'],
             'status' => $inputs['status'],
+            'image_url' => $inputs['image_url'],
+            'video_url' => $inputs['video_url'],
         ];
         $save = $model->update($inputs['billboardId'], $insData);
         if ($save) {

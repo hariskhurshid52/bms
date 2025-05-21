@@ -70,7 +70,18 @@ $current_route = isset($current_route['as']) ? $current_route['as'] : 'dashboard
             top: 50%;
             margin: -20px 0 0 -20px;
         }
-
+        .ml-0  { margin-left: 0 !important; }
+        .ml-1  { margin-left: 0.25rem !important; }
+        .ml-2  { margin-left: 0.5rem !important; }
+        .ml-3  { margin-left: 1rem !important; }
+        .ml-4  { margin-left: 1.5rem !important; }
+        .ml-5  { margin-left: 3rem !important; }
+        .mr-0  { margin-right: 0 !important; }
+        .mr-1  { margin-right: 0.25rem !important; }
+        .mr-2  { margin-right: 0.5rem !important; }
+        .mr-3  { margin-right: 1rem !important; }
+        .mr-4  { margin-right: 1.5rem !important; }
+        .mr-5  { margin-right: 3rem !important; }
     </style>
     <?= $this->renderSection('styles') ?>
 

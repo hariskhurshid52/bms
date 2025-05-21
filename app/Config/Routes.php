@@ -17,8 +17,6 @@ use CodeIgniter\Router\RouteCollection;
 
 $routes->group( '/',['filter' => ['auth', 'auth']], function ($routes) {
 
-    $routes->get('/', [Home::class, 'index'], ['filter' => 'auth', 'as' => 'dashboard'], );
-    $routes->get('/', [Home::class, 'index'], ['filter' => 'auth', 'as' => 'home'], );
 
     $routes->get('users/create', [Users::class, 'index'], ['as' => 'admin.users.create']);
     $routes->get('users/list-all', [Users::class, 'listAll'], ['as' => 'admin.users.listAll']);
@@ -40,6 +38,7 @@ $routes->group( '/',['filter' => ['auth', 'auth']], function ($routes) {
     $routes->get('boards/list-all', [Billboards::class, 'listAll'], ['as' => 'admin.billboard.list']);
     $routes->post('boards/listing', [Billboards::class, 'dtBillboardList'], ['as' => 'admin.billboard.dtList']);
     $routes->get('board/edit/(:num)', [Billboards::class, 'editBillboard'], ['as' => 'admin.billboard.edit']);
+    $routes->get('board/view/(:num)', [Billboards::class, 'detailBillboard'], ['as' => 'admin.billboard.detail']);
     $routes->post('board/update', [Billboards::class, 'updateBillboardInfo'], ['as' => 'admin.billboard.update']);
     $routes->post('board/get-data', [Billboards::class, 'getHordingDataAjax'], ['as' => 'admin.billboard.get.ajax']);
 
@@ -65,6 +64,7 @@ $routes->get('/logout', 'Login::logout');
 $routes->post('/verify', 'Login::verify', ["as" => "login.verify"]);
 
 
-
+$routes->get('/', [Home::class, 'index'], ['filter' => 'auth', 'as' => 'dashboard'], );
+$routes->get('/', [Home::class, 'index'], ['filter' => 'auth', 'as' => 'home'], );
 
 

@@ -136,7 +136,22 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="mb-2 mt-2">
+                                        <label for="image_url" class="form-label">Image Url</label>
 
+                                        <input type="text" class="form-control" id="image_url" name="image_url"
+                                               value="<?= $billboard['image_url']; ?>">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-2 mt-2">
+                                        <label for="video_url" class="form-label">Video Url</label>
+                                        <input type="text" class="form-control" id="video_url" name="video_url"
+                                               value="<?= $billboard['video_url']; ?>">
+
+                                    </div>
+                                </div>
                             </div>
 
 

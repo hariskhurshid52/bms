@@ -69,7 +69,6 @@ class Login extends BaseController
         ];
 
 
-
         return $sessionData;
     }
 

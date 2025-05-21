@@ -5,7 +5,6 @@ $current_route = $router->getMatchedRouteOptions();
 $current_route = isset($current_route['as']) ? $current_route['as'] : 'dashboard';
 
 
-
 ?>
 
 <!-- ========== Left Sidebar Start ========== -->
@@ -43,46 +42,48 @@ $current_route = isset($current_route['as']) ? $current_route['as'] : 'dashboard
                 <li class="menu-title">Navigation</li>
 
                 <li>
-                    <a href="<?=route_to('dashboard')?>" class="waves-effect">
+                    <a href="<?= route_to('dashboard') ?>" class="waves-effect">
                         <i class="ri-dashboard-line"></i>
                         <span> Dashboards </span>
                     </a>
 
                 </li>
 
+                <?php if (session()->get('loggedIn')['roleId'] == 1): ?>
 
 
-                <li class="menu-title mt-2">Users & Customers</li>
+                    <li class="menu-title mt-2">Users & Customers</li>
 
-                <li>
-                    <a href="<?= route_to('admin.users.listAll') ?>">
-                        <i class="ri-user-2-fill"></i>
-                        <span> Users </span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#sidebarEmail" data-bs-toggle="collapse" aria-expanded="false"
-                        aria-controls="sidebarEmail">
-                        <i class="ri-user-3-line"></i>
-                        <span> Clients </span>
-                        <span class="menu-arrow"></span>
-                    </a>
-                    <div class="collapse" id="sidebarEmail">
-                        <ul class="nav-second-level">
-                            <li>
-                                <a href="<?=route_to('admin.customer.create')?>">Add New</a>
-                            </li>
-                            <li>
-                                <a href="<?=route_to('admin.customers.list')?>">List All</a>
-                            </li>
-                            
-                        </ul>
-                    </div>
-                </li>
+                    <li>
+                        <a href="<?= route_to('admin.users.listAll') ?>">
+                            <i class="ri-user-2-fill"></i>
+                            <span> Users </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#sidebarEmail" data-bs-toggle="collapse" aria-expanded="false"
+                           aria-controls="sidebarEmail">
+                            <i class="ri-user-3-line"></i>
+                            <span> Clients </span>
+                            <span class="menu-arrow"></span>
+                        </a>
+                        <div class="collapse" id="sidebarEmail">
+                            <ul class="nav-second-level">
+                                <li>
+                                    <a href="<?= route_to('admin.customer.create') ?>">Add New</a>
+                                </li>
+                                <li>
+                                    <a href="<?= route_to('admin.customers.list') ?>">List All</a>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </li>
+                <?php endif; ?>
                 <li class="menu-title mt-2">Ads & Boards</li>
                 <li>
                     <a href="#sidebarBillboards" data-bs-toggle="collapse" aria-expanded="false"
-                        aria-controls="sidebarBillboards">
+                       aria-controls="sidebarBillboards">
                         <i class="ri-signal-tower-fill"></i>
                         <span> Boards </span>
                         <span class="menu-arrow"></span>
@@ -90,19 +91,20 @@ $current_route = isset($current_route['as']) ? $current_route['as'] : 'dashboard
                     <div class="collapse" id="sidebarBillboards">
                         <ul class="nav-second-level">
                             <li>
-                                <a href="<?=route_to('admin.billboard.create')?>">Add New</a>
+                                <a href="<?= route_to('admin.billboard.create') ?>">Add New</a>
                             </li>
                             <li>
-                                <a href="<?=route_to('admin.billboard.list')?>">List All</a>
+                                <a href="<?= route_to('admin.billboard.list') ?>">List All</a>
                             </li>
-                            
+
                         </ul>
                     </div>
                 </li>
+
                 <li class="menu-title mt-2">Manage Bookings & Expenses</li>
                 <li>
                     <a href="#mngOrders" data-bs-toggle="collapse" aria-expanded="false"
-                        aria-controls="mngOrders">
+                       aria-controls="mngOrders">
                         <i class="ri-signal-tower-fill"></i>
                         <span> Bookings </span>
                         <span class="menu-arrow"></span>
@@ -110,35 +112,36 @@ $current_route = isset($current_route['as']) ? $current_route['as'] : 'dashboard
                     <div class="collapse" id="mngOrders">
                         <ul class="nav-second-level">
                             <li>
-                                <a href="<?=route_to('admin.order.create')?>">Add Booking</a>
+                                <a href="<?= route_to('admin.order.create') ?>">Add Booking</a>
                             </li>
                             <li>
-                                <a href="<?=route_to('admin.orders.list')?>">List All</a>
-                            </li>
-                            
-                        </ul>
-                    </div>
-                </li>
-                <li>
-                    <a href="#mngExpenses" data-bs-toggle="collapse" aria-expanded="false"
-                       aria-controls="mngExpenses">
-                        <i class="ri-signal-tower-fill"></i>
-                        <span> Expenses </span>
-                        <span class="menu-arrow"></span>
-                    </a>
-                    <div class="collapse" id="mngExpenses">
-                        <ul class="nav-second-level">
-                            <li>
-                                <a href="<?=route_to('admin.expense.create')?>">Add Expense</a>
-                            </li>
-                            <li>
-                                <a href="<?=route_to('admin.expense.list')?>">List All</a>
+                                <a href="<?= route_to('admin.orders.list') ?>">List All</a>
                             </li>
 
                         </ul>
                     </div>
                 </li>
+                <?php if (session()->get('loggedIn')['roleId'] == 1): ?>
+                    <li>
+                        <a href="#mngExpenses" data-bs-toggle="collapse" aria-expanded="false"
+                           aria-controls="mngExpenses">
+                            <i class="ri-signal-tower-fill"></i>
+                            <span> Expenses </span>
+                            <span class="menu-arrow"></span>
+                        </a>
+                        <div class="collapse" id="mngExpenses">
+                            <ul class="nav-second-level">
+                                <li>
+                                    <a href="<?= route_to('admin.expense.create') ?>">Add Expense</a>
+                                </li>
+                                <li>
+                                    <a href="<?= route_to('admin.expense.list') ?>">List All</a>
+                                </li>
 
+                            </ul>
+                        </div>
+                    </li>
+                <?php endif; ?>
             </ul>
 
         </div>
