@@ -129,7 +129,7 @@
                                         <label for="status" class="form-label">Status</label>
 
                                         <select name="status" id="status" class="form-control select2" required>
-                                            <?php foreach (['active' => 'Active', 'inactive' => 'In Active', 'under_maintaince' => 'Under Maintaince'] as $k => $v): ?>
+                                            <?php foreach (['active' => 'Active', 'inactive' => 'In Active', 'under_maintenance' => 'Under Maintaince'] as $k => $v): ?>
                                                 <option <?= $billboard['status'] == $k ? 'selected' : '' ?>
                                                         value="<?= $k ?>"><?= $v ?></option>
                                             <?php endforeach; ?>
