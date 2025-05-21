@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-
 use App\Libraries\Validation;
 use App\Models\AggregatorModel;
 use App\Models\AssignedNotificationModel;
@@ -13,31 +12,456 @@ use App\Models\ServiceTypesModel;
 use App\Models\ShortCodeOrdersModel;
 use App\Models\ShortCodesModel;
 use App\Models\TariffZoneMappingsModel;
+use App\Models\BillboardModel;
+use App\Models\OrderModel;
+use App\Models\CustomerModel;
+use App\Models\ExpenseModel;
+use App\Models\OrderStatusModel;
 
 class Home extends BaseController
 {
     protected $user;
+    protected $billboardModel;
+    protected $orderModel;
+    protected $customerModel;
+    protected $expenseModel;
+    protected $orderStatusModel;
 
     public function __construct()
     {
         parent::__construct();
 
-        $this->user = $this->session->get('loggedIn');
+        $this->user = session()->get('loggedIn');
+        $this->billboardModel = new BillboardModel();
+        $this->orderModel = new OrderModel();
+        $this->customerModel = new CustomerModel();
+        $this->expenseModel = new ExpenseModel();
+        $this->orderStatusModel = new OrderStatusModel();
     }
 
     public function index()
     {
-
-        $data = [];
+        $data = $this->getDashboardData();
         return view("home/dashboard", $data);
     }
 
     public function home()
     {
-
-        $data = [];
-
+        $data = $this->getDashboardData();
         return view("home/dashboard", $data);
+    }
+
+    protected function getDashboardData()
+    {
+        $userId = $this->user['userId'];
+        $isAdmin = $this->user['roleId'] == 1;
+
+        // Get total billboards and growth
+        $billboardQuery = $this->billboardModel;
+        if (!$isAdmin) {
+            $billboardQuery->where('added_by', $userId);
+        }
+        $totalBillboards = $billboardQuery->countAll();
+        $lastMonthBillboards = $billboardQuery->where('created_at <', date('Y-m-d H:i:s', strtotime('-1 month')))->countAllResults();
+        $billboardGrowth = $lastMonthBillboards > 0 ? round((($totalBillboards - $lastMonthBillboards) / $lastMonthBillboards) * 100) : 0;
+
+        // Get active bookings and growth (status_id 1 is active)
+        $orderQuery = $this->orderModel;
+        if (!$isAdmin) {
+            $orderQuery->where('added_by', $userId);
+        }
+        $activeBookings = $orderQuery->where('status_id', 1)->countAllResults();
+        $lastMonthBookings = $orderQuery->where('status_id', 1)
+            ->where('created_at <', date('Y-m-d H:i:s', strtotime('-1 month')))
+            ->countAllResults();
+        $bookingGrowth = $lastMonthBookings > 0 ? round((($activeBookings - $lastMonthBookings) / $lastMonthBookings) * 100) : 0;
+
+        // Get total revenue and growth (status_id 2 is completed)
+        $revenueQuery = $this->orderModel;
+        if (!$isAdmin) {
+            $revenueQuery->where('added_by', $userId);
+        }
+        $totalRevenue = $revenueQuery->selectSum('amount')->where('status_id', 2)->first()['amount'] ?? 0;
+        $lastMonthRevenue = $revenueQuery->selectSum('amount')
+            ->where('status_id', 2)
+            ->where('created_at <', date('Y-m-d H:i:s', strtotime('-1 month')))
+            ->first()['amount'] ?? 0;
+        $revenueGrowth = $lastMonthRevenue > 0 ? round((($totalRevenue - $lastMonthRevenue) / $lastMonthRevenue) * 100) : 0;
+
+        // Get total clients and growth
+        $clientQuery = $this->customerModel;
+        if (!$isAdmin) {
+            $clientQuery->where('added_by', $userId);
+        }
+        $totalClients = $clientQuery->countAll();
+        $lastMonthClients = $clientQuery->where('created_at <', date('Y-m-d H:i:s', strtotime('-1 month')))->countAllResults();
+        $clientGrowth = $lastMonthClients > 0 ? round((($totalClients - $lastMonthClients) / $lastMonthClients) * 100) : 0;
+
+        // Get expense analytics
+        $expenseData = $this->getExpenseAnalytics();
+        $totalExpenses = $expenseData['totalExpenses'];
+        $expenseGrowth = $expenseData['expenseGrowth'];
+        $expenseCategories = $expenseData['categories'];
+
+        // Calculate profitability metrics
+        $netProfit = $totalRevenue - $totalExpenses;
+        $profitMargin = $totalRevenue > 0 ? round(($netProfit / $totalRevenue) * 100, 1) : 0;
+        $roi = $totalExpenses > 0 ? round(($netProfit / $totalExpenses) * 100, 1) : 0;
+
+        // Get revenue vs expense trends
+        $revenueExpenseTrends = $this->getRevenueExpenseTrends();
+
+        // Get billboard performance analysis
+        $billboardPerformance = $this->getBillboardPerformance();
+
+        // Get booking analytics
+        $bookingAnalytics = $this->getBookingAnalytics();
+
+        // Get recent activities
+        $recentActivities = $this->getRecentActivities();
+
+        // Get top performing billboards
+        $topBillboards = $this->getTopPerformingBillboards();
+
+        // Get billboard status distribution
+        $billboardStatus = $this->getBillboardStatusDistribution();
+
+        // Get client distribution
+        $clientDistribution = $this->getClientDistribution();
+
+        return [
+            'totalBillboards' => $totalBillboards,
+            'billboardGrowth' => $billboardGrowth,
+            'activeBookings' => $activeBookings,
+            'bookingGrowth' => $bookingGrowth,
+            'totalRevenue' => $totalRevenue,
+            'revenueGrowth' => $revenueGrowth,
+            'totalClients' => $totalClients,
+            'clientGrowth' => $clientGrowth,
+            'recentActivities' => $recentActivities,
+            'topBillboards' => $topBillboards,
+            'isAdmin' => $isAdmin,
+            'bookingAnalytics' => $bookingAnalytics,
+            'billboardStatus' => $billboardStatus,
+            'clientDistribution' => $clientDistribution,
+            'totalExpenses' => $totalExpenses,
+            'expenseGrowth' => $expenseGrowth,
+            'expenseCategories' => $expenseCategories,
+            'netProfit' => $netProfit,
+            'profitMargin' => $profitMargin,
+            'roi' => $roi,
+            'revenueExpenseTrends' => $revenueExpenseTrends,
+            'billboardPerformance' => $billboardPerformance
+        ];
+    }
+
+    protected function getExpenseAnalytics()
+    {
+        $userId = $this->user['userId'];
+        $isAdmin = $this->user['roleId'] == 1;
+
+        $query = $this->expenseModel;
+        if (!$isAdmin) {
+            $query->where('added_by', $userId);
+        }
+
+        // Get total expenses
+        $totalExpenses = $query->selectSum('amount')->first()['amount'] ?? 0;
+
+        // Get last month's expenses for growth calculation
+        $lastMonthExpenses = $query->selectSum('amount')
+            ->where('created_at <', date('Y-m-d H:i:s', strtotime('-1 month')))
+            ->first()['amount'] ?? 0;
+        $expenseGrowth = $lastMonthExpenses > 0 ? round((($totalExpenses - $lastMonthExpenses) / $lastMonthExpenses) * 100) : 0;
+
+        // Get expenses by type
+        $types = [
+            'maintenance' => ['name' => 'Maintenance', 'color' => '#0d6efd'],
+            'utilities' => ['name' => 'Utilities', 'color' => '#198754'],
+            'rent' => ['name' => 'Rent', 'color' => '#ffc107'],
+            'staff' => ['name' => 'Staff', 'color' => '#dc3545'],
+            'other' => ['name' => 'Other', 'color' => '#6c757d']
+        ];
+
+        $expenseCategories = [];
+        foreach ($types as $key => $type) {
+            $amount = $query->where('type', $key)->selectSum('amount')->first()['amount'] ?? 0;
+            $lastMonthAmount = $query->where('type', $key)
+                ->where('created_at <', date('Y-m-d H:i:s', strtotime('-1 month')))
+                ->selectSum('amount')
+                ->first()['amount'] ?? 0;
+            
+            $trend = $lastMonthAmount > 0 ? round((($amount - $lastMonthAmount) / $lastMonthAmount) * 100) : 0;
+            $percentage = $totalExpenses > 0 ? round(($amount / $totalExpenses) * 100, 1) : 0;
+
+            $expenseCategories[] = [
+                'name' => $type['name'],
+                'color' => $type['color'],
+                'amount' => $amount,
+                'percentage' => $percentage,
+                'trend' => $trend
+            ];
+        }
+
+        return [
+            'totalExpenses' => $totalExpenses,
+            'expenseGrowth' => $expenseGrowth,
+            'categories' => $expenseCategories
+        ];
+    }
+
+    protected function getRevenueExpenseTrends()
+    {
+        $userId = $this->user['userId'];
+        $isAdmin = $this->user['roleId'] == 1;
+
+        $labels = [];
+        $revenue = [];
+        $expenses = [];
+
+        // Get data for last 6 months
+        for ($i = 5; $i >= 0; $i--) {
+            $startDate = date('Y-m-d H:i:s', strtotime("-$i months"));
+            $endDate = date('Y-m-d H:i:s', strtotime("-" . ($i - 1) . " months"));
+            
+            $labels[] = date('M Y', strtotime($startDate));
+
+            // Get revenue for the month
+            $revenueQuery = $this->orderModel->where('status_id', 2)
+                ->where('created_at >=', $startDate)
+                ->where('created_at <', $endDate);
+            if (!$isAdmin) {
+                $revenueQuery->where('added_by', $userId);
+            }
+            $revenue[] = $revenueQuery->selectSum('amount')->first()['amount'] ?? 0;
+
+            // Get expenses for the month
+            $expenseQuery = $this->expenseModel
+                ->where('created_at >=', $startDate)
+                ->where('created_at <', $endDate);
+            if (!$isAdmin) {
+                $expenseQuery->where('added_by', $userId);
+            }
+            $expenses[] = $expenseQuery->selectSum('amount')->first()['amount'] ?? 0;
+        }
+
+        return [
+            'labels' => $labels,
+            'revenue' => $revenue,
+            'expenses' => $expenses
+        ];
+    }
+
+    protected function getBillboardPerformance()
+    {
+        $userId = $this->user['userId'];
+        $isAdmin = $this->user['roleId'] == 1;
+
+        $query = $this->billboardModel->select('billboards.*, 
+            COALESCE(SUM(CASE WHEN orders.status_id = 2 THEN orders.amount ELSE 0 END), 0) as revenue,
+            COALESCE(SUM(expenses.amount), 0) as expenses')
+            ->join('orders', 'orders.billboard_id = billboards.id', 'left')
+            ->join('expenses', 'expenses.billboard_id = billboards.id', 'left')
+            ->groupBy('billboards.id');
+
+        if (!$isAdmin) {
+            $query->where('billboards.added_by', $userId);
+        }
+
+        $billboards = $query->find();
+        $result = [];
+
+        foreach ($billboards as $billboard) {
+            $revenue = $billboard['revenue'] ?? 0;
+            $expenses = $billboard['expenses'] ?? 0;
+            $netProfit = $revenue - $expenses;
+            $profitMargin = $revenue > 0 ? round(($netProfit / $revenue) * 100, 1) : 0;
+
+            $result[] = [
+                'name' => $billboard['name'],
+                'revenue' => $revenue,
+                'expenses' => $expenses,
+                'net_profit' => $netProfit,
+                'profit_margin' => $profitMargin,
+                'status' => ucfirst($billboard['status']),
+                'status_color' => $this->getStatusColor($billboard['status'])
+            ];
+        }
+
+        // Sort by net profit
+        usort($result, function($a, $b) {
+            return $b['net_profit'] - $a['net_profit'];
+        });
+
+        return array_slice($result, 0, 5); // Return top 5 performing billboards
+    }
+
+    protected function getBookingAnalytics()
+    {
+        $userId = $this->user['userId'];
+        $isAdmin = $this->user['roleId'] == 1;
+
+        $query = $this->orderModel;
+        if (!$isAdmin) {
+            $query->where('added_by', $userId);
+        }
+
+        return [
+            'active' => [
+                'count' => $query->where('status_id', 1)->countAllResults(),
+                'revenue' => $query->where('status_id', 1)->selectSum('amount')->first()['amount'] ?? 0
+            ],
+            'pending' => [
+                'count' => $query->where('status_id', 4)->countAllResults(),
+                'revenue' => $query->where('status_id', 4)->selectSum('amount')->first()['amount'] ?? 0
+            ],
+            'review' => [
+                'count' => $query->where('status_id', 3)->countAllResults(),
+                'revenue' => $query->where('status_id', 3)->selectSum('amount')->first()['amount'] ?? 0
+            ]
+        ];
+    }
+
+    protected function getBillboardStatusDistribution()
+    {
+        $userId = $this->user['userId'];
+        $isAdmin = $this->user['roleId'] == 1;
+
+        $query = $this->billboardModel;
+        if (!$isAdmin) {
+            $query->where('added_by', $userId);
+        }
+
+        return [
+            'active' => $query->where('status', 'active')->countAllResults(),
+            'booked' => $query->where('status', 'booked')->countAllResults(),
+            'under_maintenance' => $query->where('status', 'under_maintenance')->countAllResults(),
+            'inactive' => $query->where('status', 'inactive')->countAllResults()
+        ];
+    }
+
+    protected function getClientDistribution()
+    {
+        $userId = $this->user['userId'];
+        $isAdmin = $this->user['roleId'] == 1;
+
+        $query = $this->customerModel;
+        if (!$isAdmin) {
+            $query->where('added_by', $userId);
+        }
+
+        $lastMonth = date('Y-m-d H:i:s', strtotime('-1 month'));
+        $lastThreeMonths = date('Y-m-d H:i:s', strtotime('-3 months'));
+
+        return [
+            'new' => $query->where('created_at >', $lastMonth)->countAllResults(),
+            'active' => $query->where('created_at <=', $lastMonth)
+                ->where('created_at >', $lastThreeMonths)
+                ->countAllResults(),
+            'inactive' => $query->where('created_at <=', $lastThreeMonths)->countAllResults()
+        ];
+    }
+
+    protected function getRecentActivities()
+    {
+        $activities = [];
+        $userId = $this->user['userId'];
+        $isAdmin = $this->user['roleId'] == 1;
+
+        // Get recent orders
+        $orderQuery = $this->orderModel->orderBy('created_at', 'DESC')->limit(5);
+        if (!$isAdmin) {
+            $orderQuery->where('added_by', $userId);
+        }
+        $recentOrders = $orderQuery->find();
+
+        foreach ($recentOrders as $order) {
+            $statusText = $this->getStatusText($order['status_id']);
+            $activities[] = [
+                'type' => 'success',
+                'icon' => 'calendar-check-fill',
+                'title' => 'New Booking',
+                'description' => "Booking #{$order['id']} created with status: {$statusText}",
+                'time' => date('M d, Y H:i', strtotime($order['created_at']))
+            ];
+        }
+
+        // Get recent billboard updates
+        $billboardQuery = $this->billboardModel->orderBy('updated_at', 'DESC')->limit(5);
+        if (!$isAdmin) {
+            $billboardQuery->where('added_by', $userId);
+        }
+        $recentBillboards = $billboardQuery->find();
+        
+        foreach ($recentBillboards as $billboard) {
+            $activities[] = [
+                'type' => 'primary',
+                'icon' => 'signal-tower-fill',
+                'title' => 'Billboard Updated',
+                'description' => "Billboard {$billboard['name']} status changed to {$billboard['status']}",
+                'time' => date('M d, Y H:i', strtotime($billboard['updated_at']))
+            ];
+        }
+
+        // Sort activities by time
+        usort($activities, function($a, $b) {
+            return strtotime($b['time']) - strtotime($a['time']);
+        });
+
+        return array_slice($activities, 0, 5);
+    }
+
+    protected function getTopPerformingBillboards()
+    {
+        $userId = $this->user['userId'];
+        $isAdmin = $this->user['roleId'] == 1;
+
+        $query = $this->billboardModel->select('billboards.*, COUNT(orders.id) as bookings, SUM(orders.amount) as revenue')
+            ->join('orders', 'orders.billboard_id = billboards.id', 'left')
+            ->groupBy('billboards.id')
+            ->orderBy('revenue', 'DESC')
+            ->limit(5);
+
+        if (!$isAdmin) {
+            $query->where('billboards.added_by', $userId);
+        }
+
+        $billboards = $query->find();
+
+        $result = [];
+        foreach ($billboards as $billboard) {
+            $result[] = [
+                'location' => $billboard['area'],
+                'bookings' => $billboard['bookings'],
+                'revenue' => $billboard['revenue'] ?? 0,
+                'status' => ucfirst($billboard['status']),
+                'status_color' => $this->getStatusColor($billboard['status'])
+            ];
+        }
+
+        return $result;
+    }
+
+    protected function getStatusText($statusId)
+    {
+        $statuses = [
+            1 => 'Active',
+            2 => 'Completed',
+            3 => 'Cancelled',
+            4 => 'Pending'
+        ];
+        return $statuses[$statusId] ?? 'Unknown';
+    }
+
+    protected function getStatusColor($status)
+    {
+        $colors = [
+            'active' => 'success',
+            'booked' => 'primary',
+            'under_maintenance' => 'warning',
+            'inactive' => 'danger'
+        ];
+        return $colors[$status] ?? 'secondary';
     }
 
     public function dtShortCodeOrdersList()
