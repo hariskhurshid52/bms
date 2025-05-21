@@ -2,14 +2,13 @@
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController;
 use App\Libraries\Validation;
-use App\Models\RoleModel;
-use App\Models\UsersModel;
-use App\Models\CountryModel;
 use App\Models\CityModel;
+use App\Models\CountryModel;
 use App\Models\CustomerModel;
+use App\Models\RoleModel;
 use App\Models\StateModel;
+use App\Models\UsersModel;
 
 class Users extends BaseController
 {
@@ -69,7 +68,6 @@ class Users extends BaseController
                 'status' => $data['status'],
                 'added_by' => session()->get('loggedIn')['userId'],
             ];
-
             $saved = $userModel->save($user);
             if ($saved) {
                 return redirect()->route('admin.users.listAll')->with('postBack', ['status' => 'success', 'message' => 'User created successfully']);
@@ -90,9 +88,7 @@ class Users extends BaseController
 
         $builder = $model->builder()
             ->join('roles', 'roles.id = users.role_id', 'left')
-            ->join('users as ua', 'ua.id = users.added_by', type: 'left')
-        ;
-        ;
+            ->join('users as ua', 'ua.id = users.added_by', type: 'left');;
 
         if (!empty($inputs['search']['value'])) {
             $searchValue = $inputs['search']['value'];
@@ -101,7 +97,6 @@ class Users extends BaseController
                 ->like('users.email', $searchValue)
                 ->like('users.username', $searchValue)
                 ->orLike('roles.role_name', $searchValue)
-
                 ->groupEnd();
         }
         $totalRecords = $builder->countAllResults(false);
@@ -119,7 +114,7 @@ class Users extends BaseController
                 $value['email'],
                 $value['roleName'],
                 date('d-m-Y', strtotime($value['created_at'])),
-                '<a href="' . base_url('admin/users/edit/' . $value['id']) . '" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a><a href="' . base_url('admin/order/create/' . $value['id']) . '" class="btn btn-sm btn-primary">Place Order</a>',
+                '<a href="' . route_to('admin.users.edit', $value['id']) . '" class="btn btn-sm btn-primary mr-5"><i class="fa fa-edit"></i></a>',
 
             ];
         }
@@ -142,13 +137,10 @@ class Users extends BaseController
         if (!$user) {
             return redirect()->route('admin.users.listAll')->with('postBack', ['status' => 'error', 'message' => 'User not found']);
         }
-        $countryId = $user['countryId'];
-        $CountryAggregatorsModel = new CountryAggregatorsModel();
-        $data['partners'] = $CountryAggregatorsModel->countryAggregatorsList($countryId);
+
         $roleModel = new RoleModel();
         $data['roles'] = $roleModel->findAll();
-        $operatorModel = new OperatorModel();
-        $data['operators'] = $operatorModel->getOperatorsByCountry($countryId);
+
         $data['roles'] = $roleModel->findAll();
         $data['user'] = $user;
         return view("admin/users/edit", $data);
@@ -162,20 +154,14 @@ class Users extends BaseController
         }
 
         $rules = [
-            'userId' => Validation::$REQUIRED,
             'name' => Validation::$NAME,
             'email' => Validation::$EMAIL,
             'username' => Validation::$USERNAME,
-            //            'password' => Validation::$PASSWORD,
+            'password' => Validation::$PASSWORD,
             'role' => Validation::$ROLE,
-            'status' => Validation::$STATUS
+            'status' => Validation::$STATUS,
         ];
-        if (isset($data['role']) && $data['role'] != 1) {
-            $rules['operator'] = Validation::$REQUIRED;
-        }
-        if (isset($data['role']) && $data['role'] == 3) { // Admin check
-            $rules['operator'] = Validation::$REQUIRED;
-        }
+
         $validation = \Config\Services::validation();
         if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $validation->getErrors());
@@ -186,16 +172,10 @@ class Users extends BaseController
             'name' => $data['name'],
             'email' => $data['email'],
             'username' => $data['username'],
-            //  'password' => $userModel->encryptPassword($data['password']),
-            'roleId' => intval($data['role']),
+            'password' => $userModel->encryptPassword($data['password']),
+            'role_id' => intval($data['role']),
             'status' => $data['status'],
         ];
-        if (isset($data['role']) && $data['role'] != 1) { // Admin check
-            $user['operatorId'] = intval($data['operator']);
-        }
-        if (isset($data['role']) && $data['role'] == 3) { // Admin check
-            $user['partnerId'] = $data['partner'];
-        }
         $saved = $userModel->update(intval($data['userId']), $user);
         if ($saved) {
             return redirect()->route('admin.users.listAll')->with('postBack', ['status' => 'success', 'message' => 'User updated successfully']);
@@ -210,26 +190,13 @@ class Users extends BaseController
         $data = [];
 
 
-
         return view("admin/customers/list-all", $data);
     }
 
     public function createCustoemr()
     {
         $data = [];
-        $model = new CountryModel();
-        $data['countries'] = $model->getCountries();
-        if (count($data['countries']) > 0) {
-            $model = new StateModel();
-            $data['states'] = $model->getCountryStatesList($data['countries'][0]['id']);
-            if (count($data['states']) > 0) {
-                $stateIds = array_column($data['states'], 'id');
 
-                $model = new CityModel();
-                $data['cities'] = $model->whereIn('state_id', $stateIds)->findAll();
-            }
-
-        }
         return view("admin/customers/add-new", $data);
     }
 
@@ -237,10 +204,9 @@ class Users extends BaseController
     {
         $rules = [
             'firstName' => Validation::$REQUIRED,
-            'lastName' => Validation::$REQUIRED,
             'email' => Validation::$REQUIRED,
-            'cnic' => Validation::$REQUIRED,
-            'address1' => Validation::$REQUIRED,
+            'phone' => Validation::$REQUIRED,
+            'billingAddress' => Validation::$REQUIRED,
         ];
         $validation = \Config\Services::validation();
         if (!$this->validate($rules)) {
@@ -253,20 +219,11 @@ class Users extends BaseController
 
         $insData = [
             'first_name' => $inputs['firstName'],
-            'last_name' => $inputs['lastName'],
             'email' => $inputs['email'],
             'phone' => $inputs['phone'],
-            'cnic' => $inputs['cnic'],
-            'date_of_birth' => $inputs['dateOfBirth'],
-            'company_name' => $inputs['companyName'],
-            'address_line_1' => $inputs['address1'],
-            'address_line_2' => $inputs['address2'],
-            'city_id' => $inputs['city'],
-            'pronvince_id' => $inputs['state'],
-            'country_id' => $inputs['country'],
-            'postal_code' => $inputs['postalCode'],
-            'billing_address' => $inputs['billingAddress'],
-            'status' => $inputs['status'],
+            'contact_person' => $inputs['contactPerson'],
+            'address_line_1' => $inputs['billingAddress'],
+            'customer_type' => $inputs['customerType'],
             'added_by' => $this->userId
         ];
         $model = new CustomerModel();
@@ -287,9 +244,7 @@ class Users extends BaseController
         $model = new CustomerModel();
 
         $builder = $model->builder()
-            ->join('countries', 'countries.id = customers.country_id', 'left')
-            ->join('states', 'states.id = customers.pronvince_id', 'left')
-            ->join('cities', 'cities.id = customers.city_id', 'left')
+
             ->join('users', 'users.id = customers.added_by', 'left');
 
         if (!empty($inputs['search']['value'])) {
@@ -306,7 +261,6 @@ class Users extends BaseController
                 ->like('countries.name', $searchValue)
                 ->like('cities.name', $searchValue)
                 ->like('states.name', $searchValue)
-
                 ->groupEnd();
         }
         $totalRecords = $builder->countAllResults(false);
@@ -314,19 +268,16 @@ class Users extends BaseController
             ->orderBy('customers.id', 'DESC');
 
         $list = $builder->select('
-                customers.*, countries.name as countryName, states.name as stateName, cities.name as cityName
+                customers.*
                
             ')->get()->getResultArray();
         $rows = [];
         foreach ($list as $key => $value) {
             $rows[] = [
-                $value['first_name'] . " " . $value['last_name'],
-                $value['company_name'],
+                $value['first_name'] ,
                 $value['email'],
                 $value['phone'],
-                $value['stateName'],
-                $value['cityName'],
-                ucfirst($value['status']),
+                ucfirst($value['customer_type']),
                 date('d-m-Y', strtotime($value['created_at'])),
                 '<a href="' . route_to('admin.customers.edit', $value['id']) . '" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a>',
 
@@ -339,6 +290,7 @@ class Users extends BaseController
             "data" => $rows,
         ]);
     }
+
     public function editCustomer($customerId = false)
     {
         if (!$customerId) {
@@ -370,18 +322,18 @@ class Users extends BaseController
 
         return view("admin/customers/edit", $data);
     }
+
     public function updateCustomerInfo()
     {
         $inputs = $this->request->getPost();
-        if(!isset($inputs['customerId']) || empty($inputs['customerId'])){
+        if (!isset($inputs['customerId']) || empty($inputs['customerId'])) {
             return redirect()->back()->with('postBack', ['status' => 'error', 'message' => 'Customer not found']);
         }
         $rules = [
             'firstName' => Validation::$REQUIRED,
-            'lastName' => Validation::$REQUIRED,
             'email' => Validation::$REQUIRED,
-            'cnic' => Validation::$REQUIRED,
-            'address1' => Validation::$REQUIRED,
+            'phone' => Validation::$REQUIRED,
+            'billingAddress' => Validation::$REQUIRED,
         ];
         $validation = \Config\Services::validation();
         if (!$this->validate($rules)) {
@@ -390,24 +342,13 @@ class Users extends BaseController
         }
 
 
-       
-
         $insData = [
             'first_name' => $inputs['firstName'],
-            'last_name' => $inputs['lastName'],
             'email' => $inputs['email'],
             'phone' => $inputs['phone'],
-            'cnic' => $inputs['cnic'],
-            'date_of_birth' => $inputs['dateOfBirth'],
-            'company_name' => $inputs['companyName'],
-            'address_line_1' => $inputs['address1'],
-            'address_line_2' => $inputs['address2'],
-            'city_id' => $inputs['city'],
-            'pronvince_id' => $inputs['state'],
-            'country_id' => $inputs['country'],
-            'postal_code' => $inputs['postalCode'],
-            'billing_address' => $inputs['billingAddress'],
-            'status' => $inputs['status'],
+            'contact_person' => $inputs['contactPerson'],
+            'address_line_1' => $inputs['billingAddress'],
+            'customer_type' => $inputs['customerType'],
         ];
         $model = new CustomerModel();
         $saved = $model->update($inputs['customerId'], $insData);

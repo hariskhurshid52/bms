@@ -64,7 +64,7 @@ $current_route = isset($current_route['as']) ? $current_route['as'] : 'dashboard
                     <a href="#sidebarEmail" data-bs-toggle="collapse" aria-expanded="false"
                         aria-controls="sidebarEmail">
                         <i class="ri-user-3-line"></i>
-                        <span> Customers </span>
+                        <span> Clients </span>
                         <span class="menu-arrow"></span>
                     </a>
                     <div class="collapse" id="sidebarEmail">
@@ -79,12 +79,12 @@ $current_route = isset($current_route['as']) ? $current_route['as'] : 'dashboard
                         </ul>
                     </div>
                 </li>
-                <li class="menu-title mt-2">Ads & Hording</li>
+                <li class="menu-title mt-2">Ads & Boards</li>
                 <li>
                     <a href="#sidebarBillboards" data-bs-toggle="collapse" aria-expanded="false"
                         aria-controls="sidebarBillboards">
                         <i class="ri-signal-tower-fill"></i>
-                        <span> Hording </span>
+                        <span> Boards </span>
                         <span class="menu-arrow"></span>
                     </a>
                     <div class="collapse" id="sidebarBillboards">
@@ -99,7 +99,7 @@ $current_route = isset($current_route['as']) ? $current_route['as'] : 'dashboard
                         </ul>
                     </div>
                 </li>
-                <li class="menu-title mt-2">Manage Orders Orders</li>
+                <li class="menu-title mt-2">Manage Orders & Expenses</li>
                 <li>
                     <a href="#mngOrders" data-bs-toggle="collapse" aria-expanded="false"
                         aria-controls="mngOrders">
@@ -119,7 +119,25 @@ $current_route = isset($current_route['as']) ? $current_route['as'] : 'dashboard
                         </ul>
                     </div>
                 </li>
+                <li>
+                    <a href="#mngExpenses" data-bs-toggle="collapse" aria-expanded="false"
+                       aria-controls="mngExpenses">
+                        <i class="ri-signal-tower-fill"></i>
+                        <span> Expenses </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse" id="mngExpenses">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a href="<?=route_to('admin.expense.create')?>">Add Expense</a>
+                            </li>
+                            <li>
+                                <a href="<?=route_to('admin.expense.list')?>">List All</a>
+                            </li>
 
+                        </ul>
+                    </div>
+                </li>
 
             </ul>
 

@@ -157,8 +157,8 @@ class Orders extends BaseController
                 $value['statusName'],
                 date('d-m-Y', strtotime($value['startDate'])),
                 date('d-m-Y', strtotime($value['endDate'])),
-                $value['amount'],
-                $value['paidAmount'],
+                $value['amount'] .' PKR',
+                empty($value['paidAmount']) ? '0 PKR' : $value['paidAmount'] .' PKR',
                 date('d-m-Y', strtotime($value['created_at'])),
 
                 '<a href="' . route_to('admin.order.edit', $value['id']) . '" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a>',

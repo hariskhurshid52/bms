@@ -15,24 +15,14 @@ class UsersModel extends Model
         'email',
         'username',
         'password',
-        'roleId',
-        'parentId',
-        'addedBy',
+        'role_id',
+        'added_by',
         'status',
-        'authType',
-        'createdAt',
-        'passwordUpdated',
-        'updatedAt',
-        'deletedAt',
-        'operatorId',
-        'partnerId',
-        'countryId'
+
     ];
 
     protected $useTimestamps = true;
-    protected $createdField = 'createdAt';
-    protected $updatedField = 'updatedAt';
-    protected $deletedField = 'deletedAt';
+
 
     protected $validationRules = [
         //        'name' => 'required|min_length[3]|max_length[255]',

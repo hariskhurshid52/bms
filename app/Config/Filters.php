@@ -4,8 +4,7 @@ namespace Config;
 
 use App\Filters\AuthFilter;
 use App\Filters\AdminAuthFilter;
-use App\Filters\OperatorAuthFilter;
-use App\Filters\PartnerAuthFilter;
+use App\Filters\MarketingAuth;
 use CodeIgniter\Config\Filters as BaseFilters;
 use CodeIgniter\Filters\Cors;
 use CodeIgniter\Filters\CSRF;
@@ -40,8 +39,7 @@ class Filters extends BaseFilters
         'performance' => PerformanceMetrics::class,
         'auth' => AuthFilter::class,
         'adminAuth' => AdminAuthFilter::class,
-        'operatorAuth' => OperatorAuthFilter::class,
-        'partnerAuth' => PartnerAuthFilter::class,
+        'MarketingAuth' => MarketingAuth::class,
     ];
 
     /**

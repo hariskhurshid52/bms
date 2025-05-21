@@ -1,11 +1,8 @@
 <?= $this->section('styles') ?>
-<style>
-
-</style>
 <?= $this->endSection() ?>
+<?= $this->extend('common/default-nav') ?> <?= $this->section('content') ?>
 
-<?= $this->extend('common/default') ?>
-<?= $this->section('content') ?>
+
 <?php
 $errors = session()->getFlashdata('errors');
 ?>
@@ -77,7 +74,7 @@ $errors = session()->getFlashdata('errors');
                             <select id="role" class="form-select" name="role">
                                 <?php if (isset($roles)): ?>
                                     <?php foreach ($roles as $role): ?>
-                                        <option <?= $user['roleId'] == $role['id'] ? 'selected' : '' ?>  value="<?= $role['id'] ?>"><?= $role['roleName'] ?></option>
+                                        <option <?= $user['role_id'] == $role['id'] ? 'selected' : '' ?>  value="<?= $role['id'] ?>"><?= $role['role_name'] ?></option>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
 
@@ -91,29 +88,8 @@ $errors = session()->getFlashdata('errors');
                                 </div>
                             <?php endif; ?>
                         </div>
-                        <div class="mb-2 col-md-6 " id="partnerSelection">
-                            <label for="partner" class="form-label">Partner</label>
-                            <select id="partner" class="form-select select2" name="partner">
-                                <?php if (isset($partners)): ?>
-                                    <?php foreach ($partners as $partner): ?>
-                                        <option <?= $user['partnerId'] == $partner['countryAggregatorId'] ? 'selected' : '' ?>
-                                                value="<?= $partner['countryAggregatorId'] ?>"><?= $partner['name'] ?></option>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
-                            </select>
-                        </div>
-                        <div class="mb-2 col-md-6 <?=$user['roleId'] == 1 ? 'd-none' : ''?>" id="operatorSelection">
-                            <label for="operator" class="form-label">Operator</label>
-                            <select id="operator" class="form-select select2" name="operator">
-                                <?php if (isset($operators)): ?>
-                                    <?php foreach ($operators as $operator): ?>
-                                        <option <?= $user['operatorId'] == $operator['id'] ? 'selected' : '' ?>
-                                                value="<?= $operator['id'] ?>"><?= $operator['operatorName'] ?></option>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
 
-                            </select>
-                        </div>
+
                         <div class="mb-2 col-md-6">
                             <label for="userStatus" class="form-label">Status</label>
                             <select id="userStatus" class="form-select" name="status">

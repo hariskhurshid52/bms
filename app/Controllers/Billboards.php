@@ -46,6 +46,7 @@ class Billboards extends BaseController
             return redirect()->back()->withInput()->with('postBack', ['status' => 'error', 'message' => 'Please fill all required fields']);
         }
         $inputs = $this->request->getPost();
+
         $model = new \App\Models\BillboardModel();
         $insData = [
             'name' => $inputs['name'],
@@ -54,7 +55,7 @@ class Billboards extends BaseController
             'width' => $inputs['width'],
             'height' => $inputs['height'],
             'size_type' => $inputs['size_type'],
-            'city_id' => $inputs['area'],
+            'city_id' => $inputs['city'],
             'area' => $inputs['area'],
             'address' => $inputs['address'],
             'installation_date' => $inputs['installation_date'],
@@ -64,7 +65,7 @@ class Billboards extends BaseController
         ];
         $save = $model->insert($insData);
         if ($save) {
-            return redirect()->back()->with('postBack', ['status' => 'success', 'message' => 'Billboard saved successfully']);
+            return redirect()->route('admin.billboard.list')->with('postBack', ['status' => 'success', 'message' => 'Billboard saved successfully']);
         }
         return redirect()->back()->withInput()->with('postBack', ['status' => 'danger', 'message' => 'Failed to save billboard']);
 
@@ -166,7 +167,7 @@ class Billboards extends BaseController
             'width' => $inputs['width'],
             'height' => $inputs['height'],
             'size_type' => $inputs['size_type'],
-            'city_id' => $inputs['area'],
+            'city_id' => $inputs['city'],
             'area' => $inputs['area'],
             'address' => $inputs['address'],
             'installation_date' => $inputs['installation_date'],
@@ -175,7 +176,7 @@ class Billboards extends BaseController
         ];
         $save = $model->update($inputs['billboardId'], $insData);
         if ($save) {
-            return redirect()->back()->with('postBack', ['status' => 'success', 'message' => 'Billboard updated successfully']);
+            return redirect()->route('admin.billboard.list')->with('postBack', ['status' => 'success', 'message' => 'Billboard updated successfully']);
         }
         return redirect()->back()->with('postBack', ['status' => 'danger', 'message' => 'Failed to update billboard']);
 

@@ -16,12 +16,10 @@
                         <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Company Name</th>
+
                                 <th>Email</th>
                                 <th>Phone</th>
-                                <th>State</th>
-                                <th>City</th>
-                                <th>Status</th>
+                                <th>Customer Type</th>
                                
                                 <th>Added At</th>
                                 <th>Actions</th>

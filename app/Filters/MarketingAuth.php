@@ -6,7 +6,7 @@ use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 
-class OperatorAuthFilter implements FilterInterface
+class MarketingAuth implements FilterInterface
 {
     /**
      * Do whatever processing this filter needs to do.
@@ -19,19 +19,17 @@ class OperatorAuthFilter implements FilterInterface
      * redirects, etc.
      *
      * @param RequestInterface $request
-     * @param array|null $arguments
+     * @param array|null       $arguments
      *
      * @return RequestInterface|ResponseInterface|string|void
      */
     public function before(RequestInterface $request, $arguments = null)
     {
         $session = \Config\Services::session();
-        $loggedIn = $session->get('loggedIn');
 
-        if (!$loggedIn) {
+        if (!$session->get('loggedIn')) {
             return redirect()->route('login');
-        } else if ($loggedIn['roleId'] != 2 || (!empty($loggedIn['parentRoleId']) && $loggedIn['parentRoleId'] != 2)) {
-
+        } else if (!($session->get('loggedIn')['roleId'] == 2)) {
             $session->destroy();
             return redirect()->route('login');
         }
@@ -43,9 +41,9 @@ class OperatorAuthFilter implements FilterInterface
      * to stop execution of other after filters, short of
      * throwing an Exception or Error.
      *
-     * @param RequestInterface $request
+     * @param RequestInterface  $request
      * @param ResponseInterface $response
-     * @param array|null $arguments
+     * @param array|null        $arguments
      *
      * @return ResponseInterface|void
      */
