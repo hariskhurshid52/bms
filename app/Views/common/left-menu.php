@@ -104,7 +104,7 @@ $current_route = isset($current_route['as']) ? $current_route['as'] : 'dashboard
                     <a href="#mngOrders" data-bs-toggle="collapse" aria-expanded="false"
                         aria-controls="mngOrders">
                         <i class="ri-signal-tower-fill"></i>
-                        <span> Orders </span>
+                        <span> Bookings </span>
                         <span class="menu-arrow"></span>
                     </a>
                     <div class="collapse" id="mngOrders">

@@ -21,7 +21,7 @@
                                 <th>Expense Date</th>
                                 <th>Added By</th>
                                 <th>Added At</th>
-<!--                                <th>Actions</th>-->
+                                <th>Actions</th>
                             </tr>
                             </thead>
                             <tbody>

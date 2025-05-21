@@ -116,13 +116,13 @@ class Expense extends BaseController
         $rows = [];
         foreach ($list as $key => $value) {
             $rows[] = [
-               ucfirst($value['type']),
+                ucfirst($value['type']),
                 $value['amount'] . ' PKR',
                 $value['billboardName'] . ' ' . $value['billboardArea'],
                 date('d-m-Y', strtotime($value['expenseDate'])),
                 $value['addedByName'],
                 date('d-m-Y', strtotime($value['addedAt'])),
-//                '<a href="' . route_to('admin.order.edit', $value['id']) . '" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a>',
+                '<a href="' . route_to('admin.expense.edit', $value['id']) . '" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a>',
 
             ];
         }
@@ -132,5 +132,71 @@ class Expense extends BaseController
             "recordsFiltered" => count($rows),
             "data" => $rows,
         ]);
+    }
+
+    public function edit($expenseId = null)
+    {
+
+        $data = [];
+        $mdExpense = new ExpenseModel();
+        $expense = $mdExpense->find($expenseId);
+        if (empty($expense)) {
+            return redirect()->back()->withInput()->with('postBack', ['status' => 'error', 'message' => 'Invalid request']);
+        }
+        $mdBillboards = new BillboardModel();
+        $list = $mdBillboards
+            ->join('billboard_types', 'billboard_types.id = billboards.billboard_type_id')
+            ->where('status', 'active')
+            ->select('billboards.id as id,billboards.name, billboard_types.name as typeName,billboards.area')
+            ->findAll();
+
+        $billboards = [];
+        foreach ($list as $key => $value) {
+            $billboards[$value['typeName']][] = $value;
+        }
+        $data['billboards'] = $billboards;
+
+        helper(['form']);
+        $data['expense'] = $expense;
+        return view("admin/expense/edit", $data);
+    }
+
+    public function update()
+    {
+        $inputs = $this->request->getPost();
+        $rules = [
+            'expense_id' => 'required',
+            'type' => 'required',
+            'amount' => 'required',
+            'expenseDate' => 'required|date',
+
+        ];
+        if (!empty($inputs['type']) == "billboard") {
+            $rules['billboard'] = 'required';
+        }
+        $validation = \Config\Services::validation();
+        if (!$this->validate($rules)) {
+            $error = ucfirst(strtolower(array_values($validation->getErrors())[0]));
+            return redirect()->back()->withInput()->with('postBack', ['status' => 'error', 'message' => $error]);
+        }
+
+        $mdOrder = new  ExpenseModel();
+        $insData = [
+            'type' => $inputs['type'],
+            'amount' => $inputs['amount'],
+            'addtional_info' => $inputs['addtionalInformatoin'],
+            'expense_date' => $inputs['expenseDate'],
+            'added_by' => $this->userId,
+
+        ];
+        if (!empty($inputs['type']) == "billboard") {
+            $insData['billboard_id'] = $inputs['billboard'];
+        }
+        $saved = $mdOrder->update($inputs['expense_id'], $insData);
+        if (!$saved) {
+            return redirect()->back()->withInput()->with('postBack', ['status' => 'error', 'message' => 'Unable to update expense']);
+        }
+
+        return redirect()->route('admin.expense.list')->with('postBack', ['status' => 'success', 'message' => 'Expense update successfully']);
     }
 }

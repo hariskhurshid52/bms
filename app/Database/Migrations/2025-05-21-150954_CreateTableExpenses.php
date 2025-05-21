@@ -62,6 +62,7 @@ class CreateTableExpenses extends Migration
         $this->forge->addKey('id', true);
         $this->forge->addForeignKey('added_by', 'users', 'id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('expenses');
+
     }
 
     public function down()
