@@ -284,6 +284,7 @@
                 </div>
             </div>
         </div>
+        <?php if ($isAdmin): ?>
         <div class="col-md-3">
             <div class="card stat-card h-100" style="background: linear-gradient(45deg, #f6d365, #fda085);">
                 <div class="card-body text-white">
@@ -306,6 +307,7 @@
                 </div>
             </div>
         </div>
+        <?php endif; ?>
         <div class="col-md-3">
             <div class="card stat-card h-100" style="background: linear-gradient(45deg, #4facfe, #00f2fe);">
                 <div class="card-body text-white">
@@ -358,7 +360,7 @@
 
     <!-- Charts Row -->
     <div class="row g-3 mb-4">
-        <!-- Revenue Overview -->
+        <?php if ($isAdmin): ?>
         <div class="col-md-8">
             <div class="card h-100">
                 <div class="card-header d-flex justify-content-between align-items-center">
@@ -381,6 +383,7 @@
                 </div>
             </div>
         </div>
+        <?php endif; ?>
 
         <!-- Billboard Status Distribution -->
         <div class="col-md-4">
@@ -507,10 +510,9 @@
                             <thead>
                                 <tr>
                                     <th>Billboard</th>
-                                    <th>Revenue</th>
+                                    <?php if ($isAdmin): ?><th>Revenue</th><?php endif; ?>
                                     <th>Expenses</th>
-                                    <th>Net Profit</th>
-                                    <th>Profit Margin</th>
+                                    <?php if ($isAdmin): ?><th>Net Profit</th><th>Profit Margin</th><?php endif; ?>
                                     <th>Status</th>
                                 </tr>
                             </thead>
@@ -518,14 +520,16 @@
                                 <?php foreach ($billboardPerformance as $billboard): ?>
                                 <tr>
                                     <td><?= $billboard['name'] ?></td>
-                                    <td>Rs.<?= number_format($billboard['revenue'], 2) ?></td>
+                                    <?php if ($isAdmin): ?><td>Rs.<?= number_format($billboard['revenue'], 2) ?></td><?php endif; ?>
                                     <td>Rs.<?= number_format($billboard['expenses'], 2) ?></td>
+                                    <?php if ($isAdmin): ?>
                                     <td class="<?= $billboard['net_profit'] >= 0 ? 'text-success' : 'text-danger' ?>">
                                         Rs.<?= number_format($billboard['net_profit'], 2) ?>
                                     </td>
                                     <td class="<?= $billboard['profit_margin'] >= 0 ? 'text-success' : 'text-danger' ?>">
                                         <?= number_format($billboard['profit_margin'], 1) ?>%
                                     </td>
+                                    <?php endif; ?>
                                     <td>
                                         <span class="badge bg-<?= $billboard['status_color'] ?>">
                                             <?= $billboard['status'] ?>
@@ -556,7 +560,7 @@
                                 <tr>
                                     <th>Status</th>
                                     <th>Count</th>
-                                    <th>Revenue</th>
+                                    <?php if ($isAdmin): ?><th>Revenue</th><?php endif; ?>
                                     <th>Trend</th>
                                 </tr>
                             </thead>
@@ -564,7 +568,7 @@
                                 <tr>
                                     <td><span class="performance-indicator bg-success"></span> Active</td>
                                     <td><?= number_format($activeBookings) ?></td>
-                                    <td>Rs.<?= number_format($activeBookings * 1000, 2) ?></td>
+                                    <?php if ($isAdmin): ?><td>Rs.<?= number_format($activeBookings * 1000, 2) ?></td><?php endif; ?>
                                     <td>
                                         <span class="trend-indicator <?= $bookingGrowth >= 0 ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger' ?>">
                                             <?= $bookingGrowth ?>%
@@ -574,7 +578,7 @@
                                 <tr>
                                     <td><span class="performance-indicator bg-primary"></span> Pending</td>
                                     <td><?= number_format($pendingBookings ?? 0) ?></td>
-                                    <td>Rs.<?= number_format(($pendingBookings ?? 0) * 1000, 2) ?></td>
+                                    <?php if ($isAdmin): ?><td>Rs.<?= number_format(($pendingBookings ?? 0) * 1000, 2) ?></td><?php endif; ?>
                                     <td>
                                         <span class="trend-indicator bg-secondary-subtle text-secondary">
                                             -
@@ -584,7 +588,7 @@
                                 <tr>
                                     <td><span class="performance-indicator bg-warning"></span> Under Review</td>
                                     <td><?= number_format($reviewBookings ?? 0) ?></td>
-                                    <td>Rs.<?= number_format(($reviewBookings ?? 0) * 1000, 2) ?></td>
+                                    <?php if ($isAdmin): ?><td>Rs.<?= number_format(($reviewBookings ?? 0) * 1000, 2) ?></td><?php endif; ?>
                                     <td>
                                         <span class="trend-indicator bg-secondary-subtle text-secondary">
                                             -
@@ -723,7 +727,7 @@
                                 <thead>
                                     <tr>
                                         <th>Client</th>
-                                        <th>Revenue</th>
+                                        <?php if ($isAdmin): ?><th>Revenue</th><?php endif; ?>
                                         <th>Bookings</th>
                                     </tr>
                                 </thead>
@@ -731,7 +735,7 @@
                                     <?php foreach ($topClients as $client): ?>
                                     <tr>
                                         <td><?= $client['name'] ?></td>
-                                        <td>Rs.<?= number_format($client['revenue'], 2) ?></td>
+                                        <?php if ($isAdmin): ?><td>Rs.<?= number_format($client['revenue'], 2) ?></td><?php endif; ?>
                                         <td><?= $client['bookings'] ?></td>
                                     </tr>
                                     <?php endforeach; ?>
@@ -763,7 +767,7 @@
 
     <!-- Financial Analytics Section -->
     <div class="row g-3 mb-4">
-        <!-- Revenue Analysis -->
+        <?php if ($isAdmin): ?>
         <div class="col-md-8">
             <div class="card h-100">
                 <div class="card-header d-flex justify-content-between align-items-center">
@@ -781,6 +785,7 @@
                 </div>
             </div>
         </div>
+        <?php endif; ?>
 
         <!-- Financial Health Indicators -->
         <div class="col-md-4">
@@ -831,7 +836,7 @@
 
     <!-- Expense Breakdown and Budget Analysis -->
     <div class="row g-3 mb-4">
-        <!-- Expense Breakdown -->
+        <?php if ($isAdmin): ?>
         <div class="col-md-6">
             <div class="card h-100">
                 <div class="card-header">
@@ -844,6 +849,7 @@
                 </div>
             </div>
         </div>
+        <?php endif; ?>
 
         <!-- Budget vs Actual -->
         <div class="col-md-6">
@@ -862,7 +868,7 @@
 
     <!-- Financial Metrics Grid -->
     <div class="row g-3 mb-4">
-        <!-- Revenue by Billboard Type -->
+        <?php if ($isAdmin): ?>
         <div class="col-md-4">
             <div class="card h-100">
                 <div class="card-header">
@@ -875,6 +881,7 @@
                 </div>
             </div>
         </div>
+        <?php endif; ?>
 
         <!-- Cost Analysis -->
         <div class="col-md-4">

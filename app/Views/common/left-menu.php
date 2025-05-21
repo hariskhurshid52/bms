@@ -12,7 +12,7 @@ $current_route = isset($current_route['as']) ? $current_route['as'] : 'dashboard
 
     <!-- LOGO -->
     <div class="logo-box">
-        <a href="index-2.html" class="logo logo-dark text-center">
+        <a href="<?= route_to('dashboard') ?>" class="logo logo-dark text-center">
             <span class="logo-sm">
                 <img src="<?= base_url() ?>assets/images/logos/logo-sm-dark.png" alt="" height="24">
                 <!-- <span class="logo-lg-text-light">Minton</span> -->
@@ -23,7 +23,7 @@ $current_route = isset($current_route['as']) ? $current_route['as'] : 'dashboard
             </span>
         </a>
 
-        <a href="index-2.html" class="logo logo-light text-center">
+        <a href="<?= route_to('dashboard') ?>" class="logo logo-light text-center">
             <span class="logo-sm">
                 <img src="<?= base_url() ?>assets/images/logos/logo-sm.png" alt="" height="24">
             </span>
