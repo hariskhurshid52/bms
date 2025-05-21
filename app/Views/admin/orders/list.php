@@ -8,7 +8,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-body">
-                <h4 class="header-title">List All Orders <a href="<?= route_to('admin.order.create') ?>"
+                <h4 class="header-title">List All Bookings <a href="<?= route_to('admin.order.create') ?>"
                         class="btn btn-primary btn-sm pull-right" role="button">Add New</a></h4>
                 <hr />
                 <div class="table-responsive">

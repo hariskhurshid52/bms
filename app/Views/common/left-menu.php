@@ -99,7 +99,7 @@ $current_route = isset($current_route['as']) ? $current_route['as'] : 'dashboard
                         </ul>
                     </div>
                 </li>
-                <li class="menu-title mt-2">Manage Orders & Expenses</li>
+                <li class="menu-title mt-2">Manage Bookings & Expenses</li>
                 <li>
                     <a href="#mngOrders" data-bs-toggle="collapse" aria-expanded="false"
                         aria-controls="mngOrders">
@@ -110,7 +110,7 @@ $current_route = isset($current_route['as']) ? $current_route['as'] : 'dashboard
                     <div class="collapse" id="mngOrders">
                         <ul class="nav-second-level">
                             <li>
-                                <a href="<?=route_to('admin.order.create')?>">Place new order</a>
+                                <a href="<?=route_to('admin.order.create')?>">Add Booking</a>
                             </li>
                             <li>
                                 <a href="<?=route_to('admin.orders.list')?>">List All</a>

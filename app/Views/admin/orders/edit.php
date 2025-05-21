@@ -30,7 +30,7 @@
 
                             <form action="<?= route_to('admin.order.update') ?>" method="POST"
                                 class="tab-content twitter-bs-wizard-tab-content">
-                                <!-- CSRF Token (if using Laravel) -->
+                                
                                 <?= csrf_field() ?>
                                 <?= form_hidden('order_id', $order['id'])?>
 

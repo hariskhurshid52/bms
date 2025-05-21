@@ -7,14 +7,14 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="header-title">New Order <a href="<?= route_to('admin.orders.list') ?>"
+                    <h4 class="header-title">New Booking <a href="<?= route_to('admin.orders.list') ?>"
                                                                       class="btn btn-primary btn-sm pull-right"
                                                                       role="button">List All</a></h4>
                     <hr/>
                     <div class="row">
                         <form action="<?= route_to('admin.order.store') ?>" method="POST"
                               class="tab-content twitter-bs-wizard-tab-content">
-                            <!-- CSRF Token (if using Laravel) -->
+                            
                             <?= csrf_field() ?>
 
                             <div class="row">
