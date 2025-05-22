@@ -237,709 +237,160 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
-<div class="container-fluid">
-    <!-- Statistics Cards Row -->
+<div class="container-fluid" style="margin-top: 32px;">
+    <!-- Admin Summary Cards Row (3 per row) -->
     <div class="row g-3 mb-4">
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="card stat-card h-100" style="background: linear-gradient(45deg, #4158D0, #C850C0);">
                 <div class="card-body text-white">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-white-50 mb-2">Total Billboards</h6>
-                            <h3 class="mb-0 text-white"><?= number_format($totalBillboards) ?></h3>
-                            <div class="mt-2">
-                                <span class="trend-indicator <?= $billboardGrowth >= 0 ? 'bg-white text-success' : 'bg-white text-danger' ?>">
-                                    <i class="bi <?= $billboardGrowth >= 0 ? 'bi-arrow-up' : 'bi-arrow-down' ?>"></i>
-                                    <?= abs($billboardGrowth) ?>%
-                                </span>
-                                <small class="text-white-50 ms-2">vs last month</small>
-                            </div>
-                        </div>
-                        <div class="stat-icon">
-                            <i class="bi bi-signpost-split-fill"></i>
-                        </div>
-                    </div>
+                    <h6 class="text-white-50 mb-2">Total Bookings</h6>
+                    <h3 class="mb-0 text-white"><?= number_format($totalBookings ?? 0) ?></h3>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="card stat-card h-100" style="background: linear-gradient(45deg, #00b09b, #96c93d);">
                 <div class="card-body text-white">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-white-50 mb-2">Active Bookings</h6>
-                            <h3 class="mb-0 text-white"><?= number_format($activeBookings) ?></h3>
-                            <div class="mt-2">
-                                <span class="trend-indicator <?= $bookingGrowth >= 0 ? 'bg-white text-success' : 'bg-white text-danger' ?>">
-                                    <i class="bi <?= $bookingGrowth >= 0 ? 'bi-arrow-up' : 'bi-arrow-down' ?>"></i>
-                                    <?= abs($bookingGrowth) ?>%
-                                </span>
-                                <small class="text-white-50 ms-2">vs last month</small>
-                            </div>
-                        </div>
-                        <div class="stat-icon">
-                            <i class="bi bi-calendar-check-fill"></i>
-                        </div>
-                    </div>
+                    <h6 class="text-white-50 mb-2">Active Bookings</h6>
+                    <h3 class="mb-0 text-white"><?= number_format($activeBookings ?? 0) ?></h3>
                 </div>
             </div>
         </div>
-        <?php if ($isAdmin): ?>
-        <div class="col-md-3">
-            <div class="card stat-card h-100" style="background: linear-gradient(45deg, #f6d365, #fda085);">
-                <div class="card-body text-white">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-white-50 mb-2">Total Revenue</h6>
-                            <h3 class="mb-0 text-white">Rs.<?= number_format($totalRevenue, 2) ?></h3>
-                            <div class="mt-2">
-                                <span class="trend-indicator <?= $revenueGrowth >= 0 ? 'bg-white text-success' : 'bg-white text-danger' ?>">
-                                    <i class="bi <?= $revenueGrowth >= 0 ? 'bi-arrow-up' : 'bi-arrow-down' ?>"></i>
-                                    <?= abs($revenueGrowth) ?>%
-                                </span>
-                                <small class="text-white-50 ms-2">vs last month</small>
-                            </div>
-                        </div>
-                        <div class="stat-icon">
-                            <i class="bi bi-currency-dollar"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <?php endif; ?>
-        <div class="col-md-3">
-            <div class="card stat-card h-100" style="background: linear-gradient(45deg, #4facfe, #00f2fe);">
-                <div class="card-body text-white">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-white-50 mb-2">Total Clients</h6>
-                            <h3 class="mb-0 text-white"><?= number_format($totalClients) ?></h3>
-                            <div class="mt-2">
-                                <span class="trend-indicator <?= $clientGrowth >= 0 ? 'bg-white text-success' : 'bg-white text-danger' ?>">
-                                    <i class="bi <?= $clientGrowth >= 0 ? 'bi-arrow-up' : 'bi-arrow-down' ?>"></i>
-                                    <?= abs($clientGrowth) ?>%
-                                </span>
-                                <small class="text-white-50 ms-2">vs last month</small>
-                            </div>
-                        </div>
-                        <div class="stat-icon">
-                            <i class="bi bi-people-fill"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Expenses Card Row -->
-    <div class="row g-3 mb-4">
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="card stat-card h-100" style="background: linear-gradient(45deg, #ff0844, #ffb199);">
                 <div class="card-body text-white">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-white-50 mb-2">Total Expenses</h6>
-                            <h3 class="mb-0 text-white">Rs.<?= number_format($totalExpenses, 2) ?></h3>
-                            <div class="mt-2">
-                                <span class="trend-indicator <?= $expenseGrowth >= 0 ? 'bg-white text-danger' : 'bg-white text-success' ?>">
-                                    <i class="bi <?= $expenseGrowth >= 0 ? 'bi-arrow-up' : 'bi-arrow-down' ?>"></i>
-                                    <?= abs($expenseGrowth) ?>%
-                                </span>
-                                <small class="text-white-50 ms-2">vs last month</small>
-                            </div>
-                        </div>
-                        <div class="stat-icon">
-                            <i class="bi bi-cash-stack"></i>
-                        </div>
-                    </div>
+                    <h6 class="text-white-50 mb-2">Total Expenses</h6>
+                    <h3 class="mb-0 text-white">Rs.<?= number_format($totalExpenses ?? 0, 2) ?></h3>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Charts Row -->
     <div class="row g-3 mb-4">
-        <?php if ($isAdmin): ?>
-        <div class="col-md-8">
-            <div class="card h-100">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0">Revenue vs Expenses</h5>
-                    <div class="dropdown">
-                        <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                            This Month
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">This Week</a></li>
-                            <li><a class="dropdown-item" href="#">This Month</a></li>
-                            <li><a class="dropdown-item" href="#">This Year</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="chart-container">
-                        <canvas id="revenueExpenseChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <?php endif; ?>
-
-        <!-- Billboard Status Distribution -->
         <div class="col-md-4">
-            <div class="card h-100">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Billboard Status</h5>
-                </div>
-                <div class="card-body">
-                    <div class="chart-container">
-                        <canvas id="billboardStatusChart"></canvas>
-                    </div>
+            <div class="card stat-card h-100" style="background: linear-gradient(45deg, #4facfe, #00f2fe);">
+                <div class="card-body text-white">
+                    <h6 class="text-white-50 mb-2">Total Hoardings</h6>
+                    <h3 class="mb-0 text-white"><?= number_format($totalHoardings ?? 0) ?></h3>
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Expense Analytics Row -->
-    <div class="row g-3 mb-4">
-        <!-- Expense Overview -->
-        <div class="col-md-6">
-            <div class="card h-100">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Expense Overview</h5>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Category</th>
-                                    <th>Amount</th>
-                                    <th>% of Total</th>
-                                    <th>Trend</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($expenseCategories['table'] as $category): ?>
-                                <tr>
-                                    <td>
-                                        <span class="performance-indicator" style="background-color: <?= $category['color'] ?>"></span>
-                                        <?= $category['name'] ?>
-                                    </td>
-                                    <td>Rs.<?= number_format($category['amount'], 2) ?></td>
-                                    <td><?= number_format($category['percentage'], 1) ?>%</td>
-                                    <td>
-                                        <span class="trend-indicator <?= $category['trend'] >= 0 ? 'bg-danger-subtle text-danger' : 'bg-success-subtle text-success' ?>">
-                                            <i class="bi <?= $category['trend'] >= 0 ? 'bi-arrow-up' : 'bi-arrow-down' ?>"></i>
-                                            <?= abs($category['trend']) ?>%
-                                        </span>
-                                    </td>
-                                </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                            <tfoot>
-                                <tr class="table-light">
-                                    <th>Total Expenses</th>
-                                    <th>Rs.<?= number_format($totalExpenses, 2) ?></th>
-                                    <th>100%</th>
-                                    <th>
-                                        <span class="trend-indicator <?= $expenseGrowth >= 0 ? 'bg-danger-subtle text-danger' : 'bg-success-subtle text-success' ?>">
-                                            <i class="bi <?= $expenseGrowth >= 0 ? 'bi-arrow-up' : 'bi-arrow-down' ?>"></i>
-                                            <?= abs($expenseGrowth) ?>%
-                                        </span>
-                                    </th>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Profitability Analysis -->
-        <div class="col-md-6">
-            <div class="card h-100">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Profitability Analysis</h5>
-                </div>
-                <div class="card-body">
-                    <div class="chart-container">
-                        <canvas id="profitabilityChart"></canvas>
-                    </div>
-                    <div class="row mt-4">
-                        <div class="col-md-4">
-                            <div class="text-center">
-                                <h6 class="text-muted mb-2">Net Profit</h6>
-                                <h4 class="mb-0 <?= $netProfit >= 0 ? 'text-success' : 'text-danger' ?>">
-                                    Rs.<?= number_format(abs($netProfit), 2) ?>
-                                </h4>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="text-center">
-                                <h6 class="text-muted mb-2">Profit Margin</h6>
-                                <h4 class="mb-0 <?= $profitMargin >= 0 ? 'text-success' : 'text-danger' ?>">
-                                    <?= number_format($profitMargin, 1) ?>%
-                                </h4>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="text-center">
-                                <h6 class="text-muted mb-2">ROI</h6>
-                                <h4 class="mb-0 <?= $roi >= 0 ? 'text-success' : 'text-danger' ?>">
-                                    <?= number_format($roi, 1) ?>%
-                                </h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Billboard Performance Row -->
-    <div class="row g-3 mb-4">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Billboard Performance Analysis</h5>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Billboard</th>
-                                    <?php if ($isAdmin): ?><th>Revenue</th><?php endif; ?>
-                                    <th>Expenses</th>
-                                    <?php if ($isAdmin): ?><th>Net Profit</th><th>Profit Margin</th><?php endif; ?>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($billboardPerformance as $billboard): ?>
-                                <tr>
-                                    <td><?= $billboard['name'] ?></td>
-                                    <?php if ($isAdmin): ?><td>Rs.<?= number_format($billboard['revenue'], 2) ?></td><?php endif; ?>
-                                    <td>Rs.<?= number_format($billboard['expenses'], 2) ?></td>
-                                    <?php if ($isAdmin): ?>
-                                    <td class="<?= $billboard['net_profit'] >= 0 ? 'text-success' : 'text-danger' ?>">
-                                        Rs.<?= number_format($billboard['net_profit'], 2) ?>
-                                    </td>
-                                    <td class="<?= $billboard['profit_margin'] >= 0 ? 'text-success' : 'text-danger' ?>">
-                                        <?= number_format($billboard['profit_margin'], 1) ?>%
-                                    </td>
-                                    <?php endif; ?>
-                                    <td>
-                                        <span class="badge bg-<?= $billboard['status_color'] ?>">
-                                            <?= $billboard['status'] ?>
-                                        </span>
-                                    </td>
-                                </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Detailed Analytics Row -->
-    <div class="row g-3 mb-4">
-        <!-- Booking Analytics -->
-        <div class="col-md-6">
-            <div class="card h-100">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Booking Analytics</h5>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Status</th>
-                                    <th>Count</th>
-                                    <?php if ($isAdmin): ?><th>Revenue</th><?php endif; ?>
-                                    <th>Trend</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><span class="performance-indicator bg-success"></span> Active</td>
-                                    <td><?= number_format($activeBookings) ?></td>
-                                    <?php if ($isAdmin): ?><td>Rs.<?= number_format($activeBookings * 1000, 2) ?></td><?php endif; ?>
-                                    <td>
-                                        <span class="trend-indicator <?= $bookingGrowth >= 0 ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger' ?>">
-                                            <?= $bookingGrowth ?>%
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><span class="performance-indicator bg-primary"></span> Pending</td>
-                                    <td><?= number_format($pendingBookings ?? 0) ?></td>
-                                    <?php if ($isAdmin): ?><td>Rs.<?= number_format(($pendingBookings ?? 0) * 1000, 2) ?></td><?php endif; ?>
-                                    <td>
-                                        <span class="trend-indicator bg-secondary-subtle text-secondary">
-                                            -
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><span class="performance-indicator bg-warning"></span> Under Review</td>
-                                    <td><?= number_format($reviewBookings ?? 0) ?></td>
-                                    <?php if ($isAdmin): ?><td>Rs.<?= number_format(($reviewBookings ?? 0) * 1000, 2) ?></td><?php endif; ?>
-                                    <td>
-                                        <span class="trend-indicator bg-secondary-subtle text-secondary">
-                                            -
-                                        </span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Client Distribution -->
-        <div class="col-md-6">
-            <div class="card h-100">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Client Distribution</h5>
-                </div>
-                <div class="card-body">
-                    <div class="chart-container">
-                        <canvas id="clientDistributionChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Recent Activities and Top Billboards Row -->
-    <div class="row g-3">
-        <!-- Recent Activities -->
-        <div class="col-md-6">
-            <div class="card h-100">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Recent Activities</h5>
-                </div>
-                <div class="card-body">
-                    <?php if (empty($recentActivities)): ?>
-                        <div class="text-center text-muted py-4">
-                            <i class="bi bi-activity fs-1"></i>
-                            <p class="mt-2">No recent activities</p>
-                        </div>
-                    <?php else: ?>
-                        <?php foreach ($recentActivities as $activity): ?>
-                            <div class="activity-item">
-                                <div class="d-flex align-items-center">
-                                    <div class="stat-icon bg-<?= $activity['type'] ?>-subtle text-<?= $activity['type'] ?> me-3">
-                                        <i class="bi bi-<?= $activity['icon'] ?>"></i>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <h6 class="mb-1"><?= $activity['title'] ?></h6>
-                                        <p class="mb-0 text-muted"><?= $activity['description'] ?></p>
-                                        <small class="text-muted"><?= $activity['time'] ?></small>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </div>
-            </div>
-        </div>
-
-        <!-- Top Performing Billboards -->
-        <div class="col-md-6">
-            <div class="card h-100">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Top Performing Billboards</h5>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Location</th>
-                                    <th>Bookings</th>
-                                    <th>Revenue</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($topBillboards as $billboard): ?>
-                                    <tr>
-                                        <td><?= $billboard['location'] ?></td>
-                                        <td><?= number_format($billboard['bookings']) ?></td>
-                                        <td>Rs.<?= number_format($billboard['revenue'], 2) ?></td>
-                                        <td>
-                                            <span class="badge bg-<?= $billboard['status_color'] ?>">
-                                                <?= $billboard['status'] ?>
-                                            </span>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Booking Calendar and Client Analytics Row -->
-    <div class="row g-3 mb-4">
-        <!-- Booking Calendar -->
-        <div class="col-md-8">
-            <div class="card h-100">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0">Booking Calendar</h5>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-light btn-sm" data-view="month">Month</button>
-                        <button type="button" class="btn btn-light btn-sm" data-view="week">Week</button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div id="calendar"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Client Analytics -->
         <div class="col-md-4">
-            <div class="card h-100">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Client Analytics</h5>
-                </div>
-                <div class="card-body">
-                    <div class="mb-4">
-                        <h6 class="text-muted mb-3">Client Distribution</h6>
-                        <div class="chart-container" style="height: 200px;">
-                            <canvas id="clientDistributionChart"></canvas>
-                        </div>
-                    </div>
-                    <div class="mb-4">
-                        <h6 class="text-muted mb-3">Top Clients</h6>
-                        <div class="table-responsive">
-                            <table class="table table-sm">
-                                <thead>
-                                    <tr>
-                                        <th>Client</th>
-                                        <?php if ($isAdmin): ?><th>Revenue</th><?php endif; ?>
-                                        <th>Bookings</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($topClients as $client): ?>
-                                    <tr>
-                                        <td><?= $client['name'] ?></td>
-                                        <?php if ($isAdmin): ?><td>Rs.<?= number_format($client['revenue'], 2) ?></td><?php endif; ?>
-                                        <td><?= $client['bookings'] ?></td>
-                                    </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div>
-                        <h6 class="text-muted mb-3">Client Metrics</h6>
-                        <div class="row g-3">
-                            <div class="col-6">
-                                <div class="border rounded p-3 text-center">
-                                    <h6 class="text-muted mb-1">Retention Rate</h6>
-                                    <h4 class="mb-0"><?= number_format($clientMetrics['retention_rate'], 1) ?>%</h4>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="border rounded p-3 text-center">
-                                    <h6 class="text-muted mb-1">New Clients</h6>
-                                    <h4 class="mb-0"><?= $clientMetrics['new_clients'] ?></h4>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <div class="card stat-card h-100" style="background: linear-gradient(45deg, #00b09b, #388e3c);">
+                <div class="card-body text-white">
+                    <h6 class="text-white-50 mb-2">Active Hoardings</h6>
+                    <h3 class="mb-0 text-white"><?= number_format($activeHoardings ?? 0) ?></h3>
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Financial Analytics Section -->
-    <div class="row g-3 mb-4">
-        <?php if ($isAdmin): ?>
-        <div class="col-md-8">
-            <div class="card h-100">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0">Revenue Analysis</h5>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-light btn-sm active" data-period="monthly">Monthly</button>
-                        <button type="button" class="btn btn-light btn-sm" data-period="quarterly">Quarterly</button>
-                        <button type="button" class="btn btn-light btn-sm" data-period="yearly">Yearly</button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="chart-container" style="height: 300px;">
-                        <canvas id="revenueAnalysisChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <?php endif; ?>
-
-        <!-- Financial Health Indicators -->
         <div class="col-md-4">
-            <div class="card h-100">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Financial Health</h5>
-                </div>
-                <div class="card-body">
-                    <div class="d-flex flex-column gap-3">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="text-muted mb-1">Profit Margin</h6>
-                                <h4 class="mb-0 <?= $profitMargin >= 0 ? 'text-success' : 'text-danger' ?>">
-                                    <?= number_format($profitMargin, 1) ?>%
-                                </h4>
-                            </div>
-                            <div class="stat-icon bg-success-subtle text-success">
-                                <i class="bi bi-graph-up"></i>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="text-muted mb-1">ROI</h6>
-                                <h4 class="mb-0 <?= $roi >= 0 ? 'text-success' : 'text-danger' ?>">
-                                    <?= number_format($roi, 1) ?>%
-                                </h4>
-                            </div>
-                            <div class="stat-icon bg-info-subtle text-info">
-                                <i class="bi bi-cash-stack"></i>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="text-muted mb-1">Cash Flow</h6>
-                                <h4 class="mb-0 <?= $cashFlow >= 0 ? 'text-success' : 'text-danger' ?>">
-                                    Rs.<?= number_format(abs($cashFlow), 2) ?>
-                                </h4>
-                            </div>
-                            <div class="stat-icon bg-warning-subtle text-warning">
-                                <i class="bi bi-currency-dollar"></i>
-                            </div>
-                        </div>
-                    </div>
+            <div class="card stat-card h-100" style="background: linear-gradient(45deg, #f6d365, #fda085);">
+                <div class="card-body text-white">
+                    <h6 class="text-white-50 mb-2">Total Revenue</h6>
+                    <h3 class="mb-0 text-white">Rs.<?= number_format($totalRevenue ?? 0, 2) ?></h3>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Expense Breakdown and Budget Analysis -->
+    <!-- Admin Charts Row -->
     <div class="row g-3 mb-4">
-        <?php if ($isAdmin): ?>
         <div class="col-md-6">
             <div class="card h-100">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Expense Breakdown</h5>
-                </div>
+                <div class="card-header">Bookings Per Month</div>
                 <div class="card-body">
-                    <div class="chart-container" style="height: 300px;">
-                        <canvas id="expenseBreakdownChart"></canvas>
-                    </div>
+                    <canvas id="bookingsPerMonthChart"></canvas>
                 </div>
             </div>
         </div>
-        <?php endif; ?>
-
-        <!-- Budget vs Actual -->
         <div class="col-md-6">
             <div class="card h-100">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Budget vs Actual</h5>
-                </div>
+                <div class="card-header">Expenses Per Month</div>
                 <div class="card-body">
-                    <div class="chart-container" style="height: 300px;">
-                        <canvas id="budgetAnalysisChart"></canvas>
-                    </div>
+                    <canvas id="expensesPerMonthChart"></canvas>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Financial Metrics Grid -->
     <div class="row g-3 mb-4">
-        <?php if ($isAdmin): ?>
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="card h-100">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Revenue by Billboard Type</h5>
-                </div>
+                <div class="card-header">Booking Status</div>
                 <div class="card-body">
-                    <div class="chart-container" style="height: 250px;">
-                        <canvas id="revenueByTypeChart"></canvas>
-                    </div>
+                    <canvas id="bookingStatusChart"></canvas>
                 </div>
             </div>
         </div>
-        <?php endif; ?>
-
-        <!-- Cost Analysis -->
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="card h-100">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Cost Analysis</h5>
-                </div>
+                <div class="card-header">Expense Type Breakdown</div>
                 <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-sm">
-                            <thead>
-                                <tr>
-                                    <th>Category</th>
-                                    <th>Amount</th>
-                                    <th>% of Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($costCategories as $category): ?>
-                                <tr>
-                                    <td><?= $category['name'] ?></td>
-                                    <td>$<?= number_format($category['amount'], 2) ?></td>
-                                    <td><?= number_format($category['percentage'], 1) ?>%</td>
-                                </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Financial Ratios -->
-        <div class="col-md-4">
-            <div class="card h-100">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Financial Ratios</h5>
-                </div>
-                <div class="card-body">
-                    <div class="d-flex flex-column gap-3">
-                        <div>
-                            <h6 class="text-muted mb-1">Current Ratio</h6>
-                            <h4 class="mb-0"><?= number_format($currentRatio, 2) ?></h4>
-                        </div>
-                        <div>
-                            <h6 class="text-muted mb-1">Debt-to-Equity</h6>
-                            <h4 class="mb-0"><?= number_format($debtToEquity, 2) ?></h4>
-                        </div>
-                        <div>
-                            <h6 class="text-muted mb-1">Return on Assets</h6>
-                            <h4 class="mb-0"><?= number_format($returnOnAssets, 1) ?>%</h4>
-                        </div>
-                    </div>
+                    <canvas id="expenseTypesChart"></canvas>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+// Bookings Per Month
+const bookingsPerMonth = <?= json_encode($bookingsPerMonth ?? []) ?>;
+const bookingsLabels = bookingsPerMonth.map(item => item.month);
+const bookingsData = bookingsPerMonth.map(item => item.count);
+new Chart(document.getElementById('bookingsPerMonthChart'), {
+    type: 'bar',
+    data: {
+        labels: bookingsLabels,
+        datasets: [{
+            label: 'Bookings',
+            data: bookingsData,
+            backgroundColor: '#4158D0'
+        }]
+    }
+});
+// Expenses Per Month
+const expensesPerMonth = <?= json_encode($expensesPerMonth ?? []) ?>;
+const expensesLabels = expensesPerMonth.map(item => item.month);
+const expensesData = expensesPerMonth.map(item => item.total);
+new Chart(document.getElementById('expensesPerMonthChart'), {
+    type: 'bar',
+    data: {
+        labels: expensesLabels,
+        datasets: [{
+            label: 'Expenses',
+            data: expensesData,
+            backgroundColor: '#ff0844'
+        }]
+    }
+});
+// Booking Status
+const bookingStatus = <?= json_encode($bookingStatus ?? []) ?>;
+const bookingStatusLabels = bookingStatus.map(item => 'Status ' + item.status_id);
+const bookingStatusData = bookingStatus.map(item => item.count);
+new Chart(document.getElementById('bookingStatusChart'), {
+    type: 'doughnut',
+    data: {
+        labels: bookingStatusLabels,
+        datasets: [{
+            data: bookingStatusData,
+            backgroundColor: ['#00b09b', '#4158D0', '#f6d365', '#ff0844']
+        }]
+    }
+});
+// Expense Types
+const expenseTypes = <?= json_encode($expenseTypes ?? []) ?>;
+const expenseTypesLabels = expenseTypes.map(item => item.type);
+const expenseTypesData = expenseTypes.map(item => item.total);
+new Chart(document.getElementById('expenseTypesChart'), {
+    type: 'doughnut',
+    data: {
+        labels: expenseTypesLabels,
+        datasets: [{
+            data: expenseTypesData,
+            backgroundColor: ['#4158D0', '#00b09b', '#f6d365', '#ff0844']
+        }]
+    }
+});
+</script>
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>

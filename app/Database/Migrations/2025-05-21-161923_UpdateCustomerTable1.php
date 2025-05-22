@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class UpdateCustomerTable extends Migration
+class UpdateCustomerTable1 extends Migration
 {
     public function up()
     {

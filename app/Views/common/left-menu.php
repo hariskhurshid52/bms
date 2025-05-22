@@ -6,6 +6,39 @@ $current_route = isset($current_route['as']) ? $current_route['as'] : 'dashboard
 
 ?>
 
+<style>
+.left-side-menu {
+    background: #388e3c !important;
+    color: #fff !important;
+    /* border-radius: 0 24px 24px 0; */
+    box-shadow: 2px 0 12px rgba(56, 142, 60, 0.08);
+}
+#side-menu .menu-title {
+    color: #c8e6c9 !important;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+#side-menu > li > a {
+    color: #fff !important;
+    border-radius: 8px;
+    margin: 4px 0;
+    transition: background 0.2s, color 0.2s;
+}
+#side-menu > li > a.active, #side-menu > li > a:hover {
+    background: #4caf50 !important;
+    color: #fff !important;
+}
+#side-menu i {
+    color: #c8e6c9 !important;
+}
+.logo-box {
+    background: transparent !important;
+    border-bottom: 2px solid #4caf50;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+}
+</style>
+
 <!-- ========== Left Sidebar Start ========== -->
 <div class="left-side-menu">
 

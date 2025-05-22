@@ -123,3 +123,25 @@ $current_route = isset($current_route['as']) ? $current_route['as'] : 'dashboard
 
     </script>
 <?= $this->endSection() ?>
+
+<style>
+.navbar-custom {
+    background: #fff;
+    border-bottom: 4px solid #388e3c; /* Green accent */
+    box-shadow: 0 2px 8px rgba(56, 142, 60, 0.08);
+    padding: 0 32px;
+}
+.topnav-menu .nav-link, .topnav-menu .nav-user {
+    color: #388e3c !important;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+.topnav-menu .nav-link:hover, .topnav-menu .nav-user:hover {
+    color: #256029 !important;
+}
+.logo-box {
+    border-right: 2px solid #388e3c;
+    padding-right: 24px;
+    margin-right: 24px;
+}
+</style>
