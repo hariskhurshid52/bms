@@ -223,7 +223,7 @@
                                             <?php foreach ($payments as $payment): ?>
                                             <tr>
                                                 <td><?= date('M d, Y', strtotime($payment['created_at'])) ?></td>
-                                                <td>$<?= number_format($payment['amount'], 2) ?></td>
+                                                <td>RS<?= number_format($payment['amount'], 2) ?></td>
                                                 <td><?= $payment['addtional_info'] ?></td>
                                                 <td>
                                                     <span class="badge bg-<?= $payment['status_id'] == 1 ? 'success' : 'warning' ?>">
