@@ -103,21 +103,45 @@ class Home extends BaseController
             ? round((($totalRevenueThisMonth - $totalRevenueLastMonth) / $totalRevenueLastMonth) * 100)
             : 0;
 
-        // Bookings per month (last 6 months)
-        $bookingsPerMonth = $this->orderModel
-            ->select("DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as count")
+        // Bookings per month (last 6 months) - FIXED to always show last 6 months
+        $months = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $months[] = date('Y-m', strtotime("-$i months"));
+        }
+        $bookingsRaw = $this->orderModel
+            ->select("DATE_FORMAT(start_date, '%Y-%m') as month, COUNT(*) as count")
             ->groupBy('month')
-            ->orderBy('month', 'desc')
-            ->limit(6)
+            ->orderBy('month', 'asc')
             ->findAll();
+        $bookingsMap = [];
+        foreach ($bookingsRaw as $row) {
+            $bookingsMap[$row['month']] = $row['count'];
+        }
+        $bookingsPerMonth = [];
+        foreach ($months as $month) {
+            $bookingsPerMonth[] = [
+                'month' => $month,
+                'count' => isset($bookingsMap[$month]) ? (int)$bookingsMap[$month] : 0
+            ];
+        }
 
-        // Expenses per month (last 6 months)
-        $expensesPerMonth = $this->expenseModel
-            ->select("DATE_FORMAT(created_at, '%Y-%m') as month, SUM(amount) as total")
+        // Expenses per month (last 6 months) - FIXED to always show last 6 months
+        $expensesRaw = $this->expenseModel
+            ->select("DATE_FORMAT(expense_date, '%Y-%m') as month, SUM(amount) as total")
             ->groupBy('month')
-            ->orderBy('month', 'desc')
-            ->limit(6)
+            ->orderBy('month', 'asc')
             ->findAll();
+        $expensesMap = [];
+        foreach ($expensesRaw as $row) {
+            $expensesMap[$row['month']] = $row['total'];
+        }
+        $expensesPerMonth = [];
+        foreach ($months as $month) {
+            $expensesPerMonth[] = [
+                'month' => $month,
+                'total' => isset($expensesMap[$month]) ? (float)$expensesMap[$month] : 0
+            ];
+        }
 
         // Booking status distribution
         $bookingStatus = $this->orderModel
