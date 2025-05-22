@@ -137,6 +137,20 @@
         </div>
     </div>
 </div>
+<!-- Image Preview Modal -->
+<div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-labelledby="imagePreviewModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="imagePreviewModalLabel">Billboard Image</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <img id="previewImage" src="" alt="Billboard" class="img-fluid rounded" style="max-height: 70vh;">
+      </div>
+    </div>
+  </div>
+</div>
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
@@ -159,6 +173,16 @@
                     d.area = $('#filterArea').val();
                 }
             },
+            columnDefs: [
+                {
+                    targets: 0,
+                    render: function(data, type, row, meta) {
+                        var srcMatch = data.match(/src=["']([^"']+)["']/);
+                        var src = srcMatch ? srcMatch[1] : '';
+                        return '<a href="#" class="preview-image-link" data-img="'+src+'">'+data+'</a>';
+                    }
+                }
+            ]
         });
         $('#applyFilters').on('click', function() {
             table.ajax.reload();
@@ -166,6 +190,12 @@
         $('#clearFilters').on('click', function() {
             $('#filterForm')[0].reset();
             table.ajax.reload();
+        });
+        $(document).on('click', '.preview-image-link', function(e) {
+            e.preventDefault();
+            var imgSrc = $(this).data('img');
+            $('#previewImage').attr('src', imgSrc);
+            $('#imagePreviewModal').modal('show');
         });
     });
 </script>
