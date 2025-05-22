@@ -51,7 +51,7 @@ class Home extends BaseController
 
     public function marketingDashboard()
     {
-        $data = [];
+        $data = $this->getMarketingDashboardData();
         return view("home/marketing-dashboard", $data);
     }
 
@@ -1406,6 +1406,33 @@ class Home extends BaseController
             return 0;
 
         return ($netIncome / $totalAssets) * 100;
+    }
+
+    protected function getMarketingDashboardData()
+    {
+        // Fetch boards with image, name, address, status
+        $boards = $this->billboardModel
+            ->select('billboards.*, billboards.name, billboards.area as address, billboards.status, billboards.image_url')
+            ->findAll();
+
+        // Count by status
+        $statusCounts = [
+            'total' => count($boards),
+            'available' => 0,
+            'booked' => 0,
+            'inactive' => 0,
+            'under_maintenance' => 0
+        ];
+        foreach ($boards as $b) {
+            if ($b['status'] == 'active') $statusCounts['available']++;
+            if ($b['status'] == 'booked') $statusCounts['booked']++;
+            if ($b['status'] == 'inactive') $statusCounts['inactive']++;
+            if ($b['status'] == 'under_maintenance') $statusCounts['under_maintenance']++;
+        }
+        return [
+            'boards' => $boards,
+            'statusCounts' => $statusCounts
+        ];
     }
 
 }

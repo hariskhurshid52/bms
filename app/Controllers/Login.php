@@ -44,7 +44,11 @@ class Login extends BaseController
 
                 $sessionData = $this->sessionData($user);
                 $this->session->set('loggedIn', $sessionData);
-                return redirect()->to('/');
+                if ($sessionData['roleId'] == 3) {
+                    return redirect()->to(route_to('marketing-dashboard'));
+                } else {
+                    return redirect()->to(route_to('dashboard'));
+                }
             } else {
                 $this->session->setFlashdata('postData', [
                     'status' => 'error',

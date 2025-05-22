@@ -61,18 +61,16 @@ $current_route = isset($current_route['as']) ? $current_route['as'] : 'dashboard
 
     <!-- LOGO -->
     <div class="logo-box">
-        <a href="<?= route_to('dashboard') ?>" class="logo logo-dark text-center">
+        <a href="<?= session()->get('loggedIn')['roleId'] == 3 ? route_to('marketing-dashboard') : route_to('dashboard') ?>" class="logo logo-dark text-center">
             <span class="logo-sm">
                 <img src="<?= base_url() ?>assets/images/logos/logo-main.png" alt="" height="24" style="filter: brightness(0) invert(1);">
-                <!-- <span class="logo-lg-text-light">Minton</span> -->
             </span>
             <span class="logo-lg">
                 <img src="<?= base_url() ?>assets/images/logos/logo-main.png" alt="" height="35" style="filter: brightness(0) invert(1);">
-                <!-- <span class="logo-lg-text-light">M</span> -->
             </span>
         </a>
 
-        <a href="<?= route_to('dashboard') ?>" class="logo logo-light text-center">
+        <a href="<?= session()->get('loggedIn')['roleId'] == 3 ? route_to('marketing-dashboard') : route_to('dashboard') ?>" class="logo logo-light text-center">
             <span class="logo-sm">
                 <img src="<?= base_url() ?>assets/images/logos/logo-main.png" alt="" height="24" style="filter: brightness(0) invert(1);">
             </span>
@@ -91,7 +89,7 @@ $current_route = isset($current_route['as']) ? $current_route['as'] : 'dashboard
                 <li class="menu-title">Navigation</li>
 
                 <li>
-                    <a href="<?= route_to('dashboard') ?>" class="waves-effect">
+                    <a href="<?= session()->get('loggedIn')['roleId'] == 3 ? route_to('marketing-dashboard') : route_to('dashboard') ?>" class="waves-effect">
                         <i class="ri-dashboard-line"></i>
                         <span> Dashboards </span>
                     </a>
