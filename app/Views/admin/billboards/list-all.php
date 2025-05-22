@@ -115,6 +115,7 @@
                     <table class="table table-hover" id="dtBillboard">
                         <thead>
                             <tr>
+                                <th>Image</th>
                                 <th>Name</th>
                                 <th>Type</th>
                                 <th>Booking Price</th>

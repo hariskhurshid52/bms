@@ -144,7 +144,9 @@ class Billboards extends BaseController
         $rows = [];
         foreach ($list as $key => $value) {
             $statusClass = $value['status'] == "active" ? 'success' : ($value['status'] == "inactive" ? 'danger' : 'warning');
+            $imageTag = '<img src="' . (!empty($value['image_url']) ? base_url($value['image_url']) : base_url('assets/images/no-image.png')) . '" alt="Billboard" class="img-thumbnail" style="max-width: 60px; max-height: 40px;">';
             $rows[] = [
+                $imageTag,
                 $value['name'],
                 $value['typeName'],
                 $value['booking_price'],
