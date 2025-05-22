@@ -66,6 +66,69 @@ class Home extends BaseController
         $userId = $this->user['userId'];
         $isAdmin = $this->user['roleId'] == 1;
 
+        // --- NEW DASHBOARD DATA ---
+        $totalBookings = $this->orderModel->countAll();
+        $activeBookings = $this->orderModel->where('status_id', 1)->countAllResults();
+        $totalExpenses = $this->expenseModel->selectSum('amount')->first()['amount'] ?? 0;
+        $totalHoardings = $this->billboardModel->countAll();
+        $activeHoardings = $this->billboardModel->where('status', 'active')->countAllResults();
+        $totalRevenue = $this->orderModel->selectSum('amount')->first()['amount'] ?? 0;
+
+        // Calculate booking growth (active bookings this month vs last month)
+        $activeBookingsThisMonth = $this->orderModel->where('status_id', 1)
+            ->where('MONTH(created_at)', date('m'))
+            ->where('YEAR(created_at)', date('Y'))
+            ->countAllResults();
+        $activeBookingsLastMonth = $this->orderModel->where('status_id', 1)
+            ->where('MONTH(created_at)', date('m', strtotime('-1 month')))
+            ->where('YEAR(created_at)', date('Y', strtotime('-1 month')))
+            ->countAllResults();
+        $bookingGrowth = $activeBookingsLastMonth > 0
+            ? round((($activeBookingsThisMonth - $activeBookingsLastMonth) / $activeBookingsLastMonth) * 100)
+            : 0;
+
+        // Calculate revenue growth (completed orders this month vs last month)
+        $totalRevenueThisMonth = $this->orderModel->where('status_id', 2)
+            ->where('MONTH(created_at)', date('m'))
+            ->where('YEAR(created_at)', date('Y'))
+            ->selectSum('amount')->first()['amount'] ?? 0;
+        $totalRevenueLastMonth = $this->orderModel->where('status_id', 2)
+            ->where('MONTH(created_at)', date('m', strtotime('-1 month')))
+            ->where('YEAR(created_at)', date('Y', strtotime('-1 month')))
+            ->selectSum('amount')->first()['amount'] ?? 0;
+        $revenueGrowth = $totalRevenueLastMonth > 0
+            ? round((($totalRevenueThisMonth - $totalRevenueLastMonth) / $totalRevenueLastMonth) * 100)
+            : 0;
+
+        // Bookings per month (last 6 months)
+        $bookingsPerMonth = $this->orderModel
+            ->select("DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as count")
+            ->groupBy('month')
+            ->orderBy('month', 'desc')
+            ->limit(6)
+            ->findAll();
+
+        // Expenses per month (last 6 months)
+        $expensesPerMonth = $this->expenseModel
+            ->select("DATE_FORMAT(created_at, '%Y-%m') as month, SUM(amount) as total")
+            ->groupBy('month')
+            ->orderBy('month', 'desc')
+            ->limit(6)
+            ->findAll();
+
+        // Booking status distribution
+        $bookingStatus = $this->orderModel
+            ->select('status_id, COUNT(*) as count')
+            ->groupBy('status_id')
+            ->findAll();
+
+        // Expense type breakdown
+        $expenseTypes = $this->expenseModel
+            ->select('type, SUM(amount) as total')
+            ->groupBy('type')
+            ->findAll();
+        // --- END NEW DASHBOARD DATA ---
+
         // Get total billboards and growth
         $billboardQuery = $this->billboardModel;
         if (!$isAdmin) {
@@ -74,29 +137,6 @@ class Home extends BaseController
         $totalBillboards = $billboardQuery->countAll();
         $lastMonthBillboards = $billboardQuery->where('created_at <', date('Y-m-d H:i:s', strtotime('-1 month')))->countAllResults();
         $billboardGrowth = $lastMonthBillboards > 0 ? round((($totalBillboards - $lastMonthBillboards) / $lastMonthBillboards) * 100) : 0;
-
-        // Get active bookings and growth (status_id 1 is active)
-        $orderQuery = $this->orderModel;
-        if (!$isAdmin) {
-            $orderQuery->where('added_by', $userId);
-        }
-        $activeBookings = $orderQuery->where('status_id', 1)->countAllResults();
-        $lastMonthBookings = $orderQuery->where('status_id', 1)
-            ->where('created_at <', date('Y-m-d H:i:s', strtotime('-1 month')))
-            ->countAllResults();
-        $bookingGrowth = $lastMonthBookings > 0 ? round((($activeBookings - $lastMonthBookings) / $lastMonthBookings) * 100) : 0;
-
-        // Get total revenue and growth (status_id 2 is completed)
-        $revenueQuery = $this->orderModel;
-        if (!$isAdmin) {
-            $revenueQuery->where('added_by', $userId);
-        }
-        $totalRevenue = $revenueQuery->selectSum('amount')->where('status_id', 2)->first()['amount'] ?? 0;
-        $lastMonthRevenue = $revenueQuery->selectSum('amount')
-            ->where('status_id', 2)
-            ->where('created_at <', date('Y-m-d H:i:s', strtotime('-1 month')))
-            ->first()['amount'] ?? 0;
-        $revenueGrowth = $lastMonthRevenue > 0 ? round((($totalRevenue - $lastMonthRevenue) / $lastMonthRevenue) * 100) : 0;
 
         // Get total clients and growth
         $clientQuery = $this->customerModel;
@@ -203,7 +243,17 @@ class Home extends BaseController
             'cashFlow' => $data['cashFlow'],
             'currentRatio' => $data['currentRatio'],
             'debtToEquity' => $data['debtToEquity'],
-            'returnOnAssets' => $data['returnOnAssets']
+            'returnOnAssets' => $data['returnOnAssets'],
+            'totalBookings' => $totalBookings,
+            'activeBookings' => $activeBookings,
+            'totalExpenses' => $totalExpenses,
+            'totalHoardings' => $totalHoardings,
+            'activeHoardings' => $activeHoardings,
+            'totalRevenue' => $totalRevenue,
+            'bookingsPerMonth' => array_reverse($bookingsPerMonth),
+            'expensesPerMonth' => array_reverse($expensesPerMonth),
+            'bookingStatus' => $bookingStatus,
+            'expenseTypes' => $expenseTypes
         ];
     }
 
