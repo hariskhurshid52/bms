@@ -1,4 +1,17 @@
 <?= $this->section('styles') ?>
+<style>
+    .form-section-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #256029;
+        border-left: 4px solid #388e3c;
+        padding-left: 12px;
+        margin-top: 32px;
+        margin-bottom: 18px;
+        background: linear-gradient(90deg, #e8f5e9 0%, #fff 100%);
+        border-radius: 4px;
+    }
+</style>
 <?= $this->endSection() ?>
 <?= $this->extend('common/default-nav'); ?> <?= $this->section('content') ?>
 
@@ -17,6 +30,7 @@
                             
                             <?= csrf_field() ?>
 
+                            <div class="form-section-title"><i class="bi bi-cash-coin"></i> Expense Details</div>
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="mb-2">

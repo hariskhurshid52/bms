@@ -1,7 +1,17 @@
 <?= $this->section('styles') ?>
 <link href="<?= base_url('assets/libs/dropzone/min/dropzone.min.css') ?>" rel="stylesheet" type="text/css" />
 <style>
-
+    .form-section-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #256029;
+        border-left: 4px solid #388e3c;
+        padding-left: 12px;
+        margin-top: 32px;
+        margin-bottom: 18px;
+        background: linear-gradient(90deg, #e8f5e9 0%, #fff 100%);
+        border-radius: 4px;
+    }
 </style>
 <?= $this->endSection() ?>
 <?= $this->extend('common/default-nav') ?> <?= $this->section('content') ?>
@@ -19,8 +29,8 @@
 
                 <form method="POST" action="<?= route_to('admin.billboard.store') ?>">
                     <?= csrf_field(); ?>
-
-                    <!-- BASIC DETAILS -->
+                    <!-- Section: Basic Details -->
+                    <div class="form-section-title"><i class="bi bi-card-text"></i> Basic Details</div>
                     <div class="row">
                         <div class="col-md-6 mb-2">
                             <label for="name" class="form-label"> <strong class="text-danger">*</strong> Name</label>
@@ -43,7 +53,8 @@
                         </div>
                     </div>
 
-                    <!-- SIZE & DIMENSIONS -->
+                    <!-- Section: Size & Dimensions -->
+                    <div class="form-section-title"><i class="bi bi-arrows-angle-expand"></i> Size & Dimensions</div>
                     <div class="row">
                         <div class="col-md-4 mb-2">
                             <label for="width" class="form-label"> <strong class="text-danger">*</strong> Width</label>
@@ -65,7 +76,8 @@
                         </div>
                     </div>
 
-                    <!-- LOCATION -->
+                    <!-- Section: Location -->
+                    <div class="form-section-title"><i class="bi bi-geo-alt"></i> Location</div>
                     <div class="row">
                         <div class="col-md-6 mb-2">
                             <label for="city" class="form-label"> <strong class="text-danger">*</strong> City</label>
@@ -90,7 +102,8 @@
                         </div>
                     </div>
 
-                    <!-- CONTRACT & AUTHORITY INFO -->
+                    <!-- Section: Contract & Authority Info -->
+                    <div class="form-section-title"><i class="bi bi-file-earmark-text"></i> Contract & Authority Info</div>
                     <div class="row">
                         <div class="col-md-6 mb-2">
                             <label for="contract_duration" class="form-label"> <strong class="text-danger">*</strong> Contract Duration (in years)</label>
@@ -121,7 +134,8 @@
                         </div>
                     </div>
 
-                    <!-- FINANCIALS -->
+                    <!-- Section: Financials -->
+                    <div class="form-section-title"><i class="bi bi-cash-coin"></i> Financials</div>
                     <div class="row">
                         <div class="col-md-6 mb-2">
                             <label for="booking_price" class="form-label"> <strong class="text-danger">*</strong> Minimum Booking Price</label>
@@ -141,7 +155,8 @@
 
                     </div>
 
-                    <!-- MEDIA -->
+                    <!-- Section: Media -->
+                    <div class="form-section-title"><i class="bi bi-image"></i> Media</div>
                     <div class="row">
                         <div class="col-md-6 mb-2">
                             <label for="image_url" class="form-label">Billboard Image</label>
@@ -155,7 +170,8 @@
                         </div>
                     </div>
 
-                    <!-- STATUS -->
+                    <!-- Section: Status -->
+                    <div class="form-section-title"><i class="bi bi-info-circle"></i> Status</div>
                     <div class="row">
                         <div class="col-md-6 mb-2">
                             <label for="status" class="form-label"> <strong class="text-danger">*</strong> Status</label>
