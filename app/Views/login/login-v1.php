@@ -30,7 +30,7 @@
     <script src="<?= base_url('assets/vendors/js/vendor.bundle.addons.js') ?>"></script>
 </head>
 
-<body>
+<body class="loading">
 <div class="container-scroller">
     <div class="container-fluid page-body-wrapper full-page-wrapper">
         <div class="content-wrapper auth p-0 theme-two">

@@ -19,151 +19,135 @@ $theme_url = base_url() . 'assets/';
 
     <!-- App css -->
     <link href="<?= $theme_url ?>/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-
     <link href="<?= $theme_url ?>libs/jquery-toast-plugin/jquery.toast.min.css" rel="stylesheet" type="text/css"/>
-
-    
     <link href="<?= $theme_url ?>/css/app.min.css" rel="stylesheet" type="text/css" id="app-stylesheet" />
-
-    <!-- icons -->
     <link href="<?= $theme_url ?>/css/icons.min.css" rel="stylesheet" type="text/css" />
 
     <!-- Theme Config Js -->
     <script src="<?= $theme_url ?>/js/config.js"></script>
-
-
 </head>
 
-<body class="loading">
+<body class="auth-fluid-pages pb-0">
+    <div class="auth-fluid">
+        <!-- Auth fluid right content -->
+        <div class="auth-fluid-right">
+            
+        </div>
 
-<div class="account-pages mt-5 mb-5">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8 col-lg-6 col-xl-4">
-                <div class="card">
+        <!-- Auth fluid left content -->
+        <div class="auth-fluid-form-box">
+            <div class="align-items-center d-flex h-100">
+                <div class="card-body">
+                    <!-- Logo -->
+                    <div class="text-center text-lg-start">
+                        <div class="auth-logo d-flex justify-content-center">
+                            <a href="<?=route_to('home')?>" class="logo logo-dark text-center">
+                                <span class="logo-lg">
+                                    <img src="<?=base_url()?>/assets/images/logos/logo-login.png" alt="" height="70">
+                                </span>
+                            </a>
+                            <a href="<?=route_to('home')?>" class="logo logo-light text-center">
+                                <span class="logo-lg">
+                                    <img src="<?=base_url()?>/assets/images/logos/logo-login.png" alt="" height="70">
+                                </span>
+                            </a>
+                        </div>
+                    </div>
 
-                    <div class="card-body p-4">
+                    <!-- title-->
+                    <h4 class="mt-4">Sign In</h4>
+                    <p class="text-muted mb-4">Enter your username or email address and password to access panel.</p>
 
-                        <div class="text-center w-75 m-auto">
-                            <div class="auth-logo">
-                                <a href="index-2.html" class="logo logo-dark text-center">
-                                            <span class="logo-lg">
-                                                <img src="<?=base_url()?>/assets/images/logos/logo-dark.png" alt="" height="70">
-                                            </span>
-                                </a>
-
-                                <a href="index-2.html" class="logo logo-light text-center">
-                                            <span class="logo-lg">
-                                                <img src="<?=base_url()?>/assets/images/logos/logo-light.png" alt="" height="70">
-                                            </span>
-                                </a>
-                            </div>
-                            <p class="text-muted mb-4 mt-3">Enter your username or email address and password to access panel.</p>
+                    <!-- form -->
+                    <form method="post" action="<?=route_to('login.verify')?>">
+                        <?=csrf_field()?>
+                        <div class="mb-2">
+                            <label for="emailaddress" class="form-label">Email / Username</label>
+                            <input class="form-control" type="text" name="username" id="emailaddress" placeholder="Enter your username/email">
                         </div>
 
-                        <form method="post" action="<?=route_to('login.verify')?>">
-                            <?=csrf_field()?>
-                            <div class="mb-2">
-                                <label for="emailaddress" class="form-label">Email / Username</label>
-                                <input class="form-control" type="text" name="username" id="emailaddress"  placeholder="Enter your username/email">
-                            </div>
-
-                            <div class="mb-2">
-                                <label for="password" class="form-label">Password</label>
-                                <div class="input-group input-group-merge">
-                                    <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password">
-
-                                    <div class="input-group-text" data-password="false">
-                                        <span class="password-eye"></span>
-                                    </div>
+                        <div class="mb-2">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="input-group input-group-merge">
+                                <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password">
+                                <div class="input-group-text" data-password="false">
+                                    <span class="password-eye"></span>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="mb-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="checkbox-signin" checked>
-                                    <label class="form-check-label" for="checkbox-signin">
-                                        Remember me
-                                    </label>
-                                </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="checkbox-signin" checked>
+                                <label class="form-check-label" for="checkbox-signin">Remember me</label>
                             </div>
+                        </div>
 
-                            <div class="d-grid mb-0 text-center">
-                                <button class="btn btn-primary" type="submit"> Log In </button>
-                            </div>
+                        <div class="d-grid text-center">
+                            <button class="btn btn-primary" type="submit">Log In</button>
+                        </div>
+                    </form>
+                    <!-- end form-->
 
-                        </form>
-
-
-
-                    </div> <!-- end card-body -->
+                    <!-- Footer-->
+                    <footer class="footer footer-alt">
+                        <p class="text-muted">Don't have an account? <a href="auth-register-2.html" class="text-primary fw-medium ms-1">Sign Up</a></p>
+                    </footer>
                 </div>
-                <!-- end card -->
-
-
-                <!-- end row -->
-
-            </div> <!-- end col -->
+            </div>
         </div>
-        <!-- end row -->
     </div>
-    <!-- end container -->
-</div>
-<!-- end page -->
 
+    <!-- Vendor js -->
+    <script src="<?= $theme_url ?>/js/vendor.min.js"></script>
+    <script src="<?= $theme_url ?>libs/jquery-toast-plugin/jquery.toast.min.js"></script>
 
-
-<!-- Vendor js -->
-<script src="<?= $theme_url ?>/js/vendor.min.js"></script>
-<script src="<?= $theme_url ?>libs/jquery-toast-plugin/jquery.toast.min.js"></script>
-
-<!-- App js -->
-<script src="<?= $theme_url ?>/js/app.min.js"></script>
-<script>
-    (function ($) {
-        showSuccessToast = function (msg) {
-            'use strict';
-            resetToastPosition();
-            $.toast({
-                heading: 'Success',
-                text: msg,
-                showHideTransition: 'slide',
-                icon: 'success',
-                loaderBg: '#f96868',
-                position: 'top-right'
-            })
-        };
-        showDangerToast = function (msg) {
-            'use strict';
-            resetToastPosition();
-            $.toast({
-                heading: 'Error',
-                text: msg,
-                showHideTransition: 'slide',
-                icon: 'error',
-                loaderBg: '#f2a654',
-                position: 'top-right'
-            })
-        };
-        resetToastPosition = function () {
-            $('.jq-toast-wrap').removeClass('bottom-left bottom-right top-left top-right mid-center'); // to remove previous position class
-            $(".jq-toast-wrap").css({
-                "top": "",
-                "left": "",
-                "bottom": "",
-                "right": ""
-            }); //to remove previous position style
-        }
-    })(jQuery);
-    <?php  if(session()->has('postData')): $data = session()->getFlashdata('postData'); ?>
-    <?php if($data['status'] == "success"): ?>
-    showSuccessToast('<?=$data['message']?>')
-    <?php else: ?>
-    showDangerToast('<?=$data['message']?>')
-    <?php endif; ?>
-    <?php endif; ?>
-</script>
+    <!-- App js -->
+    <script src="<?= $theme_url ?>/js/app.min.js"></script>
+    <script>
+        (function ($) {
+            showSuccessToast = function (msg) {
+                'use strict';
+                resetToastPosition();
+                $.toast({
+                    heading: 'Success',
+                    text: msg,
+                    showHideTransition: 'slide',
+                    icon: 'success',
+                    loaderBg: '#f96868',
+                    position: 'top-right'
+                })
+            };
+            showDangerToast = function (msg) {
+                'use strict';
+                resetToastPosition();
+                $.toast({
+                    heading: 'Error',
+                    text: msg,
+                    showHideTransition: 'slide',
+                    icon: 'error',
+                    loaderBg: '#f2a654',
+                    position: 'top-right'
+                })
+            };
+            resetToastPosition = function () {
+                $('.jq-toast-wrap').removeClass('bottom-left bottom-right top-left top-right mid-center');
+                $(".jq-toast-wrap").css({
+                    "top": "",
+                    "left": "",
+                    "bottom": "",
+                    "right": ""
+                });
+            }
+        })(jQuery);
+        <?php  if(session()->has('postData')): $data = session()->getFlashdata('postData'); ?>
+        <?php if($data['status'] == "success"): ?>
+        showSuccessToast('<?=$data['message']?>')
+        <?php else: ?>
+        showDangerToast('<?=$data['message']?>')
+        <?php endif; ?>
+        <?php endif; ?>
+    </script>
 </body>
-
 </html>
 
