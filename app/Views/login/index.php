@@ -36,7 +36,7 @@ $theme_url = base_url() . 'assets/';
 
         <!-- Auth fluid left content -->
         <div class="auth-fluid-form-box">
-            <div class="align-items-center d-flex h-100">
+            <div class="align-items-cente d-flex h-100">
                 <div class="card-body">
                     <!-- Logo -->
                     <div class="text-center text-lg-start">
@@ -89,10 +89,7 @@ $theme_url = base_url() . 'assets/';
                     </form>
                     <!-- end form-->
 
-                    <!-- Footer-->
-                    <footer class="footer footer-alt">
-                        <p class="text-muted">Don't have an account? <a href="auth-register-2.html" class="text-primary fw-medium ms-1">Sign Up</a></p>
-                    </footer>
+                    
                 </div>
             </div>
         </div>
