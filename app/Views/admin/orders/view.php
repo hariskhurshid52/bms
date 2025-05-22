@@ -31,8 +31,8 @@
                     <div class="col-md-3">
                         <div class="card bg-success text-white">
                             <div class="card-body">
-                                <h5 class="card-title">Advance Payment</h5>
-                                <h3 class="mb-0">RS <?= number_format($order['advPayment'] ?? 0, 2) ?></h3>
+                                <h5 class="card-title">Paid Amount</h5>
+                                <h3 class="mb-0">RS <?= number_format($totalPaid, 2) ?></h3>
                                 <small>Paid Amount</small>
                             </div>
                         </div>
@@ -41,7 +41,7 @@
                         <div class="card bg-warning text-white">
                             <div class="card-body">
                                 <h5 class="card-title">Remaining Balance</h5>
-                                <h3 class="mb-0">RS <?= number_format($order['total_price'] - ($order['advPayment'] ?? 0), 2) ?></h3>
+                                <h3 class="mb-0">RS <?= number_format($order['total_price'] - $totalPaid, 2) ?></h3>
                                 <small>Due Amount</small>
                             </div>
                         </div>
@@ -121,12 +121,12 @@
                                         <td>RS <?= number_format($order['total_price'], 2) ?></td>
                                     </tr>
                                     <tr>
-                                        <th>Advance Payment</th>
-                                        <td>RS <?= number_format($order['advPayment'] ?? 0, 2) ?></td>
+                                        <th>Paid Amount</th>
+                                        <td>RS <?= number_format($totalPaid, 2) ?></td>
                                     </tr>
                                     <tr>
                                         <th>Remaining Balance</th>
-                                        <td>RS <?= number_format($order['total_price'] - ($order['advPayment'] ?? 0), 2) ?></td>
+                                        <td>RS <?= number_format($order['total_price'] - $totalPaid, 2) ?></td>
                                     </tr>
                                 </table>
                             </div>

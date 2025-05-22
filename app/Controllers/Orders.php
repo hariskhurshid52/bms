@@ -348,6 +348,11 @@ class Orders extends BaseController
             ->orderBy('payments.created_at', 'DESC')
             ->findAll();
 
+        $data['totalPaid'] = 0;
+        foreach ($data['payments'] as $payment) {
+            $data['totalPaid'] += $payment['amount'];
+        }
+
         return view("admin/orders/view", $data);
     }
 
