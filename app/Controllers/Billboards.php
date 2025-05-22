@@ -103,28 +103,43 @@ class Billboards extends BaseController
             ->join('cities', 'cities.id = billboards.city_id', 'left')
             ->join('users', 'users.id = billboards.added_by', 'left');
 
+        // DataTables search box
         if (!empty($inputs['search']['value'])) {
             $searchValue = $inputs['search']['value'];
             $builder->groupStart()
                 ->like('billboards.name', $searchValue)
-                ->like('billboards.description', $searchValue)
-                ->like('billboards.address', $searchValue)
-                ->like('billboards.area', $searchValue)
-                ->like('billboards.width', $searchValue)
-                ->like('billboards.height', $searchValue)
-                ->like('billboard_types.name', $searchValue)
-                ->like('users.name', $searchValue)
-                ->like('users.email', $searchValue)
-                ->like('cities.name', $searchValue)
+                ->orLike('billboards.description', $searchValue)
+                ->orLike('billboards.address', $searchValue)
+                ->orLike('billboards.area', $searchValue)
+                ->orLike('billboards.width', $searchValue)
+                ->orLike('billboards.height', $searchValue)
+                ->orLike('billboard_types.name', $searchValue)
+                ->orLike('users.name', $searchValue)
+                ->orLike('users.email', $searchValue)
+                ->orLike('cities.name', $searchValue)
                 ->groupEnd();
         }
+
+        // Custom filters
+        if (!empty($inputs['city'])) {
+            $builder->where('cities.name', $inputs['city']);
+        }
+        if (!empty($inputs['area'])) {
+            $builder->where('billboards.area', $inputs['area']);
+        }
+        if (!empty($inputs['type'])) {
+            $builder->where('billboard_types.name', $inputs['type']);
+        }
+        if (!empty($inputs['status'])) {
+            $builder->where('billboards.status', $inputs['status']);
+        }
+
         $totalRecords = $builder->countAllResults(false);
         $builder->limit($inputs['length'], $inputs['start'])
             ->orderBy('billboards.id', 'DESC');
 
         $list = $builder->select('
                 billboards.*, cities.name as cityName, users.name as addedBy, billboard_types.name as typeName
-               
             ')->get()->getResultArray();
         $rows = [];
         foreach ($list as $key => $value) {
@@ -139,8 +154,10 @@ class Billboards extends BaseController
                 '<span class="badge bg-' . $statusClass . '">' . ucfirst($value['status']) . '</span>',
                 date('d-m-Y', strtotime($value['installation_date'])),
                 date('d-m-Y', strtotime($value['created_at'])),
-                '<a href="' . route_to('admin.billboard.edit', $value['id']) . '" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a>&nbsp;<a href="' . route_to('admin.billboard.detail', $value['id']) . '" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>',
-
+                '<div class="btn-group" role="group" aria-label="Actions">'
+                . '<a href="' . route_to('admin.billboard.edit', $value['id']) . '" class="btn btn-sm btn-outline-primary" title="Edit"><i class="fa fa-edit"></i></a>'
+                . '<a href="' . route_to('admin.billboard.detail', $value['id']) . '" class="btn btn-sm btn-outline-success" title="View"><i class="fa fa-eye"></i></a>'
+                . '</div>',
             ];
         }
         return response()->setJSON([

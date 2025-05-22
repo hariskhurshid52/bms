@@ -122,8 +122,9 @@ class Expense extends BaseController
                 date('d-m-Y', strtotime($value['expenseDate'])),
                 $value['addedByName'],
                 date('d-m-Y', strtotime($value['addedAt'])),
-                '<a href="' . route_to('admin.expense.edit', $value['id']) . '" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a>',
-
+                '<div class="btn-group" role="group" aria-label="Actions">'
+                . '<a href="' . route_to('admin.expense.edit', $value['id']) . '" class="btn btn-sm btn-outline-primary" title="Edit"><i class="fa fa-edit"></i></a>'
+                . '</div>',
             ];
         }
         return response()->setJSON([

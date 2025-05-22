@@ -49,8 +49,7 @@
                                 <div class="col-md-12">
                                     <div class="mb-2">
                                         <label for="billingAddress" class="form-label"> <strong class="text-danger">*</strong> Billing Address</label>
-                                        <textarea class="form-control" id="billingAddress" name="billingAddress"
-                                                  rows="3"><?= old('billingAddress'); ?></textarea>
+                                        <textarea class="form-control" id="billingAddress" name="billingAddress" rows="3" required><?= old('billingAddress'); ?></textarea>
                                     </div>
                                 </div>
                                 <div class="col-md-6">

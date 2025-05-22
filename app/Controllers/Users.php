@@ -114,8 +114,9 @@ class Users extends BaseController
                 $value['email'],
                 $value['roleName'],
                 date('d-m-Y', strtotime($value['created_at'])),
-                '<a href="' . route_to('admin.users.edit', $value['id']) . '" class="btn btn-sm btn-primary mr-5"><i class="fa fa-edit"></i></a>',
-
+                '<div class="btn-group" role="group" aria-label="Actions">'
+                . '<a href="' . route_to('admin.users.edit', $value['id']) . '" class="btn btn-sm btn-outline-primary" title="Edit"><i class="fa fa-edit"></i></a>'
+                . '</div>',
             ];
         }
         return response()->setJSON([
@@ -279,8 +280,9 @@ class Users extends BaseController
                 $value['phone'],
                 ucfirst($value['customer_type']),
                 date('d-m-Y', strtotime($value['created_at'])),
-                '<a href="' . route_to('admin.customers.edit', $value['id']) . '" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a>',
-
+                '<div class="btn-group" role="group" aria-label="Actions">'
+                . '<a href="' . route_to('admin.customers.edit', $value['id']) . '" class="btn btn-sm btn-outline-primary" title="Edit"><i class="fa fa-edit"></i></a>'
+                . '</div>',
             ];
         }
         return response()->setJSON([

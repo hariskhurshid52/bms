@@ -171,7 +171,6 @@ class Orders extends BaseController
                 $value['display'],
                 $value['billboardName'],
                 $value['billboardArea'],
-
                 $value['statusName'],
                 date('d-m-Y', strtotime($value['startDate'])),
                 date('d-m-Y', strtotime($value['endDate'])),
@@ -180,9 +179,10 @@ class Orders extends BaseController
                 empty($value['paidAmount']) ? '0 PKR' : $value['paidAmount'] . ' PKR',
                 is_null($value['payment_due_date']) ? 'N/A' : date('d-m-Y', strtotime($value['payment_due_date'])),
                 date('d-m-Y', strtotime($value['created_at'])),
-                '<a href="' . route_to('admin.order.view', $value['id']) . '" class="btn btn-sm btn-primary me-1"><i class="fa fa-eye"></i></a>&nbsp;' .
-                '<a href="' . route_to('admin.order.edit', $value['id']) . '" class="btn btn-sm btn-primary "><i class="fa fa-edit"></i></a>',
-
+                '<div class="btn-group" role="group" aria-label="Actions">'
+                . '<a href="' . route_to('admin.order.view', $value['id']) . '" class="btn btn-sm btn-outline-success" title="View"><i class="fa fa-eye"></i></a>'
+                . '<a href="' . route_to('admin.order.edit', $value['id']) . '" class="btn btn-sm btn-outline-primary" title="Edit"><i class="fa fa-edit"></i></a>'
+                . '</div>',
             ];
         }
         return response()->setJSON([
