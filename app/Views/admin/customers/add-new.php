@@ -1,7 +1,19 @@
 <?= $this->section('styles') ?>
+<style>
+    .form-section-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #256029;
+        border-left: 4px solid #388e3c;
+        padding-left: 12px;
+        margin-top: 32px;
+        margin-bottom: 18px;
+        background: linear-gradient(90deg, #e8f5e9 0%, #fff 100%);
+        border-radius: 4px;
+    }
+</style>
 <?= $this->endSection() ?>
 <?= $this->extend('common/default-nav') ?> <?= $this->section('content') ?>
-
 
     <div class="row mt-4">
         <div class="col-md-12">
@@ -9,72 +21,49 @@
                 <div class="card-body">
                     <h4 class="header-title">Customer Registration <a href="<?= route_to('admin.customers.list') ?>"   class="btn btn-primary btn-sm pull-right"  role="button">List All</a></h4>
                     <hr/>
-                    <div class="row">
-                        <form role="form" method="POST" action="<?= route_to('admin.customer.store') ?>">
-                            <?= csrf_field(); ?>
-                            <!-- Customer's Personal Information -->
-                            <h5 class="mb-3">Personal Information</h5>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-2">
-                                        <label for="firstName" class="form-label"> <strong class="text-danger">*</strong> First Name</label>
-                                        <input type="text" class="form-control" id="firstName" name="firstName"
-                                               value="<?= old('firstName'); ?>" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-2">
-                                        <label for="email" class="form-label"> <strong class="text-danger">*</strong> Email</label>
-                                        <input type="email" class="form-control" id="email" name="email"
-                                               value="<?= old('email'); ?>" aria-describedby="emailHelp" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-2">
-                                        <label for="phone" class="form-label"> <strong class="text-danger">*</strong> Phone</label>
-                                        <input type="text" class="form-control" id="phone" name="phone"
-                                               value="<?= old('phone'); ?>"
-                                               required>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-2">
-                                        <label for="contactPerson" class="form-label">Contact Person</label>
-                                        <input type="text" class="form-control" id="contactPerson" name="contactPerson"
-                                               value="<?= old('contactPerson'); ?>"
-                                               required>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="mb-2">
-                                        <label for="billingAddress" class="form-label"> <strong class="text-danger">*</strong> Billing Address</label>
-                                        <textarea class="form-control" id="billingAddress" name="billingAddress" rows="3" required><?= old('billingAddress'); ?></textarea>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-2">
-                                        <label for="customerType" class="form-label">Client Type</label>
-
-                                        <select name="customerType" id="customerType" class="form-control" required>
-                                            <?php foreach ([ 'customer' => 'Customer','agency' => 'Agency'] as $k => $v): ?>
-                                                <option value="<?= $k ?>"><?= $v ?></option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                </div>
+                    <form role="form" method="POST" action="<?= route_to('admin.customer.store') ?>">
+                        <?= csrf_field(); ?>
+                        <!-- Section: Personal Information -->
+                        <div class="form-section-title"><i class="bi bi-person"></i> Personal Information</div>
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                <label for="firstName" class="form-label"> <strong class="text-danger">*</strong> First Name</label>
+                                <input type="text" class="form-control" id="firstName" name="firstName" value="<?= old('firstName'); ?>" required>
                             </div>
-
-
-
-
-                            <!-- Submit Button -->
-                            <div class="mt-4">
-                                <button type="submit" class="btn btn-primary pull-right ">Register Customer</button>
+                            <div class="col-md-6 mb-2">
+                                <label for="email" class="form-label"> <strong class="text-danger">*</strong> Email</label>
+                                <input type="email" class="form-control" id="email" name="email" value="<?= old('email'); ?>" aria-describedby="emailHelp" required>
                             </div>
-                        </form>
-                    </div>
-
+                            <div class="col-md-6 mb-2">
+                                <label for="phone" class="form-label"> <strong class="text-danger">*</strong> Phone</label>
+                                <input type="text" class="form-control" id="phone" name="phone" value="<?= old('phone'); ?>" required>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label for="contactPerson" class="form-label">Contact Person</label>
+                                <input type="text" class="form-control" id="contactPerson" name="contactPerson" value="<?= old('contactPerson'); ?>" required>
+                            </div>
+                        </div>
+                        <!-- Section: Client Details -->
+                        <div class="form-section-title"><i class="bi bi-building"></i> Client Details</div>
+                        <div class="row">
+                            <div class="col-md-12 mb-2">
+                                <label for="billingAddress" class="form-label"> <strong class="text-danger">*</strong> Billing Address</label>
+                                <textarea class="form-control" id="billingAddress" name="billingAddress" rows="3" required><?= old('billingAddress'); ?></textarea>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label for="customerType" class="form-label">Client Type</label>
+                                <select name="customerType" id="customerType" class="form-control" required>
+                                    <?php foreach ([ 'customer' => 'Customer','agency' => 'Agency'] as $k => $v): ?>
+                                        <option value="<?= $k ?>"><?= $v ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- Submit Button -->
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-primary float-end">Register Customer</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
