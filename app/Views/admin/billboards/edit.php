@@ -21,11 +21,11 @@
                     <!-- BASIC DETAILS -->
                     <div class="row">
                         <div class="col-md-6 mb-2">
-                            <label for="name" class="form-label">Name</label>
+                            <label for="name" class="form-label"> <strong class="text-danger">*</strong> Name</label>
                             <input type="text" class="form-control" id="name" name="name" value="<?= $billboard['name']; ?>" required>
                         </div>
                         <div class="col-md-6 mb-2">
-                            <label for="type" class="form-label">Type</label>
+                            <label for="type" class="form-label"> <strong class="text-danger">*</strong> Type</label>
                             <select name="type" id="type" class="form-control" required>
                                 <?php foreach ($billboardTypes as $type): ?>
                                     <option <?= $billboard['billboard_type_id'] == $type['id'] ? 'selected' : '' ?>
@@ -42,15 +42,15 @@
                     <!-- SIZE & DIMENSIONS -->
                     <div class="row">
                         <div class="col-md-4 mb-2">
-                            <label for="width" class="form-label">Width</label>
+                            <label for="width" class="form-label"> <strong class="text-danger">*</strong> Width</label>
                             <input type="number" class="form-control" id="width" name="width" value="<?= $billboard['width']; ?>" required>
                         </div>
                         <div class="col-md-4 mb-2">
-                            <label for="height" class="form-label">Height</label>
+                            <label for="height" class="form-label"> <strong class="text-danger">*</strong> Height</label>
                             <input type="number" class="form-control" id="height" name="height" value="<?= $billboard['height']; ?>" required>
                         </div>
                         <div class="col-md-4 mb-2">
-                            <label for="size_type" class="form-label">Size Type</label>
+                            <label for="size_type" class="form-label"> <strong class="text-danger">*</strong> Size Type</label>
                             <select name="size_type" id="size_type" class="form-control" required>
                                 <?php foreach (['ft' => 'Feet', 'in' => 'Inches', 'cm' => 'Centimeters', 'm' => 'Meters'] as $k => $v): ?>
                                     <option <?= $billboard['size_type'] == $k ? 'selected' : '' ?> value="<?= $k ?>"><?= $v ?></option>
@@ -62,7 +62,7 @@
                     <!-- LOCATION -->
                     <div class="row">
                         <div class="col-md-6 mb-2">
-                            <label for="city" class="form-label">City</label>
+                            <label for="city" class="form-label"> <strong class="text-danger">*</strong> City</label>
                             <select name="city" id="city" class="form-control select2" required>
                                 <?php foreach ($cities as $v): ?>
                                     <option <?= $billboard['city_id'] == $v['id'] ? 'selected' : '' ?>
@@ -71,15 +71,15 @@
                             </select>
                         </div>
                         <div class="col-md-6 mb-2">
-                            <label for="area" class="form-label">Area/Sector</label>
+                            <label for="area" class="form-label"> <strong class="text-danger">*</strong> Area/Sector</label>
                             <textarea class="form-control" id="area" name="area"><?= $billboard['area']; ?></textarea>
                         </div>
                         <div class="col-md-6 mb-2">
-                            <label for="address" class="form-label">Complete Address</label>
+                            <label for="address" class="form-label"> <strong class="text-danger">*</strong> Complete Address</label>
                             <textarea class="form-control" id="address" name="address"><?= $billboard['address']; ?></textarea>
                         </div>
                         <div class="col-md-6 mb-2">
-                            <label for="traffic_commming_from" class="form-label">Traffic Coming From</label>
+                            <label for="traffic_commming_from" class="form-label"> <strong class="text-danger">*</strong> Traffic Coming From</label>
                             <textarea class="form-control" id="traffic_commming_from" name="traffic_commming_from"><?= $billboard['traffic_commming_from']; ?></textarea>
                         </div>
                     </div>
@@ -87,11 +87,11 @@
                     <!-- CONTRACT & AUTHORITY INFO -->
                     <div class="row">
                         <div class="col-md-6 mb-2">
-                            <label for="contract_duration" class="form-label">Contract Duration (in years)</label>
+                            <label for="contract_duration" class="form-label"> <strong class="text-danger">*</strong> Contract Duration (in years)</label>
                             <input type="number" class="form-control" id="contract_duration" name="contract_duration" value="<?= $billboard['contract_duration']; ?>">
                         </div>
                         <div class="col-md-6 mb-2">
-                            <label for="contract_date" class="form-label">Contract Date</label>
+                            <label for="contract_date" class="form-label"> <strong class="text-danger">*</strong> Contract Date</label>
                             <div class="input-group datepicker" id="picker_contract_date">
                                 <input type="text" class="form-control" id="contract_date" name="contract_date"
                                        data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-autoclose="true"
@@ -99,11 +99,11 @@
                             </div>
                         </div>
                         <div class="col-md-6 mb-2">
-                            <label for="authority_name" class="form-label">Authority Name</label>
+                            <label for="authority_name" class="form-label"> <strong class="text-danger">*</strong> Authority Name</label>
                             <input type="text" class="form-control" id="authority_name" name="authority_name" value="<?= $billboard['authority_name']; ?>">
                         </div>
                         <div class="col-md-6 mb-2">
-                            <label for="installation_date" class="form-label">Installation Date</label>
+                            <label for="installation_date" class="form-label"> <strong class="text-danger">*</strong> Installation Date</label>
                             <div class="input-group datepicker" id="picker_installation_date">
                                 <input type="text" class="form-control" id="installation_date" name="installation_date"
                                        data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-autoclose="true"
@@ -116,15 +116,15 @@
                     <!-- FINANCIALS -->
                     <div class="row">
                         <div class="col-md-6 mb-2">
-                            <label for="booking_price" class="form-label">Minimum Booking Price</label>
+                            <label for="booking_price" class="form-label"> <strong class="text-danger">*</strong> Minimum Booking Price</label>
                             <input type="number" class="form-control" id="booking_price" name="booking_price" value="<?= $billboard['booking_price']; ?>" required>
                         </div>
                         <div class="col-md-6 mb-2">
-                            <label for="monthly_rent" class="form-label">Monthly Rent</label>
+                            <label for="monthly_rent" class="form-label"> <strong class="text-danger">*</strong> Monthly Rent</label>
                             <input type="number" class="form-control" id="monthly_rent" name="monthly_rent" value="<?= $billboard['monthly_rent']; ?>">
                         </div>
                         <div class="col-md-6 mb-2">
-                            <label for="annual_increase" class="form-label">Annual Increase (%)</label>
+                            <label for="annual_increase" class="form-label"> <strong class="text-danger">*</strong> Annual Increase (%)</label>
                             <input type="number" class="form-control" id="annual_increase" name="annual_increase" value="<?= $billboard['annual_increase']; ?>">
                         </div>
                     </div>
@@ -145,7 +145,7 @@
                     <!-- STATUS -->
                     <div class="row">
                         <div class="col-md-6 mb-2">
-                            <label for="status" class="form-label">Status</label>
+                            <label for="status" class="form-label"> <strong class="text-danger">*</strong> Status</label>
                             <select name="status" id="status" class="form-control select2" required>
                                 <?php foreach (['active' => 'Active', 'inactive' => 'Inactive', 'under_maintenance' => 'Under Maintenance'] as $k => $v): ?>
                                     <option <?= $billboard['status'] == $k ? 'selected' : '' ?> value="<?= $k ?>"><?= $v ?></option>

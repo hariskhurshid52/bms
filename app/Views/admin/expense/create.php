@@ -20,7 +20,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="mb-2">
-                                        <label for="billboard" class="form-label">Expense Type</label>
+                                        <label for="type" class="form-label"> <strong class="text-danger">*</strong> Type</label>
                                         <select class="form-control select2" id="type"
                                                 data-placeholder="Select Expense Type"
                                                 name="type">
@@ -58,7 +58,7 @@
                                         </div>
                                     </div>
                                     <div class="mb-2">
-                                        <label for="amount" class="form-label">Amount (PKR)</label>
+                                        <label for="amount" class="form-label"> <strong class="text-danger">*</strong> Amount</label>
                                         <input type="number" class="form-control" id="amount"
                                                name="amount" value="<?= old('amount') ?? '0.00' ?>"/>
                                     </div>
@@ -69,7 +69,7 @@
                                                   name="addtionalInformatoin"><?= old('addtionalInformatoin') ?></textarea>
                                     </div>
                                     <div class="mb-2">
-                                        <label for="expenseDate" class="form-label">Expense Date</label>
+                                        <label for="expense_date" class="form-label"> <strong class="text-danger">*</strong> Expense Date</label>
                                         <div class="input-group position-relative datepicker"
                                              id="expensePicker">
                                             <input autocomplete="off" data-provide="datepicker"

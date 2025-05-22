@@ -51,17 +51,35 @@ class OrderModel extends Model
     ];
 
     protected $validationMessages = [
-        'order_id' => [
-            'required' => 'The order ID is required.',
-            'is_natural_no_zero' => 'The order ID must be a positive integer.'
+        'billboard_id' => [
+            'required' => 'The billboard is required.',
+            'is_natural_no_zero' => 'The billboard ID must be a positive integer.'
         ],
-        'statusId' => [
-            'required' => 'The status ID is required.',
-            'integer' => 'The status ID must be an integer.',
+        'customer_id' => [
+            'required' => 'The customer is required.',
+            'is_natural_no_zero' => 'The customer ID must be a positive integer.'
         ],
-        'added_by' => [
-            'required' => 'The added by user ID is required.',
-            'is_natural_no_zero' => 'The added by user ID must be a positive integer.'
+        'start_date' => [
+            'required' => 'The start date is required.',
+            'valid_date' => 'The start date must be a valid date.'
+        ],
+        'end_date' => [
+            'required' => 'The end date is required.',
+            'valid_date' => 'The end date must be a valid date.'
+        ],
+        'amount' => [
+            'required' => 'The amount is required.',
+            'decimal' => 'The amount must be a decimal number.'
+        ],
+        'status_id' => [
+            'required' => 'The status is required.',
+            'is_natural_no_zero' => 'The status ID must be a positive integer.'
+        ],
+        'payment_method' => [
+            'required' => 'The payment method is required.'
+        ],
+        'payment_due_date' => [
+            'valid_date' => 'The payment due date must be a valid date.'
         ],
     ];
 

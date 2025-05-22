@@ -18,21 +18,21 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-2">
-                                        <label for="firstName" class="form-label">Full Name</label>
+                                        <label for="firstName" class="form-label"> <strong class="text-danger">*</strong> First Name</label>
                                         <input type="text" class="form-control" id="firstName" name="firstName"
                                                value="<?= old('firstName'); ?>" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-2">
-                                        <label for="email" class="form-label">Email Address</label>
+                                        <label for="email" class="form-label"> <strong class="text-danger">*</strong> Email</label>
                                         <input type="email" class="form-control" id="email" name="email"
                                                value="<?= old('email'); ?>" aria-describedby="emailHelp" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-2">
-                                        <label for="phone" class="form-label">Phone Number</label>
+                                        <label for="phone" class="form-label"> <strong class="text-danger">*</strong> Phone</label>
                                         <input type="text" class="form-control" id="phone" name="phone"
                                                value="<?= old('phone'); ?>"
                                                required>
@@ -48,7 +48,7 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="mb-2">
-                                        <label for="billingAddress" class="form-label">Address</label>
+                                        <label for="billingAddress" class="form-label"> <strong class="text-danger">*</strong> Billing Address</label>
                                         <textarea class="form-control" id="billingAddress" name="billingAddress"
                                                   rows="3"><?= old('billingAddress'); ?></textarea>
                                     </div>

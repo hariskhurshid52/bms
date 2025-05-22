@@ -21,7 +21,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-2">
-                                <label for="billboard" class="form-label">Select Billboard</label>
+                                <label for="billboard" class="form-label"> <strong class="text-danger">*</strong> Select Billboard</label>
                                 <select class="form-control select2" id="billboard" name="billboard">
                                     <?php foreach ($billboards as $t => $types): ?>
                                         <optgroup label="<?= $t ?>">
@@ -43,7 +43,7 @@
 
                         <div class="col-md-12">
                             <div class="mb-2">
-                                <label for="customer" class="form-label">Select Client</label>
+                                <label for="customer" class="form-label"> <strong class="text-danger">*</strong> Select Client</label>
                                 <select class="form-control select2" id="customer" name="customer">
                                     <?php foreach ($customers as $customer): ?>
                                         <option value="<?= $customer['id'] ?>" <?= $order['customer_id'] == $customer['id'] ? 'selected' : '' ?>>
@@ -55,7 +55,7 @@
                         </div>
 
                         <div class="col-md-6 mb-2">
-                            <label for="reservationStart" class="form-label">Reservation Start From</label>
+                            <label for="reservationStart" class="form-label"> <strong class="text-danger">*</strong> Reservation Start From</label>
                             <div class="input-group position-relative datepicker" id="resSPicker">
                                 <input type="text" class="form-control" id="reservationStart" name="reservationStart" readonly
                                        data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-autoclose="true" data-date-container="#resSPicker"
@@ -65,7 +65,7 @@
                         </div>
 
                         <div class="col-md-6 mb-2">
-                            <label for="reservationEnd" class="form-label">Reservation End At</label>
+                            <label for="reservationEnd" class="form-label"> <strong class="text-danger">*</strong> Reservation End At</label>
                             <div class="input-group position-relative datepicker" id="resEPicker">
                                 <input type="text" class="form-control" id="reservationEnd" name="reservationEnd" readonly
                                        data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-autoclose="true" data-date-container="#resEPicker"
@@ -75,14 +75,14 @@
                         </div>
 
                         <div class="col-md-12 mb-2">
-                            <label for="additionalInformation" class="form-label">Additional Information</label>
+                            <label for="additionalInformation" class="form-label"> <strong class="text-danger">*</strong> Additional Information</label>
                             <textarea class="form-control" id="additionalInformation" name="addtionalInformatoin"><?= $order['addtional_info'] ?></textarea>
                         </div>
 
                         <h4 class="header-title mt-3">Payment Information</h4>
 
                         <div class="col-md-5 mb-2">
-                            <label for="totalCost" class="form-label">Total Cost For Selected Time Period
+                            <label for="totalCost" class="form-label"> <strong class="text-danger">*</strong> Total Cost For Selected Time Period
                                 <span class="booking-price">
                                     <sup class="text-info"><i>min booking price : <?= $order['booking_price'] ?> </i></sup>
                                 </span>
@@ -96,12 +96,12 @@
                         </div>
 
                         <div class="col-md-3 mb-2">
-                            <label for="totalPriceInclTax" class="form-label">Total Price Including Tax</label>
+                            <label for="totalPriceInclTax" class="form-label"> <strong class="text-danger">*</strong> Total Price Including Tax</label>
                             <input type="number" step="0.01" readonly class="form-control" id="totalPriceInclTax" name="totalPriceInclTax" value="<?= $order['total_price'] ?>"/>
                         </div>
 
                         <div class="col-md-6 mb-2">
-                            <label for="paymentMethod" class="form-label">Payment Method</label>
+                            <label for="paymentMethod" class="form-label"> <strong class="text-danger">*</strong> Payment Method</label>
                             <select class="form-control" name="paymentMethod" id="paymentMethod">
                                 <?php foreach (['full' => 'Full Payment Cash', 'installment' => 'Installment', 'cross_cheque' => 'Through Cross Cheque'] as $k => $v): ?>
                                     <option value="<?= $k ?>" <?= $order['payment_method'] == $k ? 'selected' : '' ?>><?= $v ?></option>
@@ -110,12 +110,12 @@
                         </div>
 
                         <div class="col-md-6 mb-2">
-                            <label for="advPayment" class="form-label">Advance Payment</label>
+                            <label for="advPayment" class="form-label"> <strong class="text-danger">*</strong> Advance Payment</label>
                             <input type="number" class="form-control" id="advPayment" name="advPayment" value="<?= $order['advPayment'] ?>"/>
                         </div>
 
                         <div class="col-md-6 mb-2">
-                            <label for="paymentDueDate" class="form-label">Payment Due Date</label>
+                            <label for="paymentDueDate" class="form-label"> <strong class="text-danger">*</strong> Payment Due Date</label>
                             <div class="input-group position-relative datepicker" id="resDueDate">
                                 <input type="text" class="form-control" id="paymentDueDate" name="paymentDueDate" readonly
                                        data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-autoclose="true" data-date-container="#resDueDate"

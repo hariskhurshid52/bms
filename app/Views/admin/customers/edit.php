@@ -21,14 +21,14 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-2">
-                                        <label for="firstName" class="form-label">Full Name</label>
+                                        <label for="firstName" class="form-label"> <strong class="text-danger">*</strong> First Name</label>
                                         <input type="text" class="form-control" id="firstName" name="firstName"
                                                value="<?= $customerInfo['first_name'] ?>" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-2">
-                                        <label for="email" class="form-label">Email Address</label>
+                                        <label for="email" class="form-label"> <strong class="text-danger">*</strong> Email</label>
                                         <input type="email" class="form-control" id="email" name="email"
                                                value="<?= $customerInfo['email'] ?>" aria-describedby="emailHelp"
                                                required>
@@ -39,7 +39,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-2">
-                                        <label for="phone" class="form-label">Phone Number</label>
+                                        <label for="phone" class="form-label"> <strong class="text-danger">*</strong> Phone</label>
                                         <input type="text" class="form-control" id="phone" name="phone"
                                                value="<?= $customerInfo['phone'] ?>"
                                                required>
@@ -56,7 +56,7 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="mb-2">
-                                        <label for="billingAddress" class="form-label">Address</label>
+                                        <label for="billingAddress" class="form-label"> <strong class="text-danger">*</strong> Billing Address</label>
                                         <textarea class="form-control" id="billingAddress" name="billingAddress"
                                                   rows="3"><?= $customerInfo['address_line_1']; ?></textarea>
                                     </div>

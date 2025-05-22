@@ -20,7 +20,7 @@ $errors = session()->getFlashdata('errors');
                     <?=form_hidden(['userId' => $user['id']])?>
                     <div class="row">
                         <div class="mb-2 col-md-6">
-                            <label for="name" class="form-label">Name</label>
+                            <label for="name" class="form-label"> <strong class="text-danger">*</strong> Name</label>
                             <input type="text" class="form-control" id="name" placeholder="Name" name="name" value="<?= $user['name'] ?>">
                             <?php if (isset($errors['name']) && !empty($errors['name'])): ?>
                                 <div class="alert alert-danger alert-dismissible bg-transparent text-danger fade show mt-2 input-field-alert"
@@ -33,7 +33,7 @@ $errors = session()->getFlashdata('errors');
 
                         </div>
                         <div class="mb-2 col-md-6">
-                            <label for="username" class="form-label">Username</label>
+                            <label for="username" class="form-label"> <strong class="text-danger">*</strong> Username</label>
                             <input type="text" class="form-control" id="username" placeholder="Username" name="username" value="<?= $user['username'] ?>">
                             <?php if (isset($errors['username']) && !empty($errors['username'])): ?>
                                 <div class="alert alert-danger alert-dismissible bg-transparent text-danger fade show mt-2 input-field-alert"
@@ -45,7 +45,7 @@ $errors = session()->getFlashdata('errors');
                             <?php endif; ?>
                         </div>
                         <div class="mb-2 col-md-6">
-                            <label for="email" class="form-label">Email</label>
+                            <label for="email" class="form-label"> <strong class="text-danger">*</strong> Email</label>
                             <input type="email" class="form-control" id="email" placeholder="Email" name="email" value="<?= $user['email'] ?>">
                             <?php if (isset($errors['email']) && !empty($errors['email'])): ?>
                                 <div class="alert alert-danger alert-dismissible bg-transparent text-danger fade show mt-2 input-field-alert"
@@ -57,7 +57,7 @@ $errors = session()->getFlashdata('errors');
                             <?php endif; ?>
                         </div>
                         <div class="mb-2 col-md-6">
-                            <label for="password" class="form-label">Password</label>
+                            <label for="password" class="form-label"> <strong class="text-danger">*</strong> Password</label>
                             <input type="password" class="form-control" id="password" placeholder="Password"
                                    name="password">
                             <?php if (isset($errors['password']) && !empty($errors['password'])): ?>
@@ -70,7 +70,7 @@ $errors = session()->getFlashdata('errors');
                             <?php endif; ?>
                         </div>
                         <div class="mb-2 col-md-6">
-                            <label for="role" class="form-label">Role</label>
+                            <label for="role" class="form-label"> <strong class="text-danger">*</strong> Role</label>
                             <select id="role" class="form-select" name="role">
                                 <?php if (isset($roles)): ?>
                                     <?php foreach ($roles as $role): ?>
@@ -91,7 +91,7 @@ $errors = session()->getFlashdata('errors');
 
 
                         <div class="mb-2 col-md-6">
-                            <label for="userStatus" class="form-label">Status</label>
+                            <label for="userStatus" class="form-label"> <strong class="text-danger">*</strong> Status</label>
                             <select id="userStatus" class="form-select" name="status">
                                 <?php foreach (['active' => 'Active', 'inactive' => 'Inactive'] as $key => $value): ?>
                                     <option <?= $user['status'] == $key ? 'selected' : '' ?>  value="<?= $key ?>"><?= $value ?></option>
