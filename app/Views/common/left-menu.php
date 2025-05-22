@@ -4,7 +4,6 @@ $router = \CodeIgniter\Config\Services::router();
 $current_route = $router->getMatchedRouteOptions();
 $current_route = isset($current_route['as']) ? $current_route['as'] : 'dashboard';
 
-
 ?>
 
 <style>

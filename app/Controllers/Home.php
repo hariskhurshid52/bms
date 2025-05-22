@@ -17,6 +17,7 @@ use App\Models\OrderModel;
 use App\Models\CustomerModel;
 use App\Models\ExpenseModel;
 use App\Models\OrderStatusModel;
+use PDO;
 
 class Home extends BaseController
 {
@@ -41,8 +42,17 @@ class Home extends BaseController
 
     public function index()
     {
+        if ($this->user['roleId'] == 2) {
+            return redirect()->to(route_to('marketing-dashboard'));
+        }
         $data = $this->getDashboardData();
         return view("home/dashboard", $data);
+    }
+
+    public function marketingDashboard()
+    {
+        $data = [];
+        return view("home/marketing-dashboard", $data);
     }
 
     public function home()
@@ -232,7 +242,7 @@ class Home extends BaseController
                 ->where('created_at <', date('Y-m-d H:i:s', strtotime('-1 month')))
                 ->selectSum('amount')
                 ->first()['amount'] ?? 0;
-            
+
             $trend = $lastMonthAmount > 0 ? round((($amount - $lastMonthAmount) / $lastMonthAmount) * 100) : 0;
             $percentage = $totalExpenses > 0 ? round(($amount / $totalExpenses) * 100, 1) : 0;
 
@@ -265,7 +275,7 @@ class Home extends BaseController
         for ($i = 5; $i >= 0; $i--) {
             $startDate = date('Y-m-d H:i:s', strtotime("-$i months"));
             $endDate = date('Y-m-d H:i:s', strtotime("-" . ($i - 1) . " months"));
-            
+
             $labels[] = date('M Y', strtotime($startDate));
 
             // Get revenue for the month
@@ -331,7 +341,7 @@ class Home extends BaseController
         }
 
         // Sort by net profit
-        usort($result, function($a, $b) {
+        usort($result, function ($a, $b) {
             return $b['net_profit'] - $a['net_profit'];
         });
 
@@ -434,7 +444,7 @@ class Home extends BaseController
             $billboardQuery->where('added_by', $userId);
         }
         $recentBillboards = $billboardQuery->find();
-        
+
         foreach ($recentBillboards as $billboard) {
             $activities[] = [
                 'type' => 'primary',
@@ -446,7 +456,7 @@ class Home extends BaseController
         }
 
         // Sort activities by time
-        usort($activities, function($a, $b) {
+        usort($activities, function ($a, $b) {
             return strtotime($b['time']) - strtotime($a['time']);
         });
 
@@ -802,7 +812,7 @@ class Home extends BaseController
         // Calculate client metrics
         $totalClients = $this->customerModel->countAll();
         $newClients = $this->customerModel->where('created_at >=', date('Y-m-d H:i:s', strtotime('-30 days')))->countAllResults();
-        
+
         // Calculate active clients (those with bookings in last 3 months)
         $activeClients = $this->customerModel->select('DISTINCT customers.id')
             ->join('orders', 'orders.customer_id = customers.id')
@@ -834,16 +844,16 @@ class Home extends BaseController
     {
         $userId = $this->user['userId'];
         $isAdmin = $this->user['roleId'] == 1;
-        
+
         // Get last 12 months of data
         $months = [];
         $revenue = [];
         $expenses = [];
-        
+
         for ($i = 11; $i >= 0; $i--) {
             $date = date('Y-m', strtotime("-$i months"));
             $months[] = date('M Y', strtotime("-$i months"));
-            
+
             // Get revenue for the month
             $revenueQuery = $this->orderModel;
             if (!$isAdmin) {
@@ -852,9 +862,9 @@ class Home extends BaseController
             $revenueQuery->selectSum('amount')
                 ->where('status_id', 2) // Completed orders
                 ->where('DATE_FORMAT(created_at, "%Y-%m")', $date);
-            
+
             $revenue[] = $revenueQuery->first()['amount'] ?? 0;
-            
+
             // Get expenses for the month
             $expenseQuery = $this->expenseModel;
             if (!$isAdmin) {
@@ -862,10 +872,10 @@ class Home extends BaseController
             }
             $expenseQuery->selectSum('amount')
                 ->where('DATE_FORMAT(created_at, "%Y-%m")', $date);
-            
+
             $expenses[] = $expenseQuery->first()['amount'] ?? 0;
         }
-        
+
         return [
             'labels' => $months,
             'revenue' => $revenue,
@@ -908,7 +918,7 @@ class Home extends BaseController
                 ->where('created_at <', date('Y-m-d H:i:s', strtotime('-1 month')))
                 ->selectSum('amount')
                 ->first()['amount'] ?? 0;
-            
+
             $trend = $lastMonthAmount > 0 ? round((($amount - $lastMonthAmount) / $lastMonthAmount) * 100) : 0;
             $percentage = $totalExpenses > 0 ? round(($amount / $totalExpenses) * 100, 1) : 0;
 
@@ -1012,15 +1022,15 @@ class Home extends BaseController
         }
 
         $results = $query->find();
-        
+
         $labels = [];
         $data = [];
-        
+
         foreach ($results as $type) {
             $labels[] = ucfirst($type['type']);
             $data[] = $type['total'];
         }
-        
+
         return [
             'labels' => $labels,
             'data' => $data
@@ -1031,15 +1041,15 @@ class Home extends BaseController
     {
         $db = \Config\Database::connect();
         $builder = $db->table('expenses');
-        
+
         $expenses = $builder->select('type, SUM(amount) as total')
             ->where('YEAR(expense_date)', date('Y'))
             ->groupBy('type')
             ->get()
             ->getResultArray();
-        
+
         $total = array_sum(array_column($expenses, 'total'));
-        
+
         $categories = [];
         foreach ($expenses as $expense) {
             $categories[] = [
@@ -1048,7 +1058,7 @@ class Home extends BaseController
                 'percentage' => ($expense['total'] / $total) * 100
             ];
         }
-        
+
         return $categories;
     }
 
@@ -1065,7 +1075,7 @@ class Home extends BaseController
     {
         $userId = $this->user['userId'];
         $isAdmin = $this->user['roleId'] == 1;
-        
+
         // Get total revenue
         $revenueQuery = $this->orderModel;
         if (!$isAdmin) {
@@ -1075,7 +1085,7 @@ class Home extends BaseController
             ->where('status_id', 2) // Completed orders
             ->where('YEAR(created_at)', date('Y'))
             ->first()['amount'] ?? 0;
-        
+
         // Get total expenses
         $expenseQuery = $this->expenseModel;
         if (!$isAdmin) {
@@ -1084,9 +1094,10 @@ class Home extends BaseController
         $expenses = $expenseQuery->selectSum('amount')
             ->where('YEAR(created_at)', date('Y'))
             ->first()['amount'] ?? 0;
-        
-        if ($revenue == 0) return 0;
-        
+
+        if ($revenue == 0)
+            return 0;
+
         return (($revenue - $expenses) / $revenue) * 100;
     }
 
@@ -1094,7 +1105,7 @@ class Home extends BaseController
     {
         $userId = $this->user['userId'];
         $isAdmin = $this->user['roleId'] == 1;
-        
+
         // Get net profit
         $revenueQuery = $this->orderModel;
         if (!$isAdmin) {
@@ -1104,7 +1115,7 @@ class Home extends BaseController
             ->where('status_id', 2) // Completed orders
             ->where('YEAR(created_at)', date('Y'))
             ->first()['amount'] ?? 0;
-        
+
         $expenseQuery = $this->expenseModel;
         if (!$isAdmin) {
             $expenseQuery->where('added_by', $userId);
@@ -1112,9 +1123,9 @@ class Home extends BaseController
         $expenses = $expenseQuery->selectSum('amount')
             ->where('YEAR(created_at)', date('Y'))
             ->first()['amount'] ?? 0;
-        
+
         $netProfit = $revenue - $expenses;
-        
+
         // Get total investment (sum of billboard booking prices)
         $billboardQuery = $this->billboardModel;
         if (!$isAdmin) {
@@ -1122,9 +1133,10 @@ class Home extends BaseController
         }
         $investment = $billboardQuery->selectSum('booking_price')
             ->first()['booking_price'] ?? 0;
-        
-        if ($investment == 0) return 0;
-        
+
+        if ($investment == 0)
+            return 0;
+
         return ($netProfit / $investment) * 100;
     }
 
@@ -1132,7 +1144,7 @@ class Home extends BaseController
     {
         $userId = $this->user['userId'];
         $isAdmin = $this->user['roleId'] == 1;
-        
+
         // Get total revenue
         $revenueQuery = $this->orderModel;
         if (!$isAdmin) {
@@ -1142,7 +1154,7 @@ class Home extends BaseController
             ->where('status_id', 2) // Completed orders
             ->where('YEAR(created_at)', date('Y'))
             ->first()['amount'] ?? 0;
-        
+
         // Get total expenses
         $expenseQuery = $this->expenseModel;
         if (!$isAdmin) {
@@ -1151,7 +1163,7 @@ class Home extends BaseController
         $expenses = $expenseQuery->selectSum('amount')
             ->where('YEAR(created_at)', date('Y'))
             ->first()['amount'] ?? 0;
-        
+
         return $revenue - $expenses;
     }
 
@@ -1159,7 +1171,7 @@ class Home extends BaseController
     {
         $userId = $this->user['userId'];
         $isAdmin = $this->user['roleId'] == 1;
-        
+
         // Get current assets (cash + accounts receivable)
         $revenueQuery = $this->orderModel;
         if (!$isAdmin) {
@@ -1169,7 +1181,7 @@ class Home extends BaseController
             ->where('status_id', 2) // Completed orders
             ->where('YEAR(created_at)', date('Y'))
             ->first()['amount'] ?? 0;
-        
+
         // Get current liabilities (accounts payable + short-term debt)
         $expenseQuery = $this->expenseModel;
         if (!$isAdmin) {
@@ -1178,9 +1190,10 @@ class Home extends BaseController
         $currentLiabilities = $expenseQuery->selectSum('amount')
             ->where('YEAR(created_at)', date('Y'))
             ->first()['amount'] ?? 0;
-        
-        if ($currentLiabilities == 0) return 0;
-        
+
+        if ($currentLiabilities == 0)
+            return 0;
+
         return $currentAssets / $currentLiabilities;
     }
 
@@ -1188,7 +1201,7 @@ class Home extends BaseController
     {
         $userId = $this->user['userId'];
         $isAdmin = $this->user['roleId'] == 1;
-        
+
         // Get total debt
         $expenseQuery = $this->expenseModel;
         if (!$isAdmin) {
@@ -1198,7 +1211,7 @@ class Home extends BaseController
             ->where('type', 'loan')
             ->where('YEAR(created_at)', date('Y'))
             ->first()['amount'] ?? 0;
-        
+
         // Get total equity (total assets - total liabilities)
         $billboardQuery = $this->billboardModel;
         if (!$isAdmin) {
@@ -1206,7 +1219,7 @@ class Home extends BaseController
         }
         $totalAssets = $billboardQuery->selectSum('booking_price')
             ->first()['booking_price'] ?? 0;
-        
+
         $expenseQuery = $this->expenseModel;
         if (!$isAdmin) {
             $expenseQuery->where('added_by', $userId);
@@ -1214,11 +1227,12 @@ class Home extends BaseController
         $totalLiabilities = $expenseQuery->selectSum('amount')
             ->where('YEAR(created_at)', date('Y'))
             ->first()['amount'] ?? 0;
-        
+
         $totalEquity = $totalAssets - $totalLiabilities;
-        
-        if ($totalEquity == 0) return 0;
-        
+
+        if ($totalEquity == 0)
+            return 0;
+
         return $totalDebt / $totalEquity;
     }
 
@@ -1226,7 +1240,7 @@ class Home extends BaseController
     {
         $userId = $this->user['userId'];
         $isAdmin = $this->user['roleId'] == 1;
-        
+
         // Get net income
         $revenueQuery = $this->orderModel;
         if (!$isAdmin) {
@@ -1236,7 +1250,7 @@ class Home extends BaseController
             ->where('status_id', 2) // Completed orders
             ->where('YEAR(created_at)', date('Y'))
             ->first()['amount'] ?? 0;
-        
+
         $expenseQuery = $this->expenseModel;
         if (!$isAdmin) {
             $expenseQuery->where('added_by', $userId);
@@ -1244,9 +1258,9 @@ class Home extends BaseController
         $expenses = $expenseQuery->selectSum('amount')
             ->where('YEAR(created_at)', date('Y'))
             ->first()['amount'] ?? 0;
-        
+
         $netIncome = $revenue - $expenses;
-        
+
         // Get total assets
         $billboardQuery = $this->billboardModel;
         if (!$isAdmin) {
@@ -1254,9 +1268,10 @@ class Home extends BaseController
         }
         $totalAssets = $billboardQuery->selectSum('booking_price')
             ->first()['booking_price'] ?? 0;
-        
-        if ($totalAssets == 0) return 0;
-        
+
+        if ($totalAssets == 0)
+            return 0;
+
         return ($netIncome / $totalAssets) * 100;
     }
 
