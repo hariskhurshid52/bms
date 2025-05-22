@@ -28,6 +28,13 @@ class BillboardModel extends Model
         'booking_price',
         'video_url',
         'image_url',
+        'annual_increase',
+        'traffic_commming_from',
+        'contract_duration',
+        'contract_date',
+        'authority_name',
+        'monthly_rent',
+        
     ];
 
     protected $useTimestamps = true;
@@ -43,6 +50,12 @@ class BillboardModel extends Model
         'status' => 'required|in_list[active,inactive,under_maintenance]',
         'installation_date' => 'permit_empty|valid_date',
         'updated_at' => 'permit_empty|valid_date',
+        'annual_increase' => 'permit_empty|integer',
+        'traffic_commming_from' => 'permit_empty|max_length[500]',
+        'contract_duration' => 'permit_empty|integer',
+        'contract_date' => 'permit_empty|valid_date',
+        'authority_name' => 'permit_empty|max_length[255]',
+        'monthly_rent' => 'permit_empty|numeric',
     ];
 
     protected $validationMessages = [
@@ -84,6 +97,26 @@ class BillboardModel extends Model
         'updated_at' => [
             'valid_date' => 'The updated date must be a valid date.',
         ],
+        'annual_increase' => [
+            'integer' => 'The annual increase must be an integer.',
+        ],
+        'traffic_commming_from' => [
+            'max_length' => 'The traffic commming from cannot exceed 500 characters.',
+        ],
+        'contract_duration' => [
+            'integer' => 'The contract duration must be an integer.',
+        ],
+        'contract_date' => [
+            'valid_date' => 'The contract date must be a valid date.',
+        ],
+        'authority_name' => [
+            'max_length' => 'The authority name cannot exceed 255 characters.',
+        ],
+        'monthly_rent' => [
+            'numeric' => 'The monthly rent must be a numeric value.',
+        ],
+        
+        
     ];
 
     protected $returnType = 'array';

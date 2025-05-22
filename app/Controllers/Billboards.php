@@ -40,6 +40,12 @@ class Billboards extends BaseController
             'height' => Validation::$REQUIRED,
             'area' => Validation::$REQUIRED,
             'booking_price' => Validation::$REQUIRED,
+            'annual_increase' => Validation::$REQUIRED,
+            'traffic_commming_from' => Validation::$REQUIRED,
+            'contract_duration' => Validation::$REQUIRED,
+            'contract_date' => Validation::$REQUIRED,
+            'authority_name' => Validation::$REQUIRED,
+            'monthly_rent' => Validation::$REQUIRED,
         ];
         $validation = \Config\Services::validation();
         if (!$this->validate($rules)) {
@@ -63,9 +69,15 @@ class Billboards extends BaseController
             'booking_price' => $inputs['booking_price'],
             'image_url' => $inputs['image_url'],
             'video_url' => $inputs['video_url'],
-            'booking_price' => $inputs['booking_price'],
+            'annual_increase' => $inputs['annual_increase'],
+            'traffic_commming_from' => $inputs['traffic_commming_from'],
+            'contract_duration' => $inputs['contract_duration'],
+            'contract_date' => $inputs['contract_date'],
+            'authority_name' => $inputs['authority_name'],
+            'monthly_rent' => $inputs['monthly_rent'],
             'added_by' => $this->userId,
         ];
+       
         $save = $model->insert($insData);
         if ($save) {
             return redirect()->route('admin.billboard.list')->with('postBack', ['status' => 'success', 'message' => 'Billboard saved successfully']);
@@ -199,6 +211,12 @@ class Billboards extends BaseController
             'status' => $inputs['status'],
             'image_url' => $inputs['image_url'],
             'video_url' => $inputs['video_url'],
+            'annual_increase' => $inputs['annual_increase'],
+            'traffic_commming_from' => $inputs['traffic_commming_from'],
+            'contract_duration' => $inputs['contract_duration'],
+            'contract_date' => $inputs['contract_date'],
+            'authority_name' => $inputs['authority_name'],
+            'monthly_rent' => $inputs['monthly_rent'],
         ];
         $save = $model->update($inputs['billboardId'], $insData);
         if ($save) {

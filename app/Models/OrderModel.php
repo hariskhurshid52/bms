@@ -20,7 +20,13 @@ class OrderModel extends Model
         'status_id',
         'added_by',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'display',
+        'tax_percent',
+        'tax_amount',
+        'total_price',
+        'advance_payment',
+        'payment_due_date',
     ];
 
     protected $useTimestamps = true;
@@ -35,6 +41,13 @@ class OrderModel extends Model
         'end_date' => 'required|valid_date',
         'amount' => 'required|decimal',
         'status_id' => 'required|is_natural_no_zero',
+        'display' => 'permit_empty|string',
+        'tax_percent' => 'permit_empty|decimal',
+        'tax_amount' => 'permit_empty|decimal',
+        'total_price' => 'permit_empty|decimal',
+        'payment_method' => 'required',
+        'advance_payment' => 'permit_empty|decimal',
+        'payment_due_date' => 'permit_empty|valid_date',
     ];
 
     protected $validationMessages = [

@@ -50,6 +50,7 @@ class Orders extends BaseController
             'reservationEnd' => 'required|date',
             'totalCost' => 'required|numeric',
             'paymentMethod' => 'required',
+            'paymentDueDate' => 'required',
         ];
         $validation = \Config\Services::validation();
         if (!$this->validate($rules)) {
@@ -64,19 +65,31 @@ class Orders extends BaseController
         if ($inputs['totalCost'] < $billboard['booking_price']) {
             return redirect()->back()->withInput()->with('postBack', ['status' => 'error', 'message' => 'Total cost cannot be less than minimum billing price']);
         }
+
+        $totalCost = $inputs['totalCost'];
+        $taxAmount = $totalCost * 0.16;
+        $totalPriceInclTax = $totalCost + $taxAmount;
+
         $mdOrder = new OrderModel();
         $insData = [
             'billboard_id' => $inputs['billboard'],
+            'display' => $inputs['display'] ?? null,
             'customer_id' => $inputs['customer'],
             'start_date' => $inputs['reservationStart'],
             'end_date' => $inputs['reservationEnd'],
-            'amount' => $inputs['totalCost'],
-            'payment_method' => $inputs['paymentMethod'],
-            'status_id' => 1,
             'addtional_info' => $inputs['addtionalInformatoin'],
+            'amount' => $totalCost,
+            'tax_amount' => $taxAmount,
+            'total_price' => $totalPriceInclTax,
+            'payment_method' => $inputs['paymentMethod'],
+
+            'payment_due_date' => $inputs['paymentDueDate'] ?? null,
+            'status_id' => 1,
             'added_by' => $this->userId,
+            'tax_percent' => 16,
 
         ];
+
         $saved = $mdOrder->insert($insData);
         if (!$saved) {
             return redirect()->back()->withInput()->with('postBack', ['status' => 'error', 'message' => 'Unable to create order']);
@@ -137,6 +150,7 @@ class Orders extends BaseController
         $list = $builder->select('
                 orders.id as id,
                 orders.created_at,
+                orders.display,
                 billboards.name as billboardName,
                 billboards.area as billboardArea,
                 customers.first_name as firstName,
@@ -145,22 +159,27 @@ class Orders extends BaseController
                 orders.start_date as startDate,
                 orders.end_date as endDate,
                 orders.amount,
+                orders.total_price,
+                orders.payment_due_date,
                 SUM(payments.amount) as paidAmount
                
             ')->get()->getResultArray();
         $rows = [];
         foreach ($list as $key => $value) {
             $rows[] = [
+                $value['firstName'] . " " . $value['lastName'],
+                $value['display'],
                 $value['billboardName'],
                 $value['billboardArea'],
-                $value['firstName'] . " " . $value['lastName'],
+
                 $value['statusName'],
                 date('d-m-Y', strtotime($value['startDate'])),
                 date('d-m-Y', strtotime($value['endDate'])),
-                $value['amount'] .' PKR',
-                empty($value['paidAmount']) ? '0 PKR' : $value['paidAmount'] .' PKR',
+                $value['amount'] . ' PKR',
+                $value['total_price'] . ' PKR',
+                empty($value['paidAmount']) ? '0 PKR' : $value['paidAmount'] . ' PKR',
+                is_null($value['payment_due_date']) ? 'N/A' : date('d-m-Y', strtotime($value['payment_due_date'])),
                 date('d-m-Y', strtotime($value['created_at'])),
-
                 '<a href="' . route_to('admin.order.edit', $value['id']) . '" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a>',
 
             ];
@@ -191,6 +210,13 @@ class Orders extends BaseController
             return redirect()->back()->with('postBack', ['status' => 'danger', 'message' => 'Order not found']);
         }
 
+        $totalCost = $data['order']['amount'];
+        $taxAmount = $totalCost * 0.16;
+        $totalPriceInclTax = $totalCost + $taxAmount;
+       
+        $data['order']['total_price'] = $totalPriceInclTax;
+        $data['order']['total_price_incl_tax'] = $taxAmount;
+
 
         $mdBillboards = new BillboardModel();
         $list = $mdBillboards
@@ -216,13 +242,13 @@ class Orders extends BaseController
     {
         $inputs = $this->request->getPost();
         $rules = [
-            'billboard' => 'required',
-            'order_id' => 'required',
+           'billboard' => 'required',
             'customer' => 'required',
             'reservationStart' => 'required|date',
             'reservationEnd' => 'required|date',
             'totalCost' => 'required|numeric',
             'paymentMethod' => 'required',
+            'paymentDueDate' => 'required',
         ];
         $validation = \Config\Services::validation();
         if (!$this->validate($rules)) {
@@ -237,18 +263,22 @@ class Orders extends BaseController
         if ($inputs['totalCost'] < $billboard['booking_price']) {
             return redirect()->back()->withInput()->with('postBack', ['status' => 'error', 'message' => 'Total cost cannot be less than minimum billing price']);
         }
+        $totalCost = $inputs['totalCost'];
+        $taxAmount = $totalCost * 0.16;
+        $totalPriceInclTax = $totalCost + $taxAmount;
         $mdOrder = new OrderModel();
         $insData = [
             'billboard_id' => $inputs['billboard'],
+            'display' => $inputs['display'] ?? null,
             'customer_id' => $inputs['customer'],
             'start_date' => $inputs['reservationStart'],
             'end_date' => $inputs['reservationEnd'],
-            'amount' => $inputs['totalCost'],
-            'payment_method' => $inputs['paymentMethod'],
-            'status_id' => 1,
             'addtional_info' => $inputs['addtionalInformatoin'],
-            'added_by' => $this->userId,
-
+            'amount' => $totalCost,
+            'tax_amount' => $taxAmount,
+            'total_price' => $totalPriceInclTax,
+            'payment_method' => $inputs['paymentMethod'],
+            'payment_due_date' => $inputs['paymentDueDate'] ?? null,
         ];
         $saved = $mdOrder->update($inputs['order_id'], $insData);
         if (!$saved) {
