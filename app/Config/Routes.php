@@ -70,5 +70,5 @@ $routes->post('/verify', 'Login::verify', ["as" => "login.verify"]);
 
 $routes->get('/', [Home::class, 'index'], ['filter' => 'auth', 'as' => 'dashboard'], );
 $routes->get('/', [Home::class, 'index'], ['filter' => 'auth', 'as' => 'home'], );
-
+$routes->get('/', [Home::class, 'marketingDashboard'], ['filter' => 'auth', 'as' => 'marketing-dashboard'], );
 
