@@ -20,13 +20,30 @@ $current_route = isset($current_route['as']) ? $current_route['as'] : 'dashboard
 }
 #side-menu > li > a {
     color: #fff !important;
-    border-radius: 8px;
+    border-radius: 12px;
     margin: 4px 0;
-    transition: background 0.2s, color 0.2s;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    font-weight: 500;
+    box-shadow: none;
 }
 #side-menu > li > a.active, #side-menu > li > a:hover {
-    background: #4caf50 !important;
+    background: linear-gradient(90deg, #4caf50 80%, #388e3c 100%) !important;
     color: #fff !important;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(56, 142, 60, 0.10);
+    border-radius: 12px;
+}
+#side-menu .nav-second-level li a {
+    color: #e0f2f1 !important;
+    border-radius: 8px;
+    margin: 2px 0;
+    transition: background 0.2s, color 0.2s;
+}
+#side-menu .nav-second-level li a.active, #side-menu .nav-second-level li a:hover {
+    background: #388e3c !important;
+    color: #fff !important;
+    font-weight: 600;
+    border-radius: 8px;
 }
 #side-menu i {
     color: #c8e6c9 !important;
