@@ -43,12 +43,12 @@ $theme_url = base_url() . 'assets/';
                         <div class="auth-logo d-flex justify-content-center">
                             <a href="<?=route_to('home')?>" class="logo logo-dark text-center">
                                 <span class="logo-lg">
-                                    <img src="<?=base_url()?>/assets/images/logos/logo-login.png" alt="" height="70">
+                                    <img src="<?=base_url()?>/assets/images/logos/logo-login.png" alt="" height="35">
                                 </span>
                             </a>
                             <a href="<?=route_to('home')?>" class="logo logo-light text-center">
                                 <span class="logo-lg">
-                                    <img src="<?=base_url()?>/assets/images/logos/logo-login.png" alt="" height="70">
+                                    <img src="<?=base_url()?>/assets/images/logos/logo-login.png" alt="" height="35">
                                 </span>
                             </a>
                         </div>

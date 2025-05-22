@@ -70,21 +70,21 @@ $current_route = isset($current_route['as']) ? $current_route['as'] : 'dashboard
             <div class="logo-box">
                 <a href="<?= route_to('home') ?>" class="logo logo-dark text-center">
                             <span class="logo-sm">
-                                <img src="<?= base_url() ?>assets/images/logos/logo-sm-dark.png" alt="" height="24">
+                                <img src="<?= base_url() ?>assets/images/logos/logo-main.png" alt="" height="24">
                                 <!-- <span class="logo-lg-text-light">Minton</span> -->
                             </span>
                     <span class="logo-lg">
-                                <img src="<?= base_url() ?>assets/images/logos/logo-dark.png" alt="" height="70">
+                                <img src="<?= base_url() ?>assets/images/logos/logo-main.png" alt="" height="35">
                         <!-- <span class="logo-lg-text-light">M</span> -->
                             </span>
                 </a>
 
                 <a href="<?= route_to('home') ?>" class="logo logo-light text-center">
                             <span class="logo-sm">
-                                <img src="<?= base_url() ?>assets/images/logos/logo-sm.png" alt="" height="24">
+                                <img src="<?= base_url() ?>assets/images/logos/logo-main.png" alt="" height="24">
                             </span>
                     <span class="logo-lg">
-                                <img src="<?= base_url() ?>assets/images/logos/logo-light.png" alt="" height="70">
+                                <img src="<?= base_url() ?>assets/images/logos/logo-main.png" alt="" height="35">
                             </span>
                 </a>
             </div>
