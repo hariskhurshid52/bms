@@ -85,9 +85,10 @@
                                     <span class="input-group-text"><i class="bi bi-columns-gap"></i></span>
                                     <select class="form-select" id="filterType" name="type">
                                         <option value="">All Types</option>
-                                        <option value="unipole">Unipole</option>
-                                        <option value="bridge">Bridge</option>
-                                        <!-- Add more types as needed -->
+                                        <option value="1">Digital</option>
+                                        <option value="2">Static</option>
+                                        <option value="3">LED</option>
+                                        <option value="4">Banner</option>
                                     </select>
                                 </div>
                             </div>
@@ -98,9 +99,8 @@
                                     <select class="form-select" id="filterStatus" name="status">
                                         <option value="">All Status</option>
                                         <option value="active">Active</option>
-                                        <option value="booked">Booked</option>
-                                        <option value="under_maintenance">Under Maintenance</option>
                                         <option value="inactive">Inactive</option>
+                                        <option value="under_maintenance">Under Maintenance</option>
                                     </select>
                                 </div>
                             </div>

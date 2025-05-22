@@ -128,7 +128,7 @@ class Billboards extends BaseController
             $builder->where('billboards.area', $inputs['area']);
         }
         if (!empty($inputs['type'])) {
-            $builder->where('billboard_types.name', $inputs['type']);
+            $builder->where('billboard_types.id', $inputs['type']);
         }
         if (!empty($inputs['status'])) {
             $builder->where('billboards.status', $inputs['status']);
