@@ -66,9 +66,12 @@ class Home extends BaseController
         $userId = $this->user['userId'];
         $isAdmin = $this->user['roleId'] == 1;
 
-        // --- NEW DASHBOARD DATA ---
+        // DEBUG: Log the number of orders and a sample row
+        $allOrders = $this->orderModel->findAll(5);
+  
         $totalBookings = $this->orderModel->countAll();
-        $activeBookings = $this->orderModel->where('status_id', 1)->countAllResults();
+
+        $activeBookings = $this->orderModel->where('status_id', 'active')->countAllResults();
         $totalExpenses = $this->expenseModel->selectSum('amount')->first()['amount'] ?? 0;
         $totalHoardings = $this->billboardModel->countAll();
         $activeHoardings = $this->billboardModel->where('status', 'active')->countAllResults();
