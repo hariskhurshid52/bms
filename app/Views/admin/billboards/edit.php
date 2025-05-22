@@ -1,7 +1,10 @@
 <?= $this->section('styles') ?>
+<link href="<?= base_url('assets/libs/dropzone/min/dropzone.min.css') ?>" rel="stylesheet" type="text/css" />
+<style>
+
+</style>
 <?= $this->endSection() ?>
 <?= $this->extend('common/default-nav') ?> <?= $this->section('content') ?>
-
 
 <div class="row mt-4">
     <div class="col-md-12">
@@ -129,8 +132,9 @@
                     <!-- MEDIA -->
                     <div class="row">
                         <div class="col-md-6 mb-2">
-                            <label for="image_url" class="form-label">Image URL</label>
-                            <input type="text" class="form-control" id="image_url" name="image_url" value="<?= $billboard['image_url']; ?>">
+                            <label for="image_url" class="form-label">Billboard Image</label>
+                            <div id="image-dropzone" class="dropzone"></div>
+                            <input type="hidden" name="image_url" id="image_url" value="<?= $billboard['image_url']; ?>">
                         </div>
                         <div class="col-md-6 mb-2">
                             <label for="video_url" class="form-label">Video URL</label>
@@ -160,5 +164,55 @@
         </div>
     </div>
 </div>
+<?= $this->endSection() ?>
+<?= $this->section('scripts') ?>
+<script src="<?= base_url('assets/libs/dropzone/min/dropzone.min.js') ?>"></script>
+<script>
+Dropzone.autoDiscover = false;
+var imageDropzone = new Dropzone("#image-dropzone", {
+    url: "<?= route_to('admin.billboard.uploadImage') ?>",
+    maxFiles: 1,
+    acceptedFiles: 'image/*',
+    addRemoveLinks: true,
+    dictDefaultMessage: "Drag an image here or click to upload",
+    params: {
+        <?= csrf_token() ?>: '<?= csrf_hash() ?>'
+    },
+    init: function () {
+        // If there's an existing image, show it
+        <?php if (!empty($billboard['image_url'])): ?>
+        var mockFile = { name: "<?= basename($billboard['image_url']) ?>", size: 12345 };
+        this.emit("addedfile", mockFile);
+        this.emit("thumbnail", mockFile, "<?= base_url($billboard['image_url']) ?>");
+        this.emit("complete", mockFile);
+        mockFile.imageUrl = "<?= $billboard['image_url'] ?>";
+        this.files.push(mockFile);
+        <?php endif; ?>
 
+        this.on("success", function (file, response) {
+            $('#image_url').val(response.image_url);
+            file.imageUrl = response.image_url;
+        });
+        this.on("removedfile", function (file) {
+            if (file.imageUrl) {
+                ajaxCall('<?= route_to('admin.billboard.deleteImage') ?>', {
+                    image_url: file.imageUrl,
+                    <?= csrf_token() ?>: '<?= csrf_hash() ?>'
+                }).then((response) => {
+                    if (response.status === 'error') {
+                        console.error('Failed to delete file:', response.message);
+                    }
+                }).catch(err => {
+                    console.error('Error deleting file:', err);
+                });
+            }
+            $('#image_url').val('');
+        });
+        this.on("error", function (file, errorMessage) {
+            console.error(errorMessage);
+            alert(errorMessage.message || 'Error uploading file');
+        });
+    }
+});
+</script>
 <?= $this->endSection() ?>

@@ -41,6 +41,8 @@ $routes->group( '/',['filter' => ['auth', 'auth']], function ($routes) {
     $routes->get('board/view/(:num)', [Billboards::class, 'detailBillboard'], ['as' => 'admin.billboard.detail']);
     $routes->post('board/update', [Billboards::class, 'updateBillboardInfo'], ['as' => 'admin.billboard.update']);
     $routes->post('board/get-data', [Billboards::class, 'getHordingDataAjax'], ['as' => 'admin.billboard.get.ajax']);
+    $routes->post('board/upload-image', [Billboards::class, 'uploadImage'], ['as' => 'admin.billboard.uploadImage']);
+    $routes->post('board/delete-image', [Billboards::class, 'deleteImage'], ['as' => 'admin.billboard.deleteImage']);
 
     $routes->get('order/create', [Orders::class, 'create'], ['as' => 'admin.order.create']);
     $routes->post('order/save', [Orders::class, 'save'], ['as' => 'admin.order.store']);

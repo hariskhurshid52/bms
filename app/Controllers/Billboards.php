@@ -236,4 +236,78 @@ class Billboards extends BaseController
         $data = $model->find($inputs['hording']);
         return response()->setJSON(['status' => 'success', 'data' => $data]);
     }
+
+    public function uploadImage()
+    {
+        $file = $this->request->getFile('file');
+        
+        if (!$file->isValid() || $file->hasMoved()) {
+            return response()->setJSON([
+                'status' => 'error',
+                'message' => 'Invalid file upload'
+            ]);
+        }
+
+        // Validate file type
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        if (!in_array($file->getMimeType(), $allowedTypes)) {
+            return response()->setJSON([
+                'status' => 'error',
+                'message' => 'Only JPG, PNG and GIF images are allowed'
+            ]);
+        }
+
+        // Create upload directory if it doesn't exist
+        $uploadPath = FCPATH . 'uploads/billboards';
+        if (!is_dir($uploadPath)) {
+            mkdir($uploadPath, 0777, true);
+        }
+
+        // Generate unique filename
+        $newName = $file->getRandomName();
+        
+        // Move file to upload directory
+        if ($file->move($uploadPath, $newName)) {
+            return response()->setJSON([
+                'status' => 'success',
+                'image_url' => 'uploads/billboards/' . $newName
+            ]);
+        }
+
+        return response()->setJSON([
+            'status' => 'error',
+            'message' => 'Failed to upload file'
+        ]);
+    }
+
+    public function deleteImage()
+    {
+        $imageUrl = $this->request->getPost('image_url');
+        
+        if (empty($imageUrl)) {
+            return response()->setJSON([
+                'status' => 'error',
+                'message' => 'No image specified'
+            ]);
+        }
+
+        // Get the full path to the file
+        $filePath = FCPATH . $imageUrl;
+
+        // Check if file exists and is within the uploads directory
+        if (file_exists($filePath) && strpos($filePath, FCPATH . 'uploads/billboards/') === 0) {
+            // Delete the file
+            if (unlink($filePath)) {
+                return response()->setJSON([
+                    'status' => 'success',
+                    'message' => 'File deleted successfully'
+                ]);
+            }
+        }
+
+        return response()->setJSON([
+            'status' => 'error',
+            'message' => 'Failed to delete file'
+        ]);
+    }
 }
