@@ -50,6 +50,8 @@ $routes->group( '/',['filter' => ['auth', 'auth']], function ($routes) {
     $routes->get('order/list', [Orders::class, 'listAll'], ['as' => 'admin.orders.list']);
     $routes->post('order/listing', [Orders::class, 'dtList'], ['as' => 'admin.orders.dtList']);
     $routes->get('order/edit/(:num)', [Orders::class, 'edit'], ['as' => 'admin.order.edit']);
+    $routes->get('order/view/(:num)',  [Orders::class, 'view'], ['as' => 'admin.order.view']);
+    $routes->post('orders/add-payment',[Orders::class, 'addPayment'], ['as' => 'admin.orders.addPayment']);
 
     $routes->get('expense/create', [Expense::class, 'create'], ['as' => 'admin.expense.create']);
     $routes->post('expense/save', [Expense::class, 'save'], ['as' => 'admin.expense.store']);

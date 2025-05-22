@@ -180,6 +180,7 @@ class Orders extends BaseController
                 empty($value['paidAmount']) ? '0 PKR' : $value['paidAmount'] . ' PKR',
                 is_null($value['payment_due_date']) ? 'N/A' : date('d-m-Y', strtotime($value['payment_due_date'])),
                 date('d-m-Y', strtotime($value['created_at'])),
+                '<a href="' . route_to('admin.order.view', $value['id']) . '" class="btn btn-sm btn-info me-1"><i class="fa fa-eye"></i></a>' .
                 '<a href="' . route_to('admin.order.edit', $value['id']) . '" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a>',
 
             ];
@@ -304,5 +305,80 @@ class Orders extends BaseController
         }
 
         return redirect()->route('admin.orders.list')->with('postBack', ['status' => 'success', 'message' => 'Order updated successfully']);
+    }
+
+    public function view($id)
+    {
+        if (!$id) {
+            return redirect()->back()->with('postBack', ['status' => 'danger', 'message' => 'Order not found']);
+        }
+
+        $data = [];
+
+        // Get order details with related data
+        $data['order'] = (new OrderModel())
+            ->select('orders.*, order_status.name as status_name')
+            ->join('order_status', 'order_status.id = orders.status_id')
+            ->join('payments', "payments.order_id = orders.id AND payments.addtional_info = 'Advance Payment'", 'left')
+            ->select('orders.*, order_status.name as status_name, payments.amount as advPayment')
+            ->where('orders.id', $id)
+            ->first();
+
+        if (empty($data['order'])) {
+            return redirect()->back()->with('postBack', ['status' => 'danger', 'message' => 'Order not found']);
+        }
+
+        // Get billboard details
+        $data['billboard'] = (new BillboardModel())
+            ->select('billboards.*, billboard_types.name as typeName')
+            ->join('billboard_types', 'billboard_types.id = billboards.billboard_type_id')
+            ->where('billboards.id', $data['order']['billboard_id'])
+            ->first();
+
+        // Get customer details
+        $data['customer'] = (new CustomerModel())
+            ->where('id', $data['order']['customer_id'])
+            ->first();
+
+        // Get payment history
+        $data['payments'] = (new PaymentModel())
+            ->select('payments.*, users.name as added_by_name')
+            ->join('users', 'users.id = payments.added_by')
+            ->where('payments.order_id', $id)
+            ->orderBy('payments.created_at', 'DESC')
+            ->findAll();
+
+        return view("admin/orders/view", $data);
+    }
+
+    public function addPayment()
+    {
+        $inputs = $this->request->getPost();
+        $rules = [
+            'order_id' => 'required|is_natural_no_zero',
+            'amount' => 'required|numeric',
+            'payment_type' => 'required',
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()->with('postBack', ['status' => 'error', 'message' => 'Invalid input data']);
+        }
+
+        $mdPayment = new PaymentModel();
+        $insData = [
+            'order_id' => $inputs['order_id'],
+            'amount' => $inputs['amount'],
+            'addtional_info' => $inputs['payment_type'],
+            'notes' => $inputs['notes'] ?? null,
+            'added_by' => $this->userId,
+            'status_id' => 1 // Completed
+        ];
+
+        $saved = $mdPayment->insert($insData);
+        if (!$saved) {
+            return redirect()->back()->with('postBack', ['status' => 'error', 'message' => 'Unable to add payment']);
+        }
+
+        return redirect()->back()->with('postBack', ['status' => 'success', 'message' => 'Payment added successfully']);
     }
 }
