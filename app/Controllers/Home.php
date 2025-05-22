@@ -231,6 +231,57 @@ class Home extends BaseController
         $data['debtToEquity'] = $this->calculateDebtToEquity();
         $data['returnOnAssets'] = $this->calculateReturnOnAssets();
 
+        // Bookings per board (for dashboard chart)
+        $bookingsPerBoard = $this->orderModel
+            ->select('billboards.name as board_name, COUNT(orders.id) as total_bookings')
+            ->join('billboards', 'orders.billboard_id = billboards.id', 'left')
+            ->groupBy('orders.billboard_id')
+            ->orderBy('total_bookings', 'desc')
+            ->findAll();
+
+        // Expense per board
+        $expensesPerBoard = $this->expenseModel
+            ->select('billboards.name as board_name, SUM(expenses.amount) as total_expenses')
+            ->join('billboards', 'expenses.billboard_id = billboards.id', 'left')
+            ->groupBy('expenses.billboard_id')
+            ->orderBy('total_expenses', 'desc')
+            ->findAll();
+
+        // Revenue per board
+        $revenuePerBoard = $this->orderModel
+            ->select('billboards.name as board_name, SUM(orders.amount) as total_revenue')
+            ->join('billboards', 'orders.billboard_id = billboards.id', 'left')
+            ->groupBy('orders.billboard_id')
+            ->orderBy('total_revenue', 'desc')
+            ->findAll();
+
+        // Net profit per board (revenue - expenses)
+        $netProfitPerBoard = [];
+        foreach ($revenuePerBoard as $rev) {
+            $boardName = $rev['board_name'];
+            $revenue = $rev['total_revenue'] ?? 0;
+            $expense = 0;
+            foreach ($expensesPerBoard as $exp) {
+                if ($exp['board_name'] === $boardName) {
+                    $expense = $exp['total_expenses'] ?? 0;
+                    break;
+                }
+            }
+            $netProfitPerBoard[] = [
+                'board_name' => $boardName,
+                'net_profit' => $revenue - $expense
+            ];
+        }
+
+        // Top customers by booking count
+        $topBookingCustomers = $this->orderModel
+            ->select('customers.first_name, customers.last_name, COUNT(orders.id) as total_bookings')
+            ->join('customers', 'orders.customer_id = customers.id', 'left')
+            ->groupBy('orders.customer_id')
+            ->orderBy('total_bookings', 'desc')
+            ->limit(10)
+            ->findAll();
+
         return [
             'totalBillboards' => $totalBillboards,
             'billboardGrowth' => $billboardGrowth,
@@ -280,7 +331,12 @@ class Home extends BaseController
             'bookingsPerMonth' => array_reverse($bookingsPerMonth),
             'expensesPerMonth' => array_reverse($expensesPerMonth),
             'bookingStatus' => $bookingStatus,
-            'expenseTypes' => $expenseTypes
+            'expenseTypes' => $expenseTypes,
+            'bookingsPerBoard' => $bookingsPerBoard,
+            'expensesPerBoard' => $expensesPerBoard,
+            'revenuePerBoard' => $revenuePerBoard,
+            'netProfitPerBoard' => $netProfitPerBoard,
+            'topBookingCustomers' => $topBookingCustomers
         ];
     }
 

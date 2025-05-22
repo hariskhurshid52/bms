@@ -312,19 +312,53 @@
         </div>
     </div>
     <div class="row g-3 mb-4">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="card h-100">
-                <div class="card-header">Booking Status</div>
+                <div class="card-header">Bookings Per Board</div>
                 <div class="card-body">
-                    <canvas id="bookingStatusChart"></canvas>
+                    <canvas id="bookingsPerBoardChart"></canvas>
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="card h-100">
                 <div class="card-header">Expense Type Breakdown</div>
                 <div class="card-body">
                     <canvas id="expenseTypesChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header">Top Customers by Bookings</div>
+                <div class="card-body">
+                    <canvas id="topBookingCustomersChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header">Expense Per Board</div>
+                <div class="card-body">
+                    <canvas id="expensesPerBoardChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header">Revenue Per Board</div>
+                <div class="card-body">
+                    <canvas id="revenuePerBoardChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header">Net Profit Per Board</div>
+                <div class="card-body">
+                    <canvas id="netProfitPerBoardChart"></canvas>
                 </div>
             </div>
         </div>
@@ -363,18 +397,29 @@ new Chart(document.getElementById('expensesPerMonthChart'), {
         }]
     }
 });
-// Booking Status
-const bookingStatus = <?= json_encode($bookingStatus ?? []) ?>;
-const bookingStatusLabels = bookingStatus.map(item => 'Status ' + item.status_id);
-const bookingStatusData = bookingStatus.map(item => item.count);
-new Chart(document.getElementById('bookingStatusChart'), {
-    type: 'doughnut',
+// Bookings Per Board
+const bookingsPerBoard = <?= json_encode($bookingsPerBoard ?? []) ?>;
+const bookingsPerBoardLabels = bookingsPerBoard.map(item => item.board_name);
+const bookingsPerBoardData = bookingsPerBoard.map(item => item.total_bookings);
+new Chart(document.getElementById('bookingsPerBoardChart'), {
+    type: 'bar',
     data: {
-        labels: bookingStatusLabels,
+        labels: bookingsPerBoardLabels,
         datasets: [{
-            data: bookingStatusData,
-            backgroundColor: ['#00b09b', '#4158D0', '#f6d365', '#ff0844']
+            label: 'Total Bookings',
+            data: bookingsPerBoardData,
+            backgroundColor: '#00b09b'
         }]
+    },
+    options: {
+        plugins: {
+            legend: { display: false },
+            title: { display: true, text: 'Bookings Per Board' }
+        },
+        scales: {
+            x: { title: { display: true, text: 'Board Name' } },
+            y: { title: { display: true, text: 'Total Bookings' }, beginAtZero: true }
+        }
     }
 });
 // Expense Types
@@ -389,6 +434,106 @@ new Chart(document.getElementById('expenseTypesChart'), {
             data: expenseTypesData,
             backgroundColor: ['#4158D0', '#00b09b', '#f6d365', '#ff0844']
         }]
+    }
+});
+// Expense Per Board
+const expensesPerBoard = <?= json_encode($expensesPerBoard ?? []) ?>;
+const expensesPerBoardLabels = expensesPerBoard.map(item => item.board_name);
+const expensesPerBoardData = expensesPerBoard.map(item => item.total_expenses);
+new Chart(document.getElementById('expensesPerBoardChart'), {
+    type: 'bar',
+    data: {
+        labels: expensesPerBoardLabels,
+        datasets: [{
+            label: 'Total Expenses',
+            data: expensesPerBoardData,
+            backgroundColor: '#ff0844'
+        }]
+    },
+    options: {
+        plugins: {
+            legend: { display: false },
+            title: { display: true, text: 'Expense Per Board' }
+        },
+        scales: {
+            x: { title: { display: true, text: 'Board Name' } },
+            y: { title: { display: true, text: 'Total Expenses' }, beginAtZero: true }
+        }
+    }
+});
+// Revenue Per Board
+const revenuePerBoard = <?= json_encode($revenuePerBoard ?? []) ?>;
+const revenuePerBoardLabels = revenuePerBoard.map(item => item.board_name);
+const revenuePerBoardData = revenuePerBoard.map(item => item.total_revenue);
+new Chart(document.getElementById('revenuePerBoardChart'), {
+    type: 'bar',
+    data: {
+        labels: revenuePerBoardLabels,
+        datasets: [{
+            label: 'Total Revenue',
+            data: revenuePerBoardData,
+            backgroundColor: '#00b09b'
+        }]
+    },
+    options: {
+        plugins: {
+            legend: { display: false },
+            title: { display: true, text: 'Revenue Per Board' }
+        },
+        scales: {
+            x: { title: { display: true, text: 'Board Name' } },
+            y: { title: { display: true, text: 'Total Revenue' }, beginAtZero: true }
+        }
+    }
+});
+// Net Profit Per Board
+const netProfitPerBoard = <?= json_encode($netProfitPerBoard ?? []) ?>;
+const netProfitPerBoardLabels = netProfitPerBoard.map(item => item.board_name);
+const netProfitPerBoardData = netProfitPerBoard.map(item => item.net_profit);
+new Chart(document.getElementById('netProfitPerBoardChart'), {
+    type: 'bar',
+    data: {
+        labels: netProfitPerBoardLabels,
+        datasets: [{
+            label: 'Net Profit',
+            data: netProfitPerBoardData,
+            backgroundColor: '#4158D0'
+        }]
+    },
+    options: {
+        plugins: {
+            legend: { display: false },
+            title: { display: true, text: 'Net Profit Per Board' }
+        },
+        scales: {
+            x: { title: { display: true, text: 'Board Name' } },
+            y: { title: { display: true, text: 'Net Profit' }, beginAtZero: true }
+        }
+    }
+});
+// Top Customers by Bookings
+const topBookingCustomers = <?= json_encode($topBookingCustomers ?? []) ?>;
+const topBookingCustomersLabels = topBookingCustomers.map(item => `${item.first_name} ${item.last_name}`);
+const topBookingCustomersData = topBookingCustomers.map(item => item.total_bookings);
+new Chart(document.getElementById('topBookingCustomersChart'), {
+    type: 'bar',
+    data: {
+        labels: topBookingCustomersLabels,
+        datasets: [{
+            label: 'Total Bookings',
+            data: topBookingCustomersData,
+            backgroundColor: '#4facfe'
+        }]
+    },
+    options: {
+        plugins: {
+            legend: { display: false },
+            title: { display: true, text: 'Top Customers by Bookings' }
+        },
+        scales: {
+            x: { title: { display: true, text: 'Customer Name' } },
+            y: { title: { display: true, text: 'Total Bookings' }, beginAtZero: true }
+        }
     }
 });
 </script>
