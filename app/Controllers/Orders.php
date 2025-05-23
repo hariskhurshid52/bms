@@ -120,35 +120,12 @@ class Orders extends BaseController
     public function dtList()
     {
         $inputs = $this->request->getPost();
+        log_message('debug', 'Orders dtList - Input: ' . json_encode($inputs));
+        
         $model = new OrderModel();
 
         $builder = $model->builder()
-            ->join('billboards', 'billboards.id = orders.billboard_id', 'left')
-            ->join('customers', 'customers.id = orders.customer_id', 'left')
-            ->join('order_status', 'order_status.id = orders.status_id', 'left')
-            ->join('payments', 'payments.order_id = orders.id', 'left')
-            ->join('users', 'users.id = orders.added_by', 'left');
-
-        if (!empty($inputs['search']['value'])) {
-            $searchValue = $inputs['search']['value'];
-            $builder->groupStart()
-                ->like('billboards.name', $searchValue)
-                ->like('billboards.area', $searchValue)
-                ->like('users.name', $searchValue)
-                ->like('users.email', $searchValue)
-                ->like('customers.first_name', $searchValue)
-                ->like('customers.last_name', $searchValue)
-                ->like('customers.address_line_1', $searchValue)
-                ->like('customers.address_line_2', $searchValue)
-                ->like('customers.address_line_2', $searchValue)
-                ->like('customers.company_name', $searchValue)
-                ->groupEnd();
-        }
-        $totalRecords = $builder->countAllResults(false);
-        $builder->limit($inputs['length'], $inputs['start'])->groupBy('orders.id')
-            ->orderBy('orders.id', 'DESC');
-
-        $list = $builder->select('
+            ->select('
                 orders.id as id,
                 orders.created_at,
                 orders.display,
@@ -162,9 +139,39 @@ class Orders extends BaseController
                 orders.amount,
                 orders.total_price,
                 orders.payment_due_date,
-                SUM(payments.amount) as paidAmount
-               
-            ')->get()->getResultArray();
+                COALESCE(SUM(payments.amount), 0) as paidAmount
+            ')
+            ->join('billboards', 'billboards.id = orders.billboard_id', 'left')
+            ->join('customers', 'customers.id = orders.customer_id', 'left')
+            ->join('order_status', 'order_status.id = orders.status_id', 'left')
+            ->join('payments', 'payments.order_id = orders.id', 'left')
+            ->join('users', 'users.id = orders.added_by', 'left')
+            ->groupBy('orders.id');
+
+        if (!empty($inputs['search']['value'])) {
+            $searchValue = $inputs['search']['value'];
+            $builder->groupStart()
+                ->like('billboards.name', $searchValue)
+                ->like('billboards.area', $searchValue)
+                ->like('users.name', $searchValue)
+                ->like('users.email', $searchValue)
+                ->like('customers.first_name', $searchValue)
+                ->like('customers.last_name', $searchValue)
+                ->like('customers.address_line_1', $searchValue)
+                ->like('customers.address_line_2', $searchValue)
+                ->like('customers.company_name', $searchValue)
+                ->groupEnd();
+        }
+
+        $totalRecords = $builder->countAllResults(false);
+        log_message('debug', 'Orders dtList - Total Records: ' . $totalRecords);
+
+        $builder->limit($inputs['length'], $inputs['start'])
+            ->orderBy('orders.id', 'DESC');
+
+        $list = $builder->get()->getResultArray();
+        log_message('debug', 'Orders dtList - Query Results: ' . json_encode($list));
+
         $rows = [];
         foreach ($list as $key => $value) {
             $rows[] = [
@@ -177,7 +184,7 @@ class Orders extends BaseController
                 date('d-m-Y', strtotime($value['endDate'])),
                 $value['amount'] . ' PKR',
                 $value['total_price'] . ' PKR',
-                empty($value['paidAmount']) ? '0 PKR' : $value['paidAmount'] . ' PKR',
+                $value['paidAmount'] . ' PKR',
                 is_null($value['payment_due_date']) ? 'N/A' : date('d-m-Y', strtotime($value['payment_due_date'])),
                 date('d-m-Y', strtotime($value['created_at'])),
                 '<div class="btn-group" role="group" aria-label="Actions">'
@@ -186,12 +193,15 @@ class Orders extends BaseController
                 . '</div>',
             ];
         }
-        return response()->setJSON([
+
+        $response = [
             "draw" => intval($inputs['draw']),
             "recordsTotal" => $totalRecords,
             "recordsFiltered" => count($rows),
             "data" => $rows,
-        ]);
+        ];
+        log_message('debug', 'Orders dtList - Response: ' . json_encode($response));
+        return response()->setJSON($response);
     }
 
     public function edit($id)

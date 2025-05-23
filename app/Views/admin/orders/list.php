@@ -109,14 +109,30 @@
                 dataType: "json",
                 data: function (d) {
                     d['<?= csrf_token() ?>'] = '<?= csrf_hash() ?>';
+                },
+                error: function (xhr, error, thrown) {
+                    console.error('DataTable Error:', error);
+                    console.error('Response:', xhr.responseText);
                 }
             },
-            columnDefs: [
-                {
-                    targets: -1, // Actions column
+            columns: [
+                { data: 0 }, // Client Name
+                { data: 1 }, // Display
+                { data: 2 }, // Hoarding Name
+                { data: 3 }, // Hoarding Area
+                { data: 4 }, // Booking Status
+                { data: 5 }, // Reservation Start
+                { data: 6 }, // Reservation End
+                { data: 7 }, // Price
+                { data: 8 }, // Total Cost
+                { data: 9 }, // Paid Amount
+                { data: 10 }, // Payment Due Date
+                { data: 11 }, // Booking Placed At
+                { 
+                    data: 12,
                     render: function(data, type, row, meta) {
                         // Extract order ID from the View button URL
-                        var viewMatch = data.match(/admin\\.order\\.view\\/([0-9]+)/);
+                        var viewMatch = data.match(/admin\.order\.view\/([0-9]+)/i);
                         var orderId = null;
                         if (viewMatch && viewMatch[1]) orderId = viewMatch[1];
                         // Add Payments button
@@ -127,7 +143,13 @@
                         return data + paymentsBtn;
                     }
                 }
-            ]
+            ],
+            drawCallback: function(settings) {
+                console.log('DataTable Draw Callback:', settings);
+            },
+            initComplete: function(settings, json) {
+                console.log('DataTable Init Complete:', settings, json);
+            }
         });
 
         // Handle Payments button click
