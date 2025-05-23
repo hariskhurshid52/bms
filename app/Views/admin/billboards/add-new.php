@@ -159,9 +159,9 @@
                     <div class="form-section-title"><i class="bi bi-image"></i> Media</div>
                     <div class="row">
                         <div class="col-md-6 mb-2">
-                            <label for="image_url" class="form-label">Billboard Image</label>
+                            <label for="image_urls" class="form-label">Billboard Images</label>
                             <div id="image-dropzone" class="dropzone"></div>
-                            <input type="hidden" name="image_url" id="image_url" value="<?= old('image_url'); ?>">
+                            <input type="hidden" name="image_urls" id="image_urls" value='<?= old('image_urls', '[]'); ?>'>
                         </div>
                         <div class="col-md-6 mb-2">
                             <label for="video_url" class="form-label">Video URL</label>
@@ -199,23 +199,28 @@
 <script src="<?= base_url('assets/libs/dropzone/min/dropzone.min.js') ?>"></script>
 <script>
     Dropzone.autoDiscover = false;
+    var uploadedImages = [];
     var imageDropzone = new Dropzone("#image-dropzone", {
         url: "<?= route_to('admin.billboard.uploadImage') ?>",
-        maxFiles: 1,
+        maxFiles: null,
         acceptedFiles: 'image/*',
         addRemoveLinks: true,
-        dictDefaultMessage: "Drag an image here or click to upload",
+        dictDefaultMessage: "Drag images here or click to upload",
         params: {
             <?= csrf_token() ?>: '<?= csrf_hash() ?>'
         },
         init: function () {
             this.on("success", function (file, response) {
-                $('#image_url').val(response.image_url);
-                // Store the image URL in the file object for later deletion
-                file.imageUrl = response.image_url;
+                if (response.image_url) {
+                    uploadedImages.push(response.image_url);
+                    $('#image_urls').val(JSON.stringify(uploadedImages));
+                    file.imageUrl = response.image_url;
+                }
             });
             this.on("removedfile", function (file) {
                 if (file.imageUrl) {
+                    uploadedImages = uploadedImages.filter(function(url) { return url !== file.imageUrl; });
+                    $('#image_urls').val(JSON.stringify(uploadedImages));
                     ajaxCall('<?= route_to('admin.billboard.deleteImage') ?>', {
                         image_url: file.imageUrl,
                         <?= csrf_token() ?>: '<?= csrf_hash() ?>'
@@ -227,7 +232,6 @@
                         console.error('Error deleting file:', err);
                     });
                 }
-                $('#image_url').val('');
             });
             this.on("error", function (file, errorMessage) {
                 console.error(errorMessage);
