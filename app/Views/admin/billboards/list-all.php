@@ -137,16 +137,28 @@
         </div>
     </div>
 </div>
-<!-- Image Preview Modal -->
+<!-- Image Preview Modal with Carousel -->
 <div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-labelledby="imagePreviewModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="imagePreviewModalLabel">Billboard Image</h5>
+        <h5 class="modal-title" id="imagePreviewModalLabel">Billboard Images</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body text-center">
-        <img id="previewImage" src="" alt="Billboard" class="img-fluid rounded" style="max-height: 70vh;">
+      <div class="modal-body">
+        <div id="billboardCarousel" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-inner" id="carouselImagesContainer">
+            <!-- Images will be injected here -->
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#billboardCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#billboardCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -179,7 +191,7 @@
                     render: function(data, type, row, meta) {
                         var srcMatch = data.match(/src=["']([^"']+)["']/);
                         var src = srcMatch ? srcMatch[1] : '';
-                        return '<a href="#" class="preview-image-link" data-img="'+src+'">'+data+'</a>';
+                        return '<a href="#" class="preview-image-link" data-row="'+meta.row+'">'+data+'</a>';
                     }
                 }
             ]
@@ -193,8 +205,20 @@
         });
         $(document).on('click', '.preview-image-link', function(e) {
             e.preventDefault();
-            var imgSrc = $(this).data('img');
-            $('#previewImage').attr('src', imgSrc);
+            var rowIdx = $(this).data('row');
+            var rowData = table.row(rowIdx).data();
+            var imageUrls = rowData[rowData.length - 1]; // last column
+            var $carousel = $('#carouselImagesContainer');
+            $carousel.empty();
+            if (imageUrls && imageUrls.length > 0) {
+                imageUrls.forEach(function(url, idx) {
+                    $carousel.append('<div class="carousel-item'+(idx===0?' active':'')+'"><img src="'+url+'" class="d-block w-100 rounded" style="max-height:65vh;object-fit:contain;" alt="Billboard Image '+(idx+1)+'"></div>');
+                });
+            } else {
+                $carousel.append('<div class="carousel-item active"><img src="<?= base_url('assets/images/no-image.png') ?>" class="d-block w-100 rounded" style="max-height:65vh;object-fit:contain;" alt="No Image"></div>');
+            }
+            var carousel = new bootstrap.Carousel(document.getElementById('billboardCarousel'));
+            carousel.to(0); // always start at first image
             $('#imagePreviewModal').modal('show');
         });
     });
