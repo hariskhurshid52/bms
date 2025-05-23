@@ -15,6 +15,7 @@
                     <table class="table table-hover" id="dtOrders">
                         <thead>
                             <tr>
+                                <th>Add Payment</th>
                                 <th style="display:none;">Order ID</th>
                                 <th>Client Name</th>
                                 <th>Display</th>
@@ -117,30 +118,21 @@
                 }
             },
             columns: [
-                { data: 0, visible: false }, // Order ID (hidden)
-                { data: 1 }, // Client Name
-                { data: 2 }, // Display
-                { data: 3 }, // Hoarding Name
-                { data: 4 }, // Hoarding Area
-                { data: 5 }, // Booking Status
-                { data: 6 }, // Reservation Start
-                { data: 7 }, // Reservation End
-                { data: 8 }, // Price
-                { data: 9 }, // Total Cost
-                { data: 10 }, // Paid Amount
-                { data: 11 }, // Payment Due Date
-                { data: 12 }, // Booking Placed At
-                { 
-                    data: 13, // Actions
-                    render: function(data, type, row, meta) {
-                        var orderId = row[0]; // Get order ID from hidden column
-                        var paymentsBtn = '';
-                        if (orderId) {
-                            paymentsBtn = '<button class="btn btn-sm btn-success ms-1 payments-btn" data-order-id="'+orderId+'" title="Add Payment"><i class="fa fa-plus"></i> Add Payment</button>';
-                        }
-                        return data + paymentsBtn;
-                    }
-                }
+                { data: 0 }, // Add Payment button
+                { data: 1, visible: false }, // Order ID (hidden)
+                { data: 2 }, // Client Name
+                { data: 3 }, // Display
+                { data: 4 }, // Hoarding Name
+                { data: 5 }, // Hoarding Area
+                { data: 6 }, // Booking Status
+                { data: 7 }, // Reservation Start
+                { data: 8 }, // Reservation End
+                { data: 9 }, // Price
+                { data: 10 }, // Total Cost
+                { data: 11 }, // Paid Amount
+                { data: 12 }, // Payment Due Date
+                { data: 13 }, // Booking Placed At
+                { data: 14 } // Actions
             ],
             drawCallback: function(settings) {
                 console.log('DataTable Draw Callback:', settings);

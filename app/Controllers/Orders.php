@@ -175,6 +175,7 @@ class Orders extends BaseController
         $rows = [];
         foreach ($list as $key => $value) {
             $rows[] = [
+                '<button class="btn btn-sm btn-success payments-btn" data-order-id="' . $value['id'] . '" title="Add Payment"><i class="fa fa-plus"></i> Add Payment</button>',
                 $value['id'],
                 $value['firstName'] . " " . $value['lastName'],
                 $value['display'],
