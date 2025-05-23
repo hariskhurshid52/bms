@@ -5,6 +5,7 @@ use App\Controllers\Home;
 use App\Controllers\Billboards;
 use App\Controllers\Orders;
 use App\Controllers\Expense;
+use App\Controllers\ReportController;
 
 use CodeIgniter\Router\RouteCollection;
 
@@ -70,4 +71,7 @@ $routes->post('/verify', 'Login::verify', ["as" => "login.verify"]);
 
 $routes->get('/', [Home::class, 'index'], ['filter' => 'auth', 'as' => 'dashboard']);
 $routes->get('marketing-dashboard', 'Home::marketingDashboard', ['as' => 'marketing-dashboard']);
+
+$routes->get('report/hoarding-wise-revenue', 'ReportController::hoardingWiseRevenue', ['as' => 'admin.report.hoardingWiseRevenue']);
+$routes->get('report/hoarding-wise-expense', 'ReportController::hoardingWiseExpense', ['as' => 'admin.report.hoardingWiseExpense']);
 
