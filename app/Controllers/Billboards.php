@@ -163,7 +163,7 @@ class Billboards extends BaseController
                 '<span class="badge bg-' . $statusClass . '">' . ucfirst($value['status']) . '</span>',
                 date('d-m-Y', strtotime($value['installation_date'])),
                 date('d-m-Y', strtotime($value['created_at'])),
-                '<div class="btn-group" role="group" aria-label="Actions"'
+                '<div class="btn-group" role="group" aria-label="Actions">'
                 . '<a href="' . route_to('admin.billboard.edit', $value['id']) . '" class="btn btn-sm btn-outline-primary" title="Edit"><i class="fa fa-edit"></i></a>'
                 . '<a href="' . route_to('admin.billboard.detail', $value['id']) . '" class="btn btn-sm btn-outline-success" title="View"><i class="fa fa-eye"></i></a>'
                 . '</div>',
