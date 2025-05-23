@@ -144,7 +144,7 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <h6>Billboard Details</h6>
+                                        <h6>Hoarding Details</h6>
                                         <table class="table table-borderless">
                                             <tr>
                                                 <th width="40%">Name</th>
@@ -165,7 +165,7 @@
                                         </table>
                                     </div>
                                     <div class="col-md-6">
-                                        <h6>Customer Details</h6>
+                                        <h6>Client Details</h6>
                                         <table class="table table-borderless">
                                             <tr>
                                                 <th width="40%">Name</th>

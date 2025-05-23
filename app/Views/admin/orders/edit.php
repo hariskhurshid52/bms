@@ -23,7 +23,7 @@
             <div class="card-body">
                 <h4 class="header-title">
                     Edit Booking
-                    <a href="<?= route_to('admin.orders.list') ?>" class="btn btn-primary btn-sm float-end">List All</a>
+                    <a href="<?= route_to('admin.orders.list') ?>" class="btn btn-primary btn-sm float-end">List All Bookings</a>
                 </h4>
                 <hr/>
                 <form action="<?= route_to('admin.order.update') ?>" method="POST">
@@ -33,7 +33,7 @@
                     <div class="form-section-title"><i class="bi bi-clipboard-check"></i> Booking Details</div>
                     <div class="row">
                         <div class="col-md-6 mb-2">
-                            <label for="billboard" class="form-label"> <strong class="text-danger">*</strong> Select Billboard</label>
+                            <label for="billboard" class="form-label"> <strong class="text-danger">*</strong> Select Hoarding</label>
                             <select class="form-control select2" id="billboard" name="billboard">
                                 <?php foreach ($billboards as $t => $types): ?>
                                     <optgroup label="<?= $t ?>">
@@ -123,7 +123,7 @@
                         </div>
                     </div>
                     <div class="mt-4">
-                        <button type="submit" class="btn btn-primary float-end">Update Order</button>
+                        <button type="submit" class="btn btn-primary float-end">Update Booking</button>
                     </div>
                 </form>
             </div>

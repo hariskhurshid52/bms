@@ -21,7 +21,7 @@
                 <div class="card-body">
                     <h4 class="header-title">New Booking <a href="<?= route_to('admin.orders.list') ?>"
                                                                       class="btn btn-primary btn-sm pull-right"
-                                                                      role="button">List All</a></h4>
+                                                                      role="button">List All Bookings</a></h4>
                     <hr/>
                     <form action="<?= route_to('admin.order.store') ?>" method="POST"
                           class="tab-content twitter-bs-wizard-tab-content">
@@ -30,8 +30,8 @@
                         <div class="form-section-title"><i class="bi bi-clipboard-check"></i> Booking Details</div>
                         <div class="row">
                             <div class="col-md-6 mb-2">
-                                <label for="billboard" class="form-label"> <strong class="text-danger">*</strong> Select Billboard</label>
-                                <select class="form-control select2" id="billboard" data-placeholder="Select billboard" name="billboard">
+                                <label for="billboard" class="form-label"> <strong class="text-danger">*</strong> Select Hoarding</label>
+                                <select class="form-control select2" id="billboard" data-placeholder="Select hoarding" name="billboard">
                                     <?php foreach ($billboards as $t => $types): ?>
                                         <optgroup label="<?= $t ?>">
                                             <?php foreach ($types as $billboard): ?>
@@ -120,7 +120,7 @@
                             </div>
                         </div>
                         <div class="mt-4">
-                            <button type="submit" class="btn btn-primary float-end">Create Order</button>
+                            <button type="submit" class="btn btn-primary float-end">Create Booking</button>
                         </div>
                     </form>
                 </div>

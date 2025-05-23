@@ -15,18 +15,18 @@
                     <table class="table table-hover" id="dtOrders">
                         <thead>
                             <tr>
-                                <th>Customer Name</th>
+                                <th>Client Name</th>
                                 <th>Display</th>
-                                <th>Billboard Name</th>
-                                <th>Billboard Area</th>
-                                <th>Order Status</th>
+                                <th>Hoarding Name</th>
+                                <th>Hoarding Area</th>
+                                <th>Booking Status</th>
                                 <th>Reservation Start</th>
                                 <th>Reservation End</th>
                                 <th>Price</th>
                                 <th>Total Cost</th>
                                 <th>Paid Amount</th>
                                 <th>Payment Due Date</th>
-                                <th>Order Placed At</th>
+                                <th>Booking Placed At</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
