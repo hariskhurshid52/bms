@@ -175,6 +175,7 @@ class Orders extends BaseController
         $rows = [];
         foreach ($list as $key => $value) {
             $rows[] = [
+                $value['id'],
                 $value['firstName'] . " " . $value['lastName'],
                 $value['display'],
                 $value['billboardName'],

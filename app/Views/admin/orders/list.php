@@ -15,6 +15,7 @@
                     <table class="table table-hover" id="dtOrders">
                         <thead>
                             <tr>
+                                <th style="display:none;">Order ID</th>
                                 <th>Client Name</th>
                                 <th>Display</th>
                                 <th>Hoarding Name</th>
@@ -116,29 +117,27 @@
                 }
             },
             columns: [
-                { data: 0 }, // Client Name
-                { data: 1 }, // Display
-                { data: 2 }, // Hoarding Name
-                { data: 3 }, // Hoarding Area
-                { data: 4 }, // Booking Status
-                { data: 5 }, // Reservation Start
-                { data: 6 }, // Reservation End
-                { data: 7 }, // Price
-                { data: 8 }, // Total Cost
-                { data: 9 }, // Paid Amount
-                { data: 10 }, // Payment Due Date
-                { data: 11 }, // Booking Placed At
+                { data: 0, visible: false }, // Order ID (hidden)
+                { data: 1 }, // Client Name
+                { data: 2 }, // Display
+                { data: 3 }, // Hoarding Name
+                { data: 4 }, // Hoarding Area
+                { data: 5 }, // Booking Status
+                { data: 6 }, // Reservation Start
+                { data: 7 }, // Reservation End
+                { data: 8 }, // Price
+                { data: 9 }, // Total Cost
+                { data: 10 }, // Paid Amount
+                { data: 11 }, // Payment Due Date
+                { data: 12 }, // Booking Placed At
                 { 
-                    data: 12,
+                    data: 13, // Actions
                     render: function(data, type, row, meta) {
-                        // Extract order ID from the View button URL
-                        var viewMatch = data.match(/admin\.order\.view\/([0-9]+)/i);
-                        var orderId = null;
-                        if (viewMatch && viewMatch[1]) orderId = viewMatch[1];
-                        // Add Payments button
+                        var orderId = row[0]; // Get order ID from hidden column
                         var paymentsBtn = '';
                         if (orderId) {
                             paymentsBtn = '<button class="btn btn-sm btn-outline-warning ms-1 payments-btn" data-order-id="'+orderId+'" title="Payments"><i class="fa fa-credit-card"></i></button>';
+                            paymentsBtn += '<button class="btn btn-sm btn-success ms-1 payments-btn" data-order-id="'+orderId+'" title="Add Payment"><i class="fa fa-plus"></i> Add Payment</button>';
                         }
                         return data + paymentsBtn;
                     }
