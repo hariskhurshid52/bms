@@ -156,9 +156,9 @@
                     <?php endif; ?>
                     <div class="row">
                         <div class="col-md-6 mb-2">
-                            <label for="image_url" class="form-label">Billboard Image</label>
+                            <label for="image_urls" class="form-label">Billboard Images</label>
                             <div id="image-dropzone" class="dropzone"></div>
-                            <input type="hidden" name="image_url" id="image_url" value="<?= $billboard['image_url']; ?>">
+                            <input type="hidden" name="image_urls" id="image_urls" value='<?= json_encode(array_column($billboardImages, "image_url")) ?>'>
                         </div>
                         <div class="col-md-6 mb-2">
                             <label for="video_url" class="form-label">Video URL</label>
@@ -194,32 +194,37 @@
 <script src="<?= base_url('assets/libs/dropzone/min/dropzone.min.js') ?>"></script>
 <script>
 Dropzone.autoDiscover = false;
+var uploadedImages = <?= json_encode(array_column($billboardImages, "image_url")) ?>;
 var imageDropzone = new Dropzone("#image-dropzone", {
     url: "<?= route_to('admin.billboard.uploadImage') ?>",
-    maxFiles: 1,
+    maxFiles: null,
     acceptedFiles: 'image/*',
     addRemoveLinks: true,
-    dictDefaultMessage: "Drag an image here or click to upload",
+    dictDefaultMessage: "Drag images here or click to upload",
     params: {
         <?= csrf_token() ?>: '<?= csrf_hash() ?>'
     },
     init: function () {
-        // If there's an existing image, show it
-        <?php if (!empty($billboard['image_url'])): ?>
-        var mockFile = { name: "<?= basename($billboard['image_url']) ?>", size: 12345 };
+        // Show all existing images as previews
+        <?php foreach ($billboardImages as $img): ?>
+        var mockFile = { name: "<?= basename($img['image_url']) ?>", size: 12345 };
         this.emit("addedfile", mockFile);
-        this.emit("thumbnail", mockFile, "<?= base_url($billboard['image_url']) ?>");
+        this.emit("thumbnail", mockFile, "<?= base_url($img['image_url']) ?>");
         this.emit("complete", mockFile);
-        mockFile.imageUrl = "<?= $billboard['image_url'] ?>";
+        mockFile.imageUrl = "<?= $img['image_url'] ?>";
         this.files.push(mockFile);
-        <?php endif; ?>
-
+        <?php endforeach; ?>
         this.on("success", function (file, response) {
-            $('#image_url').val(response.image_url);
-            file.imageUrl = response.image_url;
+            if (response.image_url) {
+                uploadedImages.push(response.image_url);
+                $('#image_urls').val(JSON.stringify(uploadedImages));
+                file.imageUrl = response.image_url;
+            }
         });
         this.on("removedfile", function (file) {
             if (file.imageUrl) {
+                uploadedImages = uploadedImages.filter(function(url) { return url !== file.imageUrl; });
+                $('#image_urls').val(JSON.stringify(uploadedImages));
                 ajaxCall('<?= route_to('admin.billboard.deleteImage') ?>', {
                     image_url: file.imageUrl,
                     <?= csrf_token() ?>: '<?= csrf_hash() ?>'
@@ -231,7 +236,6 @@ var imageDropzone = new Dropzone("#image-dropzone", {
                     console.error('Error deleting file:', err);
                 });
             }
-            $('#image_url').val('');
         });
         this.on("error", function (file, errorMessage) {
             console.error(errorMessage);

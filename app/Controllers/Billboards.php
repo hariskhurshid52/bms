@@ -6,6 +6,7 @@ use App\Libraries\Validation;
 use App\Models\BillboardModel;
 use App\Models\BillboardTypeModel;
 use App\Models\CityModel;
+use App\Models\BillboardImageModel;
 
 class Billboards extends BaseController
 {
@@ -184,6 +185,8 @@ class Billboards extends BaseController
         }
         $data['billboardTypes'] = (new \App\Models\BillboardTypeModel())->findAll();
         $data['cities'] = (new \App\Models\CityModel())->findAll();
+        // Fetch all images for this billboard
+        $data['billboardImages'] = (new BillboardImageModel())->where('billboard_id', $id)->findAll();
         return view('admin/billboards/edit', $data);
     }
 
@@ -228,7 +231,7 @@ class Billboards extends BaseController
             'installation_date' => $inputs['installation_date'],
             'booking_price' => $inputs['booking_price'],
             'status' => $inputs['status'],
-            'image_url' => $inputs['image_url'],
+            'image_url' => $inputs['image_url'] ?? null,
             'video_url' => $inputs['video_url'],
             'annual_increase' => $inputs['annual_increase'],
             'traffic_commming_from' => $inputs['traffic_commming_from'],
@@ -238,11 +241,31 @@ class Billboards extends BaseController
             'monthly_rent' => $inputs['monthly_rent'],
         ];
         $save = $model->update($inputs['billboardId'], $insData);
+        // Handle images
+        $imageUrls = json_decode($inputs['image_urls'] ?? '[]', true);
+        $imageModel = new BillboardImageModel();
+        $existingImages = $imageModel->where('billboard_id', $inputs['billboardId'])->findAll();
+        $existingUrls = array_column($existingImages, 'image_url');
+        // Add new images
+        foreach ($imageUrls as $url) {
+            if (!in_array($url, $existingUrls)) {
+                $imageModel->insert([
+                    'billboard_id' => $inputs['billboardId'],
+                    'image_url' => $url,
+                    'created_at' => date('Y-m-d H:i:s'),
+                ]);
+            }
+        }
+        // Remove deleted images
+        foreach ($existingImages as $img) {
+            if (!in_array($img['image_url'], $imageUrls)) {
+                $imageModel->delete($img['id']);
+            }
+        }
         if ($save) {
             return redirect()->route('admin.billboard.list')->with('postBack', ['status' => 'success', 'message' => 'Billboard updated successfully']);
         }
         return redirect()->back()->with('postBack', ['status' => 'danger', 'message' => 'Failed to update billboard']);
-
     }
 
     public function getHordingDataAjax()
