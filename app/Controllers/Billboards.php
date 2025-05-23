@@ -146,12 +146,14 @@ class Billboards extends BaseController
         $imageModel = new BillboardImageModel();
         foreach ($list as $key => $value) {
             $statusClass = $value['status'] == "active" ? 'success' : ($value['status'] == "inactive" ? 'danger' : 'warning');
-            $imageTag = '<img src="' . (!empty($value['image_url']) ? base_url($value['image_url']) : base_url('assets/images/no-image.png')) . '" alt="Billboard" class="img-thumbnail" style="max-width: 60px; max-height: 40px;">';
             // Fetch all images for this billboard
             $images = $imageModel->where('billboard_id', $value['id'])->findAll();
             $imageUrls = array_map(function($img) {
                 return base_url($img['image_url']);
             }, $images);
+            // Use the first image as thumbnail, or fallback to no-image
+            $thumbUrl = !empty($imageUrls) ? $imageUrls[0] : base_url('assets/images/no-image.png');
+            $imageTag = '<img src="' . $thumbUrl . '" alt="Billboard" class="img-thumbnail" style="max-width: 60px; max-height: 40px;">';
             $rows[] = [
                 $imageTag,
                 $value['name'],
