@@ -19,7 +19,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="header-title">Customer Registration <a href="<?= route_to('admin.customers.list') ?>"   class="btn btn-primary btn-sm pull-right"  role="button">List All</a></h4>
+                    <h4 class="header-title">Client Registration <a href="<?= route_to('admin.customers.list') ?>"   class="btn btn-primary btn-sm pull-right"  role="button">List All</a></h4>
                     <hr/>
                     <form role="form" method="POST" action="<?= route_to('admin.customer.store') ?>">
                         <?= csrf_field(); ?>
@@ -54,7 +54,7 @@
                             <div class="col-md-6 mb-2">
                                 <label for="customerType" class="form-label">Client Type</label>
                                 <select name="customerType" id="customerType" class="form-control" required>
-                                    <?php foreach ([ 'customer' => 'Customer','agency' => 'Agency'] as $k => $v): ?>
+                                    <?php foreach ([ 'customer' => 'Client','agency' => 'Agency'] as $k => $v): ?>
                                         <option value="<?= $k ?>"><?= $v ?></option>
                                     <?php endforeach; ?>
                                 </select>
@@ -62,7 +62,7 @@
                         </div>
                         <!-- Submit Button -->
                         <div class="mt-4">
-                            <button type="submit" class="btn btn-primary float-end">Register Customer</button>
+                            <button type="submit" class="btn btn-primary float-end">Register Client</button>
                         </div>
                     </form>
                 </div>

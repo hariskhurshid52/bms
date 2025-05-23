@@ -7,7 +7,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="header-title">Customer Record Edit <a href="<?= route_to('admin.customer.create') ?>"
+                    <h4 class="header-title">Client Record Edit <a href="<?= route_to('admin.customer.create') ?>"
                                                                      class="btn btn-primary btn-sm pull-right"
                                                                      role="button">Add New</a></h4>
                     <hr/>
@@ -15,7 +15,7 @@
                         <form role="form" method="POST" action="<?= route_to('admin.customer.update') ?>">
                             <?= csrf_field() ?>
                             <?= form_hidden('customerId', $customerInfo['id']) ?>
-                            <!-- Customer's Personal Information -->
+                            <!-- Client's Personal Information -->
                             <h5 class="mb-3">Personal Information</h5>
 
                             <div class="row">
@@ -66,7 +66,7 @@
                                         <label for="customerType" class="form-label">Client Type</label>
 
                                         <select name="customerType" id="customerType" class="form-control" required>
-                                            <?php foreach ([ 'customer' => 'Customer','agency' => 'Agency'] as $k => $v): ?>
+                                            <?php foreach ([ 'customer' => 'Client','agency' => 'Agency'] as $k => $v): ?>
                                                 <option <?= $customerInfo['customer_type'] == $k ? 'selected' : '' ?> value="<?= $k ?>"><?= $v ?></option>
                                             <?php endforeach; ?>
                                         </select>
@@ -79,7 +79,7 @@
 
                             <!-- Submit Button -->
                             <div class="mt-4">
-                                <button type="submit" class="btn btn-primary pull-right">Update Customer</button>
+                                <button type="submit" class="btn btn-primary pull-right">Update Client</button>
                             </div>
                         </form>
                     </div>
