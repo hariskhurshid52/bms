@@ -21,7 +21,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-body">
-                <h4 class="header-title">Add New Hording
+                <h4 class="header-title">Add New Hoarding
                     <a href="<?= route_to('admin.billboard.list') ?>" class="btn btn-primary btn-sm pull-right">Go to
                         list</a>
                 </h4>
@@ -159,7 +159,7 @@
                     <div class="form-section-title"><i class="bi bi-image"></i> Media</div>
                     <div class="row">
                         <div class="col-md-6 mb-2">
-                            <label for="image_urls" class="form-label">Billboard Images</label>
+                            <label for="image_urls" class="form-label">Hoarding Images</label>
                             <div id="image-dropzone" class="dropzone"></div>
                             <input type="hidden" name="image_urls" id="image_urls" value='<?= old('image_urls', '[]'); ?>'>
                         </div>

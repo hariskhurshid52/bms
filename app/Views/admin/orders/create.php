@@ -167,7 +167,7 @@
             $('.booking-price').html(`<sup class="text-info" ><i>min booking price : 0000 </i></sup>`)
 
             ajaxCall('<?=route_to('admin.billboard.get.ajax')?>', {
-                hording: id
+                hoarding: id
             }).then((response) => {
                 if (response.data) {
                     $('.booking-price').html(`<sup class="text-info" ><i>min booking price : ${response.data.booking_price} PKR </i></sup>`)

@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta property="og:locale" content="en_US"/>
     <meta property="og:type" content="Login"/>
-    <meta property="og:title" content="Hording"/>
+    <meta property="og:title" content="Hoarding"/>
 
 
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -72,7 +72,7 @@
                                 <button class="btn btn-success submit-btn">SIGN IN</button>
                             </div>
                             <div class="wrapper mt-5 text-gray">
-                                <p class="footer-text">Copyright © <?= date('Y') ?> Hording. All rights reserved.
+                                <p class="footer-text">Copyright © <?= date('Y') ?> Hoarding. All rights reserved.
                                 </p>
                                 <ul class=" auth-footer text-gray
     ">

@@ -12,7 +12,7 @@ $current_route = isset($current_route['as']) ? $current_route['as'] : 'dashboard
 <head>
     <?= csrf_meta() ?>
     <meta charset="utf-8"/>
-    <title>Hordings</title>
+    <title>Hoardings</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>

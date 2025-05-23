@@ -55,7 +55,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-body">
-                <h4 class="header-title">Hording Listing <a href="<?= route_to('admin.billboard.create') ?>"
+                <h4 class="header-title">Hoarding Listing <a href="<?= route_to('admin.billboard.create') ?>"
                         class="btn btn-primary btn-sm pull-right" role="button">Add New</a></h4>
                 <hr />
                 <!-- Modern Filter Card Section -->

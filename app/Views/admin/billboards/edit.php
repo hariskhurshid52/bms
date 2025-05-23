@@ -20,7 +20,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-body">
-                <h4 class="header-title">Update Hording Record 
+                <h4 class="header-title">Update Hoarding Record 
                     <a href="<?= route_to('admin.billboard.list') ?>" class="btn btn-primary btn-sm pull-right" role="button">Go to list</a>
                 </h4>
                 <hr />

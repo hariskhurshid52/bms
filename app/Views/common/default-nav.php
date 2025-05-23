@@ -10,7 +10,7 @@ $current_route = isset($current_route['as']) ? $current_route['as'] : 'dashboard
 <head>
     <?= csrf_meta() ?>
     <meta charset="utf-8"/>
-    <title>Hording</title>
+    <title>Hoarding</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 
@@ -128,7 +128,7 @@ $current_route = isset($current_route['as']) ? $current_route['as'] : 'dashboard
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-md-6">
-                            <?= date('Y') ?> &copy; Sonic by <a href="">Hordings</a>
+                            <?= date('Y') ?> &copy; Sonic by <a href="">Hoardings</a>
                         </div>
 
                     </div>

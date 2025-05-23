@@ -277,14 +277,14 @@ class Billboards extends BaseController
         return redirect()->back()->with('postBack', ['status' => 'danger', 'message' => 'Failed to update billboard']);
     }
 
-    public function getHordingDataAjax()
+    public function getHoardingDataAjax()
     {
         $inputs = $this->request->getPost();
-        if (empty($inputs['hording'])) {
+        if (empty($inputs['hoarding'])) {
             return response()->setJSON(['status' => 'error', 'message' => 'Billboard not found']);
         }
         $model = new \App\Models\BillboardModel();
-        $data = $model->find($inputs['hording']);
+        $data = $model->find($inputs['hoarding']);
         return response()->setJSON(['status' => 'success', 'data' => $data]);
     }
 
