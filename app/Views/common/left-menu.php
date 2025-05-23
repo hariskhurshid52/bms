@@ -203,6 +203,12 @@ $current_route = isset($current_route['as']) ? $current_route['as'] : 'dashboard
                             <span> Hoarding Wise Expense Report </span>
                         </a>
                     </li>
+                    <li>
+                        <a href="<?= route_to('admin.report.clientWise') ?>">
+                            <i class="ri-user-3-line"></i>
+                            <span> Client Wise Report </span>
+                        </a>
+                    </li>
                 <?php endif; ?>
             </ul>
 

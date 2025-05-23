@@ -219,4 +219,85 @@ class ReportController extends Controller
             'totalAmount' => $totalAmount,
         ]);
     }
+
+    public function clientWiseReport()
+    {
+        $orderModel = new OrderModel();
+        $billboardModel = new BillboardModel();
+        $paymentModel = new PaymentModel();
+        $customerModel = new CustomerModel();
+
+        // Filters
+        $client = $this->request->getGet('client');
+        $date_from = $this->request->getGet('date_from');
+        $date_to = $this->request->getGet('date_to');
+
+        $customers = $customerModel->findAll();
+        $billboards = $billboardModel->findAll();
+
+        $orders = [];
+        if ($client) {
+            $orderQuery = $orderModel->where('customer_id', $client);
+            if ($date_from) $orderQuery = $orderQuery->where('start_date >=', $date_from);
+            if ($date_to) $orderQuery = $orderQuery->where('end_date <=', $date_to);
+            $orders = $orderQuery->findAll();
+        }
+
+        $reportData = [];
+        $totalCost = 0;
+        $totalReceived = 0;
+        $totalBalance = 0;
+        foreach ($orders as $order) {
+            $display = $order['display'] ?? '-';
+            $hoarding = '-';
+            foreach ($billboards as $b) {
+                if ($b['id'] == $order['billboard_id']) {
+                    $hoarding = ($b['height'] ?? '-') . 'x' . ($b['width'] ?? '-');
+                    break;
+                }
+            }
+            $cost = $order['amount'];
+            $received = 0;
+            $payments = $paymentModel->where('order_id', $order['id'])->findAll();
+            foreach ($payments as $payment) {
+                $received += $payment['amount'];
+            }
+            $balance = $cost - $received;
+            $totalCost += $cost;
+            $totalReceived += $received;
+            $totalBalance += $balance;
+            $reportData[] = [
+                'display' => $display,
+                'hoarding' => $hoarding,
+                'start_date' => $order['start_date'],
+                'end_date' => $order['end_date'],
+                'cost' => $cost,
+                'received' => $received,
+                'balance' => $balance,
+            ];
+        }
+        // Get client name
+        $clientName = '';
+        foreach ($customers as $c) {
+            if ($c['id'] == $client) {
+                $clientName = $c['company_name'] ?: ($c['first_name'] . ' ' . $c['last_name']);
+                break;
+            }
+        }
+        return view('admin/reports/client_wise_report', [
+            'reportData' => $reportData,
+            'customers' => $customers,
+            'filters' => [
+                'client' => $client,
+                'date_from' => $date_from,
+                'date_to' => $date_to,
+            ],
+            'clientName' => $clientName,
+            'totals' => [
+                'cost' => $totalCost,
+                'received' => $totalReceived,
+                'balance' => $totalBalance,
+            ]
+        ]);
+    }
 } 

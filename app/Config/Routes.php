@@ -74,4 +74,5 @@ $routes->get('marketing-dashboard', 'Home::marketingDashboard', ['as' => 'market
 
 $routes->get('report/hoarding-wise-revenue', 'ReportController::hoardingWiseRevenue', ['as' => 'admin.report.hoardingWiseRevenue']);
 $routes->get('report/hoarding-wise-expense', 'ReportController::hoardingWiseExpense', ['as' => 'admin.report.hoardingWiseExpense']);
+$routes->get('report/client-wise', 'ReportController::clientWiseReport', ['as' => 'admin.report.clientWise']);
 
