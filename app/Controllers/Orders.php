@@ -402,8 +402,8 @@ class Orders extends BaseController
     // AJAX: Get all payments for a booking (order)
     public function getPayments($orderId)
     {
-        $model = new BookingPaymentModel();
-        $payments = $model->where('order_id', $orderId)->orderBy('payment_date', 'DESC')->findAll();
+        $model = new PaymentModel();
+        $payments = $model->where('order_id', $orderId)->orderBy('created_at', 'DESC')->findAll();
         return $this->response->setJSON(['status' => 'success', 'payments' => $payments]);
     }
 

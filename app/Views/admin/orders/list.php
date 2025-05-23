@@ -136,8 +136,7 @@
                         var orderId = row[0]; // Get order ID from hidden column
                         var paymentsBtn = '';
                         if (orderId) {
-                            paymentsBtn = '<button class="btn btn-sm btn-outline-warning ms-1 payments-btn" data-order-id="'+orderId+'" title="Payments"><i class="fa fa-credit-card"></i></button>';
-                            paymentsBtn += '<button class="btn btn-sm btn-success ms-1 payments-btn" data-order-id="'+orderId+'" title="Add Payment"><i class="fa fa-plus"></i> Add Payment</button>';
+                            paymentsBtn = '<button class="btn btn-sm btn-success ms-1 payments-btn" data-order-id="'+orderId+'" title="Add Payment"><i class="fa fa-plus"></i> Add Payment</button>';
                         }
                         return data + paymentsBtn;
                     }
