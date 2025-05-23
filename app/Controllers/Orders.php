@@ -6,6 +6,7 @@ use App\Models\BillboardModel;
 use App\Models\CustomerModel;
 use App\Models\OrderModel;
 use App\Models\PaymentModel;
+use App\Models\BookingPaymentModel;
 
 class Orders extends BaseController
 {
@@ -385,5 +386,40 @@ class Orders extends BaseController
         }
 
         return redirect()->back()->with('postBack', ['status' => 'success', 'message' => 'Payment added successfully']);
+    }
+
+    // AJAX: Get all payments for a booking (order)
+    public function getPayments($orderId)
+    {
+        $model = new BookingPaymentModel();
+        $payments = $model->where('order_id', $orderId)->orderBy('payment_date', 'DESC')->findAll();
+        return $this->response->setJSON(['status' => 'success', 'payments' => $payments]);
+    }
+
+    // AJAX: Add a new payment for a booking (order)
+    public function addBookingPayment()
+    {
+        $inputs = $this->request->getPost();
+        $rules = [
+            'order_id' => 'required|is_natural_no_zero',
+            'amount' => 'required|numeric',
+            'payment_date' => 'required|valid_date',
+        ];
+        if (!$this->validate($rules)) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Invalid input data']);
+        }
+        $model = new BookingPaymentModel();
+        $insData = [
+            'order_id' => $inputs['order_id'],
+            'amount' => $inputs['amount'],
+            'payment_date' => $inputs['payment_date'],
+            'payment_method' => $inputs['payment_method'] ?? null,
+            'notes' => $inputs['notes'] ?? null,
+        ];
+        $saved = $model->insert($insData);
+        if (!$saved) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Unable to add payment']);
+        }
+        return $this->response->setJSON(['status' => 'success', 'message' => 'Payment added successfully']);
     }
 }
