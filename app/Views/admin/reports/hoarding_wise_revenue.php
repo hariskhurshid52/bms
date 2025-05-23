@@ -117,11 +117,15 @@
                             </div>
                             <div class="col-md-2">
                                 <label for="filterDateFrom" class="form-label">Start Date</label>
-                                <input type="date" class="form-control" id="filterDateFrom" name="date_from" value="<?= esc($filters['date_from']) ?>">
+                                <div class="input-group position-relative datepicker" id="revenueReportStartPicker">
+                                    <input autocomplete="off" data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-autoclose="true" data-date-container="#revenueReportStartPicker" type="text" class="form-control" id="filterDateFrom" name="date_from" readonly value="<?= esc($filters['date_from']) ?>">
+                                </div>
                             </div>
                             <div class="col-md-2">
                                 <label for="filterDateTo" class="form-label">End Date</label>
-                                <input type="date" class="form-control" id="filterDateTo" name="date_to" value="<?= esc($filters['date_to']) ?>">
+                                <div class="input-group position-relative datepicker" id="revenueReportEndPicker">
+                                    <input autocomplete="off" data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-autoclose="true" data-date-container="#revenueReportEndPicker" type="text" class="form-control" id="filterDateTo" name="date_to" readonly value="<?= esc($filters['date_to']) ?>">
+                                </div>
                             </div>
                             <div class="col-md-2 filter-actions">
                                 <button type="submit" class="btn btn-primary w-100"><i class="bi bi-funnel"></i> Apply</button>
