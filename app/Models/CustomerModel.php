@@ -47,7 +47,7 @@ class CustomerModel extends Model
         'first_name' => 'required|min_length[3]|max_length[255]',
         'email' => 'required|valid_email|is_unique[customers.email,id,{id}]',
         'phone' => 'required',
-        'billing_address' => 'required',
+        'address_line_1' => 'required',
     ];
 
     protected $validationMessages = [
@@ -64,7 +64,7 @@ class CustomerModel extends Model
         'phone' => [
             'required' => 'Phone number is required.'
         ],
-        'billing_address' => [
+        'address_line_1' => [
             'required' => 'Billing address is required.'
         ],
     ];

@@ -40,15 +40,16 @@
                             </div>
                             <div class="col-md-6 mb-2">
                                 <label for="contactPerson" class="form-label">Contact Person</label>
-                                <input type="text" class="form-control" id="contactPerson" name="contactPerson" value="<?= old('contactPerson'); ?>" required>
+                                <input type="text" class="form-control" id="contactPerson" name="contactPerson" value="<?= old('contactPerson'); ?>">
                             </div>
                         </div>
                         <!-- Section: Client Details -->
                         <div class="form-section-title"><i class="bi bi-building"></i> Client Details</div>
                         <div class="row">
                             <div class="col-md-12 mb-2">
-                                <label for="billingAddress" class="form-label"> <strong class="text-danger">*</strong> Billing Address</label>
-                                <textarea class="form-control" id="billingAddress" name="billingAddress" rows="3" required><?= old('billingAddress'); ?></textarea>
+                                <label for="address_line_1" class="form-label"> <strong class="text-danger">*</strong> Billing Address</label>
+                                <textarea class="form-control" id="address_line_1" name="address_line_1" rows="3" required><?= old('address_line_1'); ?></textarea>
+                                <input type="hidden" name="address_line_1_fallback" id="address_line_1_fallback" value="">
                             </div>
                             <div class="col-md-6 mb-2">
                                 <label for="customerType" class="form-label">Client Type</label>
@@ -68,4 +69,16 @@
             </div>
         </div>
     </div>
+<?= $this->endSection() ?>
+<?= $this->section('scripts') ?>
+<script>
+// Ensure address_line_1 is always enabled and value is sent
+$(function() {
+    $('form').on('submit', function() {
+        var val = $('#address_line_1').val();
+        $('#address_line_1_fallback').val(val);
+        $('#address_line_1').prop('disabled', false);
+    });
+});
+</script>
 <?= $this->endSection() ?>

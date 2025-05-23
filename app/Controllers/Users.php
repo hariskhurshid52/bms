@@ -207,26 +207,30 @@ class Users extends BaseController
             'firstName' => Validation::$REQUIRED,
             'email' => Validation::$REQUIRED,
             'phone' => Validation::$REQUIRED,
-            'billingAddress' => Validation::$REQUIRED,
+            'address_line_1' => Validation::$REQUIRED,
         ];
         $validation = \Config\Services::validation();
         if (!$this->validate($rules)) {
-            $error = ucfirst(array_values($validation->getErrors())[0]);
+            $errors = $validation->getErrors();
+            log_message('error', 'Validation errors: ' . json_encode($errors));
+            log_message('error', 'POST data: ' . json_encode($this->request->getPost()));
+            $error = ucfirst(array_values($errors)[0]);
             return redirect()->back()->withInput()->with('postBack', ['status' => 'error', 'message' => $error]);
         }
 
-
         $inputs = $this->request->getPost();
+        log_message('error', 'Form inputs: ' . json_encode($inputs));
 
         $insData = [
             'first_name' => $inputs['firstName'],
             'email' => $inputs['email'],
             'phone' => $inputs['phone'],
             'contact_person' => $inputs['contactPerson'],
-            'address_line_1' => $inputs['billingAddress'],
+            'address_line_1' => $inputs['address_line_1'],
             'customer_type' => $inputs['customerType'],
             'added_by' => $this->userId
         ];
+        log_message('error', 'Data to be inserted: ' . json_encode($insData));
         $model = new CustomerModel();
         $saved = $model->save($insData);
         if ($saved) {
@@ -335,7 +339,7 @@ class Users extends BaseController
             'firstName' => Validation::$REQUIRED,
             'email' => Validation::$REQUIRED,
             'phone' => Validation::$REQUIRED,
-            'billingAddress' => Validation::$REQUIRED,
+            'address_line_1' => Validation::$REQUIRED,
         ];
         $validation = \Config\Services::validation();
         if (!$this->validate($rules)) {
@@ -349,7 +353,7 @@ class Users extends BaseController
             'email' => $inputs['email'],
             'phone' => $inputs['phone'],
             'contact_person' => $inputs['contactPerson'],
-            'address_line_1' => $inputs['billingAddress'],
+            'address_line_1' => $inputs['address_line_1'],
             'customer_type' => $inputs['customerType'],
         ];
         $model = new CustomerModel();
