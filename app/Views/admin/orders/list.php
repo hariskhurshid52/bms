@@ -169,7 +169,7 @@
                     var rows = '';
                     resp.payments.forEach(function(p) {
                         rows += '<tr>' +
-                            '<td>' + p.payment_date + '</td>' +
+                            '<td>' + (p.created_at ? p.created_at : '-') + '</td>' +
                             '<td>' + p.amount + '</td>' +
                             '<td>' + (p.payment_method ? p.payment_method : '-') + '</td>' +
                             '<td>' + (p.notes ? p.notes : '-') + '</td>' +
@@ -187,6 +187,8 @@
             e.preventDefault();
             var form = $(this);
             var data = form.serialize();
+            // Add CSRF token
+            data += '&<?= csrf_token() ?>=<?= csrf_hash() ?>';
             $('#addPaymentMsg').html('');
             $.post('<?= base_url('admin/orders/addBookingPayment') ?>', data, function(resp) {
                 if (resp.status === 'success') {

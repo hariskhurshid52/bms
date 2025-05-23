@@ -419,13 +419,15 @@ class Orders extends BaseController
         if (!$this->validate($rules)) {
             return $this->response->setJSON(['status' => 'error', 'message' => 'Invalid input data']);
         }
-        $model = new BookingPaymentModel();
+        $model = new PaymentModel();
         $insData = [
             'order_id' => $inputs['order_id'],
             'amount' => $inputs['amount'],
-            'payment_date' => $inputs['payment_date'],
             'payment_method' => $inputs['payment_method'] ?? null,
             'notes' => $inputs['notes'] ?? null,
+            'created_at' => $inputs['payment_date'],
+            'added_by' => $this->userId,
+            'status_id' => 1
         ];
         $saved = $model->insert($insData);
         if (!$saved) {

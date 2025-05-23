@@ -54,6 +54,7 @@ $routes->group( '/',['filter' => ['auth', 'auth']], function ($routes) {
     $routes->get('order/view/(:num)',  [Orders::class, 'view'], ['as' => 'admin.order.view']);
     $routes->post('orders/add-payment',[Orders::class, 'addPayment'], ['as' => 'admin.orders.addPayment']);
     $routes->get('admin/orders/getPayments/(:num)', 'Orders::getPayments/$1');
+    $routes->post('admin/orders/addBookingPayment', 'Orders::addBookingPayment');
 
     $routes->get('expense/create', [Expense::class, 'create'], ['as' => 'admin.expense.create']);
     $routes->post('expense/save', [Expense::class, 'save'], ['as' => 'admin.expense.store']);
