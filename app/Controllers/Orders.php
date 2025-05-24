@@ -531,7 +531,7 @@ class Orders extends BaseController
                 $booking = $orderModel->find($desc);
                 $billboard = $booking ? $billboardModel->find($booking['billboard_id']) : null;
                 $desc = $billboard['name'] ?? $desc;
-                $size = $billboard['area'] ?? $size;
+                $size = ($billboard['height'] ?? '') . 'x' . ($billboard['width'] ?? '');
             }
             $invoiceItemModel->insert([
                 'invoice_id' => $invoiceId,
