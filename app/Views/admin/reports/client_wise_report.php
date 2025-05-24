@@ -131,18 +131,9 @@
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
-                                <?php for ($i = 0; $i < 8; $i++): ?>
-                                    <tr>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                    </tr>
-                                <?php endfor; ?>
+                                <tr>
+                                    <td colspan="8" class="text-center text-muted">No data found.</td>
+                                </tr>
                             <?php endif; ?>
                         </tbody>
                         <tfoot>
