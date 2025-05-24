@@ -86,6 +86,13 @@
                     <label class="form-label">P.O</label>
                     <input type="text" class="form-control" name="po_number">
                 </div>
+                <div class="col-md-2 mb-2">
+                    <label class="form-label">Invoice Type</label>
+                    <select class="form-select" id="invoiceType" name="invoice_type" required>
+                        <option value="with_tax">With Sales Tax</option>
+                        <option value="without_tax">Without Sales Tax</option>
+                    </select>
+                </div>
             </div>
             <div class="section-title">Line Items</div>
             <div class="table-responsive">
@@ -256,5 +263,18 @@ function numToWords(num) {
 }
 $(document).on('input', '.item-amount, #salesTaxInput', updateTotals);
 updateTotals();
+
+$('#invoiceType').on('change', function() {
+    if ($(this).val() === 'without_tax') {
+        $('#salesTaxInput').val(0).closest('.row').hide();
+        updateTotals();
+    } else {
+        $('#salesTaxInput').closest('.row').show();
+        updateTotals();
+    }
+});
+$(document).ready(function() {
+    $('#invoiceType').trigger('change');
+});
 </script>
 <?= $this->endSection() ?> 

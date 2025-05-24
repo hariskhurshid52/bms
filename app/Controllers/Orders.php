@@ -509,6 +509,7 @@ class Orders extends BaseController
             $subTotal += floatval($item['amount'] ?? 0);
         }
         $grandTotal = $subTotal + floatval($salesTax);
+        $invoiceType = $inputs['invoice_type'] ?? 'with_tax';
         // Save invoice header
         $invoiceId = $invoiceModel->insert([
             'invoice_number' => $invoiceNumber,
@@ -519,6 +520,7 @@ class Orders extends BaseController
             'sub_total' => $subTotal,
             'sales_tax' => $salesTax,
             'grand_total' => $grandTotal,
+            'invoice_type' => $invoiceType,
         ], true);
         // Save line items
         foreach ($items as $item) {

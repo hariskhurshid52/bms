@@ -19,6 +19,7 @@ class InvoiceModel extends Model
         'grand_total',
         'created_at',
         'updated_at',
+        'invoice_type',
     ];
     protected $useTimestamps = true;
     protected $createdField = 'created_at';

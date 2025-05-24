@@ -11,13 +11,11 @@
 <?= $this->endSection() ?>
 <?= $this->section('content') ?>
 <div class="invoice-box">
-    <div class="d-flex justify-content-between align-items-center invoice-header">
-        <div>
-            <img src="<?= base_url('assets/images/logos/logo-main.png') ?>" height="50" alt="Logo">
-            <div><strong>Sign Pakistan NTN# 3705552-6</strong></div>
-        </div>
-        <div class="text-end">
-            <div class="invoice-title">SALES TAX INVOICE</div>
+    <div class="invoice-header mb-4">
+        <div class="text-start">
+            <div class="invoice-title" style="color:#388e3c;">
+                <?= (isset($invoice['invoice_type']) && $invoice['invoice_type'] === 'with_tax') ? 'SALES TAX INVOICE' : 'INVOICE' ?>
+            </div>
             <div><strong>Date:</strong> <?= date('d-M-y', strtotime($invoice['invoice_date'])) ?></div>
             <div><strong>Invoice #:</strong> <?= esc($invoice['invoice_number']) ?></div>
             <div><strong>P.O:</strong> <?= esc($invoice['po_number']) ?></div>
@@ -65,10 +63,12 @@
                     <th class="text-end">Sub Total</th>
                     <td class="text-end"><?= number_format($invoice['sub_total'], 2) ?></td>
                 </tr>
+                <?php if (isset($invoice['invoice_type']) && $invoice['invoice_type'] === 'with_tax'): ?>
                 <tr>
                     <th class="text-end">Sales Tax</th>
                     <td class="text-end"><?= number_format($invoice['sales_tax'], 2) ?></td>
                 </tr>
+                <?php endif; ?>
                 <tr>
                     <th class="text-end">Grand Total</th>
                     <td class="text-end"><?= number_format($invoice['grand_total'], 2) ?></td>
