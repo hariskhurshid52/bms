@@ -32,7 +32,7 @@
                             </div>
                             <div class="col-md-6 mb-2">
                                 <label for="email" class="form-label"> <strong class="text-danger">*</strong> Email</label>
-                                <input type="email" class="form-control" id="email" name="email" value="<?= old('email'); ?>" aria-describedby="emailHelp" required>
+                                <input type="email" class="form-control" id="email" name="email" value="<?= old('email'); ?>" aria-describedby="emailHelp">
                             </div>
                             <div class="col-md-6 mb-2">
                                 <label for="phone" class="form-label"> <strong class="text-danger">*</strong> Phone</label>

@@ -30,8 +30,7 @@
                                     <div class="mb-2">
                                         <label for="email" class="form-label"> <strong class="text-danger">*</strong> Email</label>
                                         <input type="email" class="form-control" id="email" name="email"
-                                               value="<?= $customerInfo['email'] ?>" aria-describedby="emailHelp"
-                                               required>
+                                               value="<?= $customerInfo['email'] ?>" aria-describedby="emailHelp">
                                         <div id="emailHelp" class="form-text">We'll never share your email with anyone
                                             else.
                                         </div>

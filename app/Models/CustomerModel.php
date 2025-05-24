@@ -45,7 +45,6 @@ class CustomerModel extends Model
     // Validation rules (if you need validation)
     protected $validationRules = [
         'first_name' => 'required|min_length[3]|max_length[255]',
-        'email' => 'required|valid_email|is_unique[customers.email,id,{id}]',
         'phone' => 'required',
         'address_line_1' => 'required',
     ];
@@ -55,11 +54,6 @@ class CustomerModel extends Model
             'required' => 'First name is required.',
             'min_length' => 'First name must be at least 3 characters long.',
             'max_length' => 'First name cannot exceed 255 characters.'
-        ],
-        'email' => [
-            'required' => 'Email is required.',
-            'valid_email' => 'Please provide a valid email address.',
-            'is_unique' => 'This email is already in use.',
         ],
         'phone' => [
             'required' => 'Phone number is required.'
