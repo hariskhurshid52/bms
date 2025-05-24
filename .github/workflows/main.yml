@@ -1,0 +1,30 @@
+name: SFTP Deployment to IONOS
+
+on:
+  push:
+    branches:
+      - main  # Change this to your deployment branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Install SSH Client
+        run: sudo apt-get install -y openssh-client
+
+      - name: Deploy to IONOS via SFTP
+        env:
+          SFTP_HOST: ${{ secrets.IONOS_FTP_HOST }}
+          SFTP_USER: ${{ secrets.IONOS_FTP_USERNAME }}
+          SFTP_PASS: ${{ secrets.IONOS_FTP_PASSWORD }}
+          REMOTE_PATH: "/home/ampleres/sales.signpakistan.com/"
+        run: |
+          sudo apt-get install -y lftp
+          lftp -c "open -u $SFTP_USER,$SFTP_PASS -e 'set sftp:auto-confirm yes; mirror -R --parallel=10 ./ $REMOTE_PATH; bye' sftp://$SFTP_HOST"
+
+      - name: Verify Deployment
+        run: echo "SFTP Deployment to IONOS completed successfully!"
