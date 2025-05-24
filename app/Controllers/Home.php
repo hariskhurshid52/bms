@@ -1416,11 +1416,20 @@ class Home extends BaseController
             ->findAll();
         // Fetch all images for each board
         $imageModel = new \App\Models\BillboardImageModel();
+        $orderModel = new \App\Models\OrderModel(); // Add OrderModel
         foreach ($boards as &$board) {
             $images = $imageModel->where('billboard_id', $board['id'])->findAll();
             $board['images'] = array_map(function($img) {
                 return base_url($img['image_url']);
             }, $images);
+
+            // Fetch last active booking end date
+            $lastBooking = $orderModel
+                ->where('billboard_id', $board['id'])
+                ->where('status_id', 1) // Assuming 1 is the status_id for active bookings
+                ->orderBy('end_date', 'DESC')
+                ->first();
+            $board['last_booking_end_date'] = $lastBooking['end_date'] ?? null;
         }
         unset($board);
         // Count by status
