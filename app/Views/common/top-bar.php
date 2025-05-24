@@ -15,7 +15,6 @@ $expiringOrders = $orderModel
     ->where('end_date <=', $next5Days)
     ->findAll();
 
-print_r($expiringOrders);
 ?>
 
 <!-- Topbar Start -->
@@ -63,7 +62,7 @@ print_r($expiringOrders);
                         </div>
                     </div>
                 </li>
-            <? endif; ?>
+            <?php endif; ?>
             <li class="d-none d-md-inline-block">
                 <a class="nav-link dropdown-toggle arrow-none waves-effect waves-light" id="light-dark-mode"
                    href="#">
