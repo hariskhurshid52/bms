@@ -207,6 +207,10 @@ $(document).on('change', '.booking-dropdown', function() {
     let sqft = (height && width) ? (parseFloat(height) * parseFloat(width)) : '';
     let from = selected.data('from') || '';
     let to = selected.data('to') || '';
+    // Strip time part if present
+    from = from ? from.split(' ')[0] : '';
+    to = to ? to.split(' ')[0] : '';
+    console.log('Setting dates:', from, to);
     let amount = selected.data('amount') || '';
     $(`input[name='items[${rowIdx}][size]']`).val(size);
     $(`input[name='items[${rowIdx}][from]']`).val(from);
