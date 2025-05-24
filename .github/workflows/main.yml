@@ -1,0 +1,52 @@
+name: FTPS Deployment to AMPLER Resources
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🚀 Checkout Code
+        uses: actions/checkout@v3
+
+      - name: 🔍 Check for New Migrations
+        id: migrations
+        run: |
+          git fetch --no-tags --depth=2 origin main
+          if git diff --name-only ${{ github.sha }} ${{ github.sha }}^1 | grep -E '^application/migrations/'; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 🛠 Install SSH Client & LFTP
+        run: |
+          sudo apt-get update && sudo apt-get install -y openssh-client lftp sshpass
+
+      - name: 🔹 Deploy to AMPLER via FTPS
+        env:
+          FTPS_HOST: ftp.amplesresources.com
+          FTPS_USER: sale.signpaksitan@sales.signpakistan.com
+          FTPS_PASS: k*9eRJ.[.UU.
+          REMOTE_PATH: "/home/ampleres/sales.signpakistan.com/"
+        run: |
+          lftp -c "open -u $FTPS_USER,$FTPS_PASS -e '\
+            set ftp:ssl-force true; \
+            set ssl:verify-certificate no; \
+            mirror -R --parallel=10 ./ $REMOTE_PATH; \
+            bye' ftps://$FTPS_HOST"
+
+      - name: 🔄 Run Migrations if Present
+        if: steps.migrations.outputs.changed == 'true'
+        env:
+          SSH_HOST: ftp.amplesresources.com
+          SSH_USER: sale.signpaksitan@sales.signpakistan.com
+          SSH_PASS: k*9eRJ.[.UU.
+          SSH_PORT: 21
+        run: |
+          sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USER@$SSH_HOST \
+            "cd /var/www/html/api && php index.php migrate/latest"
