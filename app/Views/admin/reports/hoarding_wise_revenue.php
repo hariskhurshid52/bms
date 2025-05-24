@@ -86,34 +86,46 @@
                             </div>
                             <div class="col-md-2">
                                 <label for="filterCity" class="form-label">City</label>
-                                <select class="form-select" id="filterCity" name="city">
-                                    <option value="">All Cities</option>
-                                    <?php foreach ($cities as $city): ?>
-                                        <option value="<?= $city['id'] ?>" <?= $filters['city'] == $city['id'] ? 'selected' : '' ?>><?= esc($city['name']) ?></option>
-                                    <?php endforeach; ?>
-                                </select>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+                                    <select class="form-select" id="filterCity" name="city">
+                                        <option value="">All Cities</option>
+                                        <?php foreach ($cities as $city): ?>
+                                            <option value="<?= $city['id'] ?>" <?= $filters['city'] == $city['id'] ? 'selected' : '' ?>><?= esc($city['name']) ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
                             </div>
                             <div class="col-md-2">
                                 <label for="filterArea" class="form-label">Area</label>
-                                <input type="text" class="form-control" id="filterArea" name="area" value="<?= esc($filters['area']) ?>" placeholder="Area">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-plus-square"></i></span>
+                                    <input type="text" class="form-control" id="filterArea" name="area" value="<?= esc($filters['area']) ?>" placeholder="Area">
+                                </div>
                             </div>
                             <div class="col-md-2">
                                 <label for="filterType" class="form-label">Type</label>
-                                <select class="form-select" id="filterType" name="type">
-                                    <option value="">All Types</option>
-                                    <?php foreach ($types as $type): ?>
-                                        <option value="<?= $type['id'] ?>" <?= $filters['type'] == $type['id'] ? 'selected' : '' ?>><?= esc($type['name']) ?></option>
-                                    <?php endforeach; ?>
-                                </select>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-grid"></i></span>
+                                    <select class="form-select" id="filterType" name="type">
+                                        <option value="">All Types</option>
+                                        <?php foreach ($types as $type): ?>
+                                            <option value="<?= $type['id'] ?>" <?= $filters['type'] == $type['id'] ? 'selected' : '' ?>><?= esc($type['name']) ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
                             </div>
                             <div class="col-md-2">
                                 <label for="filterStatus" class="form-label">Status</label>
-                                <select class="form-select" id="filterStatus" name="status">
-                                    <option value="">All Status</option>
-                                    <option value="active" <?= $filters['status'] == 'active' ? 'selected' : '' ?>>Active</option>
-                                    <option value="inactive" <?= $filters['status'] == 'inactive' ? 'selected' : '' ?>>Inactive</option>
-                                    <option value="under_maintenance" <?= $filters['status'] == 'under_maintenance' ? 'selected' : '' ?>>Under Maintenance</option>
-                                </select>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-info-circle"></i></span>
+                                    <select class="form-select" id="filterStatus" name="status">
+                                        <option value="">All Status</option>
+                                        <option value="active" <?= $filters['status'] == 'active' ? 'selected' : '' ?>>Active</option>
+                                        <option value="inactive" <?= $filters['status'] == 'inactive' ? 'selected' : '' ?>>Inactive</option>
+                                        <option value="under_maintenance" <?= $filters['status'] == 'under_maintenance' ? 'selected' : '' ?>>Under Maintenance</option>
+                                    </select>
+                                </div>
                             </div>
                             <div class="col-md-2">
                                 <label for="filterDateFrom" class="form-label">Start Date</label>

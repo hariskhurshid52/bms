@@ -194,13 +194,13 @@ $current_route = isset($current_route['as']) ? $current_route['as'] : 'dashboard
                     <li>
                         <a href="<?= route_to('admin.report.hoardingWiseRevenue') ?>">
                             <i class="ri-bar-chart-2-line"></i>
-                            <span> Hoarding Wise Revenue Report </span>
+                            <span> Revenue Report </span>
                         </a>
                     </li>
                     <li>
                         <a href="<?= route_to('admin.report.hoardingWiseExpense') ?>">
                             <i class="ri-money-dollar-circle-line"></i>
-                            <span> Hoarding Wise Expense Report </span>
+                            <span> Expense Report </span>
                         </a>
                     </li>
                     <li>

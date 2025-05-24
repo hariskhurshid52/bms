@@ -94,17 +94,19 @@
                         </div>
                     </form>
                 </div>
-                <?php if ($filters['client']): ?>
                 <div class="mb-3">
-                    <strong>Client:</strong> <?= esc($clientName) ?><br>
-                    <?php if ($filters['date_from'] || $filters['date_to']): ?>
-                        <strong>Report:</strong> From <?= $filters['date_from'] ? date('d-m-Y', strtotime($filters['date_from'])) : '...' ?> to <?= $filters['date_to'] ? date('d-m-Y', strtotime($filters['date_to'])) : '...' ?>
+                    <?php if ($filters['client']): ?>
+                        <strong>Client:</strong> <?= esc($clientName) ?><br>
+                        <?php if ($filters['date_from'] || $filters['date_to']): ?>
+                            <strong>Report:</strong> From <?= $filters['date_from'] ? date('d-m-Y', strtotime($filters['date_from'])) : '...' ?> to <?= $filters['date_to'] ? date('d-m-Y', strtotime($filters['date_to'])) : '...' ?>
+                        <?php endif; ?>
                     <?php endif; ?>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped">
                         <thead>
                             <tr>
+                                <th>Client</th>
                                 <th>Display</th>
                                 <th>Hoarding</th>
                                 <th>Start Date</th>
@@ -118,6 +120,7 @@
                             <?php if (count($reportData) > 0): ?>
                                 <?php foreach ($reportData as $row): ?>
                                     <tr>
+                                        <td><?= esc($row['client']) ?></td>
                                         <td><?= esc($row['display']) ?></td>
                                         <td><?= esc($row['hoarding']) ?></td>
                                         <td><?= date('d-M-y', strtotime($row['start_date'])) ?></td>
@@ -137,13 +140,14 @@
                                         <td>&nbsp;</td>
                                         <td>&nbsp;</td>
                                         <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
                                     </tr>
                                 <?php endfor; ?>
                             <?php endif; ?>
                         </tbody>
                         <tfoot>
                             <tr style="font-weight:bold;">
-                                <td colspan="4" class="text-end">Total:-</td>
+                                <td colspan="5" class="text-end">Total:-</td>
                                 <td><?= number_format($totals['cost'] ?? 0) ?></td>
                                 <td><?= number_format($totals['received'] ?? 0) ?></td>
                                 <td><?= number_format($totals['balance'] ?? 0) ?></td>
@@ -151,7 +155,6 @@
                         </tfoot>
                     </table>
                 </div>
-                <?php endif; ?>
             </div>
         </div>
     </div>

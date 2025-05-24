@@ -241,6 +241,11 @@ class ReportController extends Controller
             if ($date_from) $orderQuery = $orderQuery->where('start_date >=', $date_from);
             if ($date_to) $orderQuery = $orderQuery->where('end_date <=', $date_to);
             $orders = $orderQuery->findAll();
+        } else {
+            $orderQuery = $orderModel;
+            if ($date_from) $orderQuery = $orderQuery->where('start_date >=', $date_from);
+            if ($date_to) $orderQuery = $orderQuery->where('end_date <=', $date_to);
+            $orders = $orderQuery->findAll();
         }
 
         $reportData = [];
@@ -256,6 +261,14 @@ class ReportController extends Controller
                     break;
                 }
             }
+            // Find client name for this order
+            $clientNameRow = '-';
+            foreach ($customers as $c) {
+                if ($c['id'] == $order['customer_id']) {
+                    $clientNameRow = $c['company_name'] ?: ($c['first_name'] . ' ' . $c['last_name']);
+                    break;
+                }
+            }
             $cost = $order['amount'];
             $received = 0;
             $payments = $paymentModel->where('order_id', $order['id'])->findAll();
@@ -267,6 +280,7 @@ class ReportController extends Controller
             $totalReceived += $received;
             $totalBalance += $balance;
             $reportData[] = [
+                'client' => $clientNameRow,
                 'display' => $display,
                 'hoarding' => $hoarding,
                 'start_date' => $order['start_date'],
