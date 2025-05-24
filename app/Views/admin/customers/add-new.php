@@ -1,4 +1,4 @@
-<?= $this->section('styles') ?>
+* First Name<?= $this->section('styles') ?>
 <style>
     .form-section-title {
         font-size: 1.25rem;
@@ -24,10 +24,10 @@
                     <form role="form" method="POST" action="<?= route_to('admin.customer.store') ?>">
                         <?= csrf_field(); ?>
                         <!-- Section: Personal Information -->
-                        <div class="form-section-title"><i class="bi bi-person"></i> Personal Information</div>
+                        <div class="form-section-title"><i class="bi bi-person"></i> Client Information</div>
                         <div class="row">
                             <div class="col-md-6 mb-2">
-                                <label for="firstName" class="form-label"> <strong class="text-danger">*</strong> First Name</label>
+                                <label for="firstName" class="form-label"> <strong class="text-danger">*</strong> Client Name</label>
                                 <input type="text" class="form-control" id="firstName" name="firstName" value="<?= old('firstName'); ?>" required>
                             </div>
                             <div class="col-md-6 mb-2">

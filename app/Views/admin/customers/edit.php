@@ -16,12 +16,12 @@
                             <?= csrf_field() ?>
                             <?= form_hidden('customerId', $customerInfo['id']) ?>
                             <!-- Client's Personal Information -->
-                            <h5 class="mb-3">Personal Information</h5>
+                            <h5 class="mb-3">Client Information</h5>
 
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-2">
-                                        <label for="firstName" class="form-label"> <strong class="text-danger">*</strong> First Name</label>
+                                        <label for="firstName" class="form-label"> <strong class="text-danger">*</strong> Client Name</label>
                                         <input type="text" class="form-control" id="firstName" name="firstName"
                                                value="<?= $customerInfo['first_name'] ?>" required>
                                     </div>
