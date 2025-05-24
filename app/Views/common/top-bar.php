@@ -15,7 +15,7 @@ $expiringOrders = $orderModel
     ->where('end_date <=', $next5Days)
     ->findAll();
 
-
+print_r($expiringOrders);
 ?>
 
 <!-- Topbar Start -->
@@ -23,7 +23,7 @@ $expiringOrders = $orderModel
     <div class="container-fluid">
 
         <ul class="list-unstyled topnav-menu float-end mb-0">
-            <?php if (isset($expiringOrders) && count($expiringOrders) > 0): ?>
+                <?php if (isset($expiringOrders) && count($expiringOrders) > 0): ?>
 
                 <li class="dropdown notification-list topbar-dropdown">
                     <a class="nav-link dropdown-toggle waves-effect waves-light" data-bs-toggle="dropdown" href="#"
