@@ -4,18 +4,8 @@ $router = \CodeIgniter\Config\Services::router();
 $current_route = $router->getMatchedRouteOptions();
 $current_route = isset($current_route['as']) ? $current_route['as'] : 'dashboard';
 
-$orderModel = new \App\Models\OrderModel();
-$next5Days = date('Y-m-d', strtotime('+5 days'));
-$today = date('Y-m-d');
-$expiringOrders = $orderModel
-    ->select('orders.*, billboards.name as billboard_name')
-    ->join('billboards', 'billboards.id = orders.billboard_id')
-    ->where('status_id', 1)
-    ->where('end_date >=', $today)
-    ->where('end_date <=', $next5Days)
-    ->findAll();
 
-print_r($expiringOrders);
+
 ?>
 
 <!-- Topbar Start -->
@@ -23,47 +13,7 @@ print_r($expiringOrders);
     <div class="container-fluid">
 
         <ul class="list-unstyled topnav-menu float-end mb-0">
-                <?php if (isset($expiringOrders) && count($expiringOrders) > 0): ?>
-
-                <li class="dropdown notification-list topbar-dropdown">
-                    <a class="nav-link dropdown-toggle waves-effect waves-light" data-bs-toggle="dropdown" href="#"
-                       role="button" aria-haspopup="false" aria-expanded="false">
-                        <i class="fe-bell noti-icon"></i>
-                        <span class="badge bg-danger rounded-circle noti-icon-badge"><?= count($expiringOrders) ?></span>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-end dropdown-lg">
-
-                        <!-- item-->
-                        <div class="dropdown-item noti-title">
-                            <h5 class="m-0">
-                                Notification
-                            </h5>
-                        </div>
-
-                        <div class="noti-scroll" data-simplebar>
-                            <?php foreach ($expiringOrders as $order):
-
-                                $today = date('Y-m-d');
-                            $endDate = $order['end_date'];
-                            $daysLeft = date_diff(date_create($today), date_create($endDate));
-
-                                ?>
-                                <!-- item-->
-                                <a href="<?=route_to('admin.order.view', $order['id'])?>" class="dropdown-item notify-item active">
-                                    <div class="notify-icon bg-soft-primary text-primary">
-                                        <i class="mdi mdi-comment-account-outline"></i>
-                                    </div>
-                                    <p class="notify-details">Your Order #<?=order['id']?> for <?=$order['billboard_name']?> is expiring soon
-                                        <small class="text-muted"><strong><?=$daysLeft?></strong> days left</small>
-                                    </p>
-                                </a>
-                            <?php endforeach; ?>
-
-
-                        </div>
-                    </div>
-                </li>
-            <?php endif; ?>
+                
             <li class="d-none d-md-inline-block">
                 <a class="nav-link dropdown-toggle arrow-none waves-effect waves-light" id="light-dark-mode"
                    href="#">

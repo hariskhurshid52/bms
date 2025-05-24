@@ -78,6 +78,7 @@ class Orders extends BaseController
         $totalPriceInclTax = $totalCost + $taxAmount;
 
         $mdOrder = new OrderModel();
+         
         $insData = [
             'billboard_id' => $inputs['billboard'],
             'display' => $inputs['display'] ?? null,
@@ -99,6 +100,9 @@ class Orders extends BaseController
 
         $saved = $mdOrder->insert($insData);
         if (!$saved) {
+            $mdBillboard->update($inputs['billboard'],[
+                'status'=>'booked'
+            ]);
             return redirect()->back()->withInput()->with('postBack', ['status' => 'error', 'message' => 'Unable to create order']);
         }
         if (!empty($inputs['advPayment'])) {
@@ -345,7 +349,7 @@ class Orders extends BaseController
         // Get order details with related data
         $data['order'] = (new OrderModel())
             ->select('orders.*, order_status.name as status_name')
-            ->join('order_status', 'order_status.id = orders.status_id')
+            ->join('order_status', 'order_status.id = orders.status_id','left')
             ->join('payments', "payments.order_id = orders.id AND payments.addtional_info = 'Advance Payment'", 'left')
             ->select('orders.*, order_status.name as status_name, payments.amount as advPayment')
             ->where('orders.id', $id)
@@ -473,6 +477,12 @@ class Orders extends BaseController
             return $this->response->setJSON(['status' => 'error', 'message' => 'Order not found.']);
         }
         $orderModel->update($orderId, ['status_id' => $statusId]);
+        if(in_array($statusId,[3,4])){
+            $mdBillboard = new BillboardModel();
+            $mdBillboard->update($inputs['billboard'],[
+                'status'=>'active'
+            ]);
+        }
         return $this->response->setJSON(['status' => 'success', 'message' => 'Order status updated successfully.']);
     }
 
