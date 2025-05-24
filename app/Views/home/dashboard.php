@@ -322,9 +322,9 @@
         </div>
         <div class="col-md-4">
             <div class="card h-100">
-                <div class="card-header">Expense Type Breakdown</div>
+                <div class="card-header">Available vs Booked Boards</div>
                 <div class="card-body">
-                    <canvas id="expenseTypesChart"></canvas>
+                    <canvas id="boardsStatusChart"></canvas>
                 </div>
             </div>
         </div>
@@ -420,20 +420,6 @@ new Chart(document.getElementById('bookingsPerBoardChart'), {
             x: { title: { display: true, text: 'Board Name' } },
             y: { title: { display: true, text: 'Total Bookings' }, beginAtZero: true }
         }
-    }
-});
-// Expense Types
-const expenseTypes = <?= json_encode($expenseTypes ?? []) ?>;
-const expenseTypesLabels = expenseTypes.map(item => item.type);
-const expenseTypesData = expenseTypes.map(item => item.total);
-new Chart(document.getElementById('expenseTypesChart'), {
-    type: 'doughnut',
-    data: {
-        labels: expenseTypesLabels,
-        datasets: [{
-            data: expenseTypesData,
-            backgroundColor: ['#4158D0', '#00b09b', '#f6d365', '#ff0844']
-        }]
     }
 });
 // Expense Per Board
@@ -533,6 +519,26 @@ new Chart(document.getElementById('topBookingCustomersChart'), {
         scales: {
             x: { title: { display: true, text: 'Customer Name' } },
             y: { title: { display: true, text: 'Total Bookings' }, beginAtZero: true }
+        }
+    }
+});
+// Boards Status Pie Chart
+const totalBoards = <?= (int)($totalHoardings ?? 0) ?>;
+const bookedBoards = <?= (int)($activeHoardings ?? 0) ?>;
+const availableBoards = totalBoards - bookedBoards;
+new Chart(document.getElementById('boardsStatusChart'), {
+    type: 'pie',
+    data: {
+        labels: ['Available', 'Booked'],
+        datasets: [{
+            data: [availableBoards, bookedBoards],
+            backgroundColor: ['#00b09b', '#ff0844']
+        }]
+    },
+    options: {
+        plugins: {
+            legend: { display: true, position: 'top' },
+            title: { display: true, text: 'Total Available Board vs Booked Board' }
         }
     }
 });
