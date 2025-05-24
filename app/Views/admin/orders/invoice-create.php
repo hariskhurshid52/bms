@@ -1,93 +1,149 @@
 <?= $this->extend('common/default-nav') ?>
 <?= $this->section('styles') ?>
 <style>
-    .invoice-table th, .invoice-table td { vertical-align: middle; }
-    .invoice-table input, .invoice-table select { min-width: 80px; }
-    .remove-row-btn { color: #dc3545; cursor: pointer; }
+    .invoice-card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 16px rgba(56, 142, 60, 0.08);
+        padding: 32px 24px;
+        margin-bottom: 32px;
+    }
+    .section-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #388e3c;
+        margin-bottom: 16px;
+        letter-spacing: 1px;
+    }
+    .invoice-table th, .invoice-table td {
+        vertical-align: middle;
+    }
+    .invoice-table th {
+        background: #e8f5e9;
+        color: #388e3c;
+        font-weight: 600;
+    }
+    .invoice-table input, .invoice-table select {
+        min-width: 80px;
+    }
+    .remove-row-btn {
+        color: #dc3545;
+        cursor: pointer;
+        font-size: 1.3rem;
+    }
+    .summary-card {
+        background: #e8f5e9;
+        border-radius: 8px;
+        padding: 18px 24px;
+        margin-top: 12px;
+        color: #388e3c;
+        font-weight: 500;
+    }
+    .btn-success {
+        background: #388e3c;
+        border-color: #388e3c;
+    }
+    .btn-success:hover {
+        background: #256029;
+        border-color: #256029;
+    }
+    .add-row-btn {
+        float: right;
+        margin-bottom: 10px;
+    }
+    @media (max-width: 768px) {
+        .invoice-card { padding: 16px 4px; }
+    }
 </style>
 <?= $this->endSection() ?>
 <?= $this->section('content') ?>
 <div class="container mt-4">
-    <h3>Create New Invoice</h3>
-    <form id="invoiceForm" method="post" action="/admin/orders/saveInvoice">
-        <?= csrf_field() ?>
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <label for="client" class="form-label">Bill To (Client)</label>
-                <select class="form-select" id="client" name="client_id" required>
-                    <option value="">Select Client</option>
-                    <?php foreach ($customers as $c): ?>
-                        <option value="<?= $c['id'] ?>"><?= esc($c['first_name'] . ' ' . $c['last_name']) ?> - <?= esc($c['company_name']) ?></option>
-                    <?php endforeach; ?>
-                </select>
-                <textarea class="form-control mt-2" id="clientAddress" rows="2" readonly placeholder="Client address will appear here..."></textarea>
+    <div class="invoice-card">
+        <h3 class="mb-4" style="color:#388e3c; font-weight:700;">Create New Invoice</h3>
+        <form id="invoiceForm" method="post" action="/admin/orders/saveInvoice">
+            <?= csrf_field() ?>
+            <div class="section-title">Client Details</div>
+            <div class="row mb-3">
+                <div class="col-md-6 mb-2">
+                    <label for="client" class="form-label">Bill To (Client)</label>
+                    <select class="form-select" id="client" name="client_id" required>
+                        <option value="">Select Client</option>
+                        <?php foreach ($customers as $c): ?>
+                            <option value="<?= $c['id'] ?>"><?= esc($c['first_name'] . ' ' . $c['last_name']) ?> - <?= esc($c['company_name']) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <textarea class="form-control mt-2" id="clientAddress" rows="2" readonly placeholder="Client address will appear here..."></textarea>
+                </div>
+                <div class="col-md-2 mb-2">
+                    <label class="form-label">Date</label>
+                    <input type="date" class="form-control" name="invoice_date" value="<?= date('Y-m-d') ?>" required>
+                </div>
+                <div class="col-md-2 mb-2">
+                    <label class="form-label">Invoice #</label>
+                    <input type="text" class="form-control" name="invoice_number" value="<?= $nextInvoiceNumber ?? '' ?>" required>
+                </div>
+                <div class="col-md-2 mb-2">
+                    <label class="form-label">P.O</label>
+                    <input type="text" class="form-control" name="po_number">
+                </div>
             </div>
-            <div class="col-md-2">
-                <label class="form-label">Date</label>
-                <input type="date" class="form-control" name="invoice_date" value="<?= date('Y-m-d') ?>" required>
-            </div>
-            <div class="col-md-2">
-                <label class="form-label">Invoice #</label>
-                <input type="text" class="form-control" name="invoice_number" value="<?= $nextInvoiceNumber ?? '' ?>" required>
-            </div>
-            <div class="col-md-2">
-                <label class="form-label">P.O</label>
-                <input type="text" class="form-control" name="po_number">
-            </div>
-        </div>
-        <div class="table-responsive">
-            <table class="table table-bordered invoice-table align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th>Description</th>
-                        <th>Size</th>
-                        <th>Sq. Ft.</th>
-                        <th>From</th>
-                        <th>To</th>
-                        <th>Amount (Rs)</th>
-                        <th style="width:40px;"></th>
-                    </tr>
-                </thead>
-                <tbody id="invoiceItemsBody">
-                    <tr>
-                        <td><input type="text" name="items[0][description]" class="form-control" required></td>
-                        <td><input type="text" name="items[0][size]" class="form-control"></td>
-                        <td><input type="number" name="items[0][sqft]" class="form-control" min="0"></td>
-                        <td><input type="date" name="items[0][from]" class="form-control"></td>
-                        <td><input type="date" name="items[0][to]" class="form-control"></td>
-                        <td><input type="number" name="items[0][amount]" class="form-control item-amount" min="0" required></td>
-                        <td class="text-center"><span class="remove-row-btn" style="display:none;">&times;</span></td>
-                    </tr>
-                </tbody>
-            </table>
-            <button type="button" class="btn btn-outline-primary btn-sm" id="addRowBtn"><i class="bi bi-plus"></i> Add Line</button>
-        </div>
-        <div class="row mt-4">
-            <div class="col-md-6">
-                <label for="amountWords" class="form-label">Amount In Words</label>
-                <input type="text" class="form-control" id="amountWords" name="amount_words" readonly>
-            </div>
-            <div class="col-md-6">
-                <table class="table table-borderless">
-                    <tr>
-                        <th class="text-end">Sub Total</th>
-                        <td class="text-end" id="subTotalCell">0</td>
-                    </tr>
-                    <tr>
-                        <th class="text-end">Sales Tax</th>
-                        <td class="text-end"><input type="number" class="form-control form-control-sm text-end" id="salesTaxInput" name="sales_tax" value="0"></td>
-                    </tr>
-                    <tr>
-                        <th class="text-end">Grand Total</th>
-                        <td class="text-end" id="grandTotalCell">0</td>
-                    </tr>
+            <div class="section-title">Line Items</div>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover invoice-table align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Description</th>
+                            <th>Size</th>
+                            <th>Sq. Ft.</th>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>Amount (Rs)</th>
+                            <th style="width:40px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="invoiceItemsBody">
+                        <tr>
+                            <td><input type="text" name="items[0][description]" class="form-control" required></td>
+                            <td><input type="text" name="items[0][size]" class="form-control"></td>
+                            <td><input type="number" name="items[0][sqft]" class="form-control" min="0"></td>
+                            <td><input type="date" name="items[0][from]" class="form-control"></td>
+                            <td><input type="date" name="items[0][to]" class="form-control"></td>
+                            <td><input type="number" name="items[0][amount]" class="form-control item-amount" min="0" required></td>
+                            <td class="text-center"><span class="remove-row-btn" style="display:none;">&times;</span></td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
-        </div>
-        <div class="mt-3 text-end">
-            <button type="submit" class="btn btn-success">Create Invoice</button>
-        </div>
-    </form>
+            <div class="text-end mb-3">
+                <button type="button" class="btn btn-outline-primary btn-sm add-row-btn" id="addRowBtn"><i class="bi bi-plus"></i> Add Line</button>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-6 mb-2">
+                    <label for="amountWords" class="form-label">Amount In Words</label>
+                    <input type="text" class="form-control" id="amountWords" name="amount_words" readonly>
+                </div>
+                <div class="col-md-6">
+                    <div class="summary-card">
+                        <div class="row mb-2">
+                            <div class="col-6 text-end">Sub Total</div>
+                            <div class="col-6 text-end" id="subTotalCell">0</div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-6 text-end">Sales Tax</div>
+                            <div class="col-6 text-end"><input type="number" class="form-control form-control-sm text-end" id="salesTaxInput" name="sales_tax" value="0"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 text-end">Grand Total</div>
+                            <div class="col-6 text-end" id="grandTotalCell">0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4 text-end">
+                <button type="submit" class="btn btn-success btn-lg px-4"><i class="bi bi-check-circle"></i> Create Invoice</button>
+            </div>
+        </form>
+    </div>
 </div>
 <?= $this->endSection() ?>
 <?= $this->section('scripts') ?>
