@@ -39,6 +39,19 @@ $theme_url = base_url() . 'assets/';
 
     <!-- Theme Config Js -->
     <script src="<?= $theme_url ?>/js/config.js"></script>
+
+    <style>
+        .password-eye {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            background: url('data:image/svg+xml;utf8,<svg fill="%23666" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5C21.27 7.61 17 4.5 12 4.5zm0 13c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zm0-10a4 4 0 100 8 4 4 0 000-8z"/></svg>') no-repeat center center;
+            cursor: pointer;
+        }
+        .password-eye.show {
+            background: url('data:image/svg+xml;utf8,<svg fill="%23666" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M12 6a9.77 9.77 0 018.94 6A9.77 9.77 0 0112 18a9.77 9.77 0 01-8.94-6A9.77 9.77 0 0112 6m0-2C6.48 4 1.73 7.61 0 12c1.73 4.39 6.48 8 12 8s10.27-3.61 12-8c-1.73-4.39-6.48-8-12-8zm0 5a3 3 0 013 3 3 3 0 01-3 3 3 3 0 01-3-3 3 3 0 013-3z"/></svg>') no-repeat center center;
+        }
+    </style>
 </head>
 
 <body class="auth-fluid-pages pb-0">
@@ -158,6 +171,23 @@ $theme_url = base_url() . 'assets/';
         showDangerToast('<?=$data['message']?>')
         <?php endif; ?>
         <?php endif; ?>
+
+        // Show/hide password toggle
+        $(document).ready(function() {
+            $('.input-group-text[data-password]').on('click', function() {
+                var input = $(this).closest('.input-group').find('input');
+                var type = input.attr('type');
+                if (type === 'password') {
+                    input.attr('type', 'text');
+                    $(this).attr('data-password', 'true');
+                    $(this).find('.password-eye').addClass('show');
+                } else {
+                    input.attr('type', 'password');
+                    $(this).attr('data-password', 'false');
+                    $(this).find('.password-eye').removeClass('show');
+                }
+            });
+        });
     </script>
 </body>
 </html>
