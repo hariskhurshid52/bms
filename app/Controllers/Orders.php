@@ -38,6 +38,12 @@ class Orders extends BaseController
         $mdCustomer = new CustomerModel();
         $data['customers'] = $mdCustomer->findAll();
 
+        // Pre-select billboard if provided in URL
+        $billboardId = $this->request->getGet('billboard');
+        if ($billboardId) {
+            $data['selected_billboard'] = $billboardId;
+        }
+
         return view("admin/orders/create", $data);
     }
 

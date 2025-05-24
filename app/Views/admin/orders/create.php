@@ -35,7 +35,7 @@
                                     <?php foreach ($billboards as $t => $types): ?>
                                         <optgroup label="<?= $t ?>">
                                             <?php foreach ($types as $billboard): ?>
-                                                <option value="<?= $billboard['id'] ?>" <?= old('billboard') == $billboard['id'] ? 'selected' : '' ?>>
+                                                <option value="<?= $billboard['id'] ?>" <?= (isset($selected_billboard) && $selected_billboard == $billboard['id']) || old('billboard') == $billboard['id'] ? 'selected' : '' ?>>
                                                     <?= $billboard['name'] . ' ( ' . $billboard['area'] . ' )' ?>
                                                 </option>
                                             <?php endforeach; ?>

@@ -99,7 +99,11 @@
         <?php foreach ($boards as $board): ?>
             <div class="col-md-4 mb-4 board-card" data-status="<?= $board['status'] ?>" data-area="<?= strtolower($board['address']) ?>">
                 <div class="card h-100">
-                    <img src="<?= $board['image_url'] ?? base_url('assets/images/placeholder.png') ?>" class="board-card-img" alt="Board Image">
+                    <?php if (!empty($board['images'])): ?>
+                        <img src="<?= $board['images'][0] ?>" class="board-card-img" data-board="<?= $board['id'] ?>" style="cursor: pointer;" alt="Board Image">
+                    <?php else: ?>
+                        <img src="<?= base_url('assets/images/placeholder.png') ?>" class="board-card-img" alt="No Image Available">
+                    <?php endif; ?>
                     <div class="card-body">
                         <h5 class="card-title mb-1"><?= esc($board['name']) ?></h5>
                         <div class="mb-2 text-muted" style="font-size:0.97rem;">
@@ -119,7 +123,7 @@
                     </div>
                     <div class="card-footer text-center">
                         <?php if ($board['status'] == 'active'): ?>
-                            <button class="btn btn-success">Book Now</button>
+                            <a href="<?= route_to('admin.order.create') ?>?billboard=<?= $board['id'] ?>" class="btn btn-success">Book Now</a>
                         <?php else: ?>
                             <button class="btn btn-secondary" disabled>Not Available</button>
                         <?php endif; ?>
@@ -128,6 +132,28 @@
             </div>
         <?php endforeach; ?>
     </div>
+</div>
+<!-- Carousel Modal -->
+<div class="modal fade" id="imageCarouselModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Board Images</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div id="carouselImages" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-inner" id="carouselImagesInner"></div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselImages" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselImages" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 <?= $this->endSection() ?>
 
@@ -149,5 +175,22 @@
             card.style.display = (matchesStatus && matchesArea) ? '' : 'none';
         });
     }
+    // Carousel logic
+    const boards = <?= json_encode($boards) ?>;
+    $(document).on('click', '.board-card-img', function() {
+        const boardId = $(this).data('board');
+        const board = boards.find(b => b.id == boardId);
+        if (!board || !board.images.length) return;
+        let html = '';
+        board.images.forEach((img, idx) => {
+            html += `<div class="carousel-item${idx==0?' active':''}">
+                <img src="${img}" class="d-block w-100" style="max-height:65vh;object-fit:contain;">
+            </div>`;
+        });
+        $('#carouselImagesInner').html(html);
+        var carousel = new bootstrap.Carousel(document.getElementById('carouselImages'));
+        carousel.to(0);
+        $('#imageCarouselModal').modal('show');
+    });
 </script>
 <?= $this->endSection() ?>

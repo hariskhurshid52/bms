@@ -1414,24 +1414,26 @@ class Home extends BaseController
         $boards = $this->billboardModel
             ->select('billboards.*, billboards.name, billboards.area as address, billboards.status, billboards.image_url')
             ->findAll();
-
+        // Fetch all images for each board
+        $imageModel = new \App\Models\BillboardImageModel();
+        foreach ($boards as &$board) {
+            $images = $imageModel->where('billboard_id', $board['id'])->findAll();
+            $board['images'] = array_map(function($img) {
+                return base_url($img['image_url']);
+            }, $images);
+        }
+        unset($board);
         // Count by status
         $statusCounts = [
             'total' => count($boards),
-            'available' => 0,
-            'booked' => 0,
-            'inactive' => 0,
-            'under_maintenance' => 0
+            'available' => count(array_filter($boards, fn($b) => $b['status'] == 'active')),
+            'booked' => count(array_filter($boards, fn($b) => $b['status'] == 'booked')),
+            'inactive' => count(array_filter($boards, fn($b) => $b['status'] == 'inactive')),
+            'under_maintenance' => count(array_filter($boards, fn($b) => $b['status'] == 'under_maintenance')),
         ];
-        foreach ($boards as $b) {
-            if ($b['status'] == 'active') $statusCounts['available']++;
-            if ($b['status'] == 'booked') $statusCounts['booked']++;
-            if ($b['status'] == 'inactive') $statusCounts['inactive']++;
-            if ($b['status'] == 'under_maintenance') $statusCounts['under_maintenance']++;
-        }
         return [
             'boards' => $boards,
-            'statusCounts' => $statusCounts
+            'statusCounts' => $statusCounts,
         ];
     }
 
