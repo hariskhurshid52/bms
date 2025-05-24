@@ -16,6 +16,9 @@
             <div class="invoice-title" style="color:#388e3c;">
                 <?= (isset($invoice['invoice_type']) && $invoice['invoice_type'] === 'with_tax') ? 'SALES TAX INVOICE' : 'INVOICE' ?>
             </div>
+            <?php if (isset($invoice['invoice_type']) && $invoice['invoice_type'] === 'with_tax'): ?>
+            <div style="font-weight:600; color:#222;">NTN# 3705552-6</div>
+            <?php endif; ?>
             <div><strong>Date:</strong> <?= date('d-M-y', strtotime($invoice['invoice_date'])) ?></div>
             <div><strong>Invoice #:</strong> <?= esc($invoice['invoice_number']) ?></div>
             <div><strong>P.O:</strong> <?= esc($invoice['po_number']) ?></div>
