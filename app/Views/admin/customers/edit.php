@@ -56,8 +56,8 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="mb-2">
-                                        <label for="billingAddress" class="form-label"> <strong class="text-danger">*</strong> Billing Address</label>
-                                        <textarea class="form-control" id="billingAddress" name="billingAddress"
+                                        <label for="address_line_1" class="form-label"> <strong class="text-danger">*</strong> Billing Address</label>
+                                        <textarea class="form-control" id="address_line_1" name="address_line_1"
                                                   rows="3"><?= $customerInfo['address_line_1']; ?></textarea>
                                     </div>
                                 </div>
