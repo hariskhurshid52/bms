@@ -89,7 +89,9 @@ class Billboards extends BaseController
 
     public function listAll()
     {
-        $data = [];
+        $data = [
+            'status' => $this->request->getGet('status') ?? ''
+        ];
 
         return view("admin/billboards/list-all", $data);
     }

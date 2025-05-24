@@ -74,7 +74,8 @@ class Orders extends BaseController
         }
 
         $totalCost = $inputs['totalCost'];
-        $taxAmount = $totalCost * 0.16;
+        $taxPerc = $inputs['taxPerc'];
+        $taxAmount = $totalCost * $taxPerc / 100;
         $totalPriceInclTax = $totalCost + $taxAmount;
 
         $mdOrder = new OrderModel();
@@ -94,7 +95,7 @@ class Orders extends BaseController
             'payment_due_date' => $inputs['paymentDueDate'] ?? null,
             'status_id' => 1,
             'added_by' => $this->userId,
-            'tax_percent' => 16,
+            'tax_percent' => $taxPerc,
 
         ];
 
@@ -124,7 +125,9 @@ class Orders extends BaseController
 
     public function listAll()
     {
-        $data = [];
+        $data = [
+            'bookingstatus' => $this->request->getGet('bookingstatus') ?? 'all'
+        ];
         return view("admin/orders/list", $data);
     }
 
@@ -172,6 +175,9 @@ class Orders extends BaseController
                 ->like('customers.address_line_2', $searchValue)
                 ->like('customers.company_name', $searchValue)
                 ->groupEnd();
+        }
+        if($inputs['bookingstatus'] == 'active' ){
+            $builder->where('orders.status_id', 1);
         }
 
         $totalRecords = $builder->countAllResults(false);
@@ -243,8 +249,10 @@ class Orders extends BaseController
             return redirect()->back()->with('postBack', ['status' => 'danger', 'message' => 'Order not found']);
         }
 
+
+
         $totalCost = $data['order']['amount'];
-        $taxAmount = $totalCost * 0.16;
+        $taxAmount = $totalCost * $data['order']['tax_percent'] / 100;
         $totalPriceInclTax = $totalCost + $taxAmount;
        
         $data['order']['total_price'] = $totalPriceInclTax;

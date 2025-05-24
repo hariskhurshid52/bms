@@ -8,11 +8,13 @@ class OrderStatusSeeder extends Seeder
 {
     public function run()
     {
+        $this->db->disableForeignKeyChecks();
+        $this->db->table('order_status')->truncate();
+        $this->db->enableForeignKeyChecks();
         $data = [
-            ['id' => 1, 'name' => 'Active'],
-            ['id' => 2, 'name' => 'Pending'],
-            ['id' => 3, 'name' => 'Completed'],
-            ['id' => 4, 'name' => 'Cancelled'],
+            ['id' => 1, 'name' => 'In Progress'],
+            ['id' => 2, 'name' => 'Completed'],
+            ['id' => 3, 'name' => 'Cancelled'],
         ];
 
         // Insert data into 'order_status' table

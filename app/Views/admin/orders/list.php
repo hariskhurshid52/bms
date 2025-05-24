@@ -138,6 +138,7 @@
                 dataType: "json",
                 data: function (d) {
                     d['<?= csrf_token() ?>'] = '<?= csrf_hash() ?>';
+                    d.bookingstatus = "<?= $bookingstatus ?? '' ?>";
                 },
                 error: function (xhr, error, thrown) {
                     console.error('DataTable Error:', error);

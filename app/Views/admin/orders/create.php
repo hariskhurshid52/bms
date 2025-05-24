@@ -92,8 +92,12 @@
                                 <input type="number" class="form-control" id="totalCost" name="totalCost" value="<?= old('totalCost', '0.00') ?>"/>
                             </div>
                             <div class="col-md-4 mb-2">
-                                <label for="taxAmount" class="form-label"> <strong class="text-danger">*</strong> Tax</label>
-                                <input type="number" step="0.01"  class="form-control" id="taxAmount" name="taxAmount" value="<?= old('taxAmount', '0.00') ?>"/>
+                                <label for="taxPerc" class="form-label"> <strong class="text-danger">*</strong> Tax %</label>
+                                <select class="form-control" id="taxPerc" name="taxPerc">
+                                    <?php foreach ([0,16, 17, 18, 19, 20] as $tax): ?>
+                                        <option value="<?= $tax ?>" <?= old('taxPerc') == $tax ? 'selected' : '' ?>><?= $tax ?>%</option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
                             <div class="col-md-3 mb-2">
                                 <label for="totalPriceInclTax" class="form-label"> <strong class="text-danger">*</strong> Total Price Including Tax</label>
@@ -145,21 +149,26 @@
             <?php endif; ?>
 
             $('#totalCost').keyup(function(){
-                const totalCost = parseFloat($(this).val());
-                if (!isNaN(totalCost)) {
-                    const tax = (totalCost * 0.16).toFixed(2);            
-                    const totalWithTax = (totalCost + parseFloat(tax)).toFixed(2); 
-
-                    $('#taxAmount').val(tax);
-                    $('#totalPriceInclTax').val(totalWithTax);
-                } else {
-                    $('#taxAmount').val('0.00');
-                    $('#totalPriceInclTax').val('0.00');
-                }
+                calculateTotalPrice();
+                
+            })
+            $('#taxPerc').change(function(){
+                calculateTotalPrice();
                 
             })
         });
 
+        const calculateTotalPrice = () => {
+            const totalCost = parseFloat($("#totalCost").val());
+                const taxPerc = $('#taxPerc').val();
+                if (!isNaN(totalCost)) {
+                    const tax = (totalCost * taxPerc / 100).toFixed(2);            
+                    const totalWithTax = (totalCost + parseFloat(tax)).toFixed(2); 
+                    $('#totalPriceInclTax').val(totalWithTax);
+                } else {
+                    $('#totalPriceInclTax').val('0.00');
+                }
+        }
         const getBillboards = (id) => {
             if (!id) {
                 return

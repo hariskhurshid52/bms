@@ -97,10 +97,10 @@
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-info-circle"></i></span>
                                     <select class="form-select" id="filterStatus" name="status">
-                                        <option value="">All Status</option>
-                                        <option value="active">Active</option>
-                                        <option value="inactive">Inactive</option>
-                                        <option value="under_maintenance">Under Maintenance</option>
+                                    <?php foreach ([''=>'All Status', 'active'=>'Active', 'inactive'=>'Inactive', 'under_maintenance'=>'Under Maintenance','booked'=>'Booked'] as $k => $label): ?>
+                                        <option value="<?= $k ?>" <?= $k == $status ? 'selected' : '' ?>><?= ucfirst($label) ?></option>
+                                    <?php endforeach; ?>
+                                      
                                     </select>
                                 </div>
                             </div>
