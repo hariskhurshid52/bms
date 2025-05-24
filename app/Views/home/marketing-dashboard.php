@@ -42,7 +42,7 @@
     .stat-card .stat-label { font-size: 1.05rem; opacity: 0.8; margin-bottom: 6px; }
     .stat-card .stat-value { font-size: 2.1rem; font-weight: 700; }
 
-    @keyframes blink { /* Add blinking animation */
+    @keyframes blink {
         0% { opacity: 1; }
         50% { opacity: 0; }
         100% { opacity: 1; }
@@ -50,10 +50,47 @@
 
     .blinking-notification {
         animation: blink 1s linear infinite;
-        font-size: 0.8rem; /* Adjust size as needed */
+        font-size: 0.8rem;
         font-weight: bold;
-        color: #ffc107; /* Warning color */
+        color: #ffc107;
         margin-left: 5px;
+    }
+
+    /* Hoarding Card Improvements */
+    .board-card .card {
+        border: none;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+    }
+    .board-card .card:hover {
+        box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    }
+    .board-card .card-body {
+        padding: 1.25rem;
+    }
+    .board-card .card-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.75rem;
+        line-height: 1.4;
+    }
+    .board-card .location-text {
+        color: #6c757d;
+        font-size: 0.95rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .board-card .btn-success {
+        padding: 8px 20px;
+        font-weight: 500;
+        border-radius: 6px;
+    }
+    .board-card .btn-success:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
 </style>
 <?= $this->endSection() ?>
@@ -93,6 +130,7 @@
             </div>
         </div>
     </div>
+
     <!-- Filter Bar -->
     <div class="row mb-3">
         <div class="col-md-3">
@@ -108,6 +146,7 @@
             <input type="text" class="form-control" id="areaFilter" placeholder="Search by Area/Location">
         </div>
     </div>
+
     <!-- Board Cards Grid -->
     <div class="row" id="boardsGrid">
         <?php foreach ($boards as $board): ?>
@@ -119,10 +158,9 @@
                         <img src="<?= base_url('assets/images/placeholder.png') ?>" class="board-card-img" alt="No Image Available">
                     <?php endif; ?>
                     <div class="card-body">
-                        <h5 class="card-title mb-1">
+                        <h5 class="card-title">
                             <?= esc($board['name']) ?>
                             <?php
-                                // Check if the last booking ends within the next 5 days
                                 $showNotification = false;
                                 if (!empty($board['last_booking_end_date'])) {
                                     $endDate = strtotime($board['last_booking_end_date']);
@@ -137,7 +175,7 @@
                                 <span class="blinking-notification"><i class="bi bi-exclamation-circle-fill"></i> Vacating Soon</span>
                             <?php endif; ?>
                         </h5>
-                        <div class="mb-2 text-muted" style="font-size:0.97rem;">
+                        <div class="location-text">
                             <i class="bi bi-geo-alt"></i> <?= esc($board['address']) ?>
                         </div>
                         <span class="board-status-badge bg-<?=
@@ -164,27 +202,28 @@
         <?php endforeach; ?>
     </div>
 </div>
+
 <!-- Carousel Modal -->
 <div class="modal fade" id="imageCarouselModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Board Images</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <div id="carouselImages" class="carousel slide" data-bs-ride="carousel">
-          <div class="carousel-inner" id="carouselImagesInner"></div>
-          <button class="carousel-control-prev" type="button" data-bs-target="#carouselImages" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon"></span>
-          </button>
-          <button class="carousel-control-next" type="button" data-bs-target="#carouselImages" data-bs-slide="next">
-            <span class="carousel-control-next-icon"></span>
-          </button>
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Board Images</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="carouselImages" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner" id="carouselImagesInner"></div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselImages" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon"></span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselImages" data-bs-slide="next">
+                        <span class="carousel-control-next-icon"></span>
+                    </button>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>
 <?= $this->endSection() ?>
 
