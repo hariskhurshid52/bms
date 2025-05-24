@@ -174,10 +174,18 @@ class Orders extends BaseController
 
         $rows = [];
         foreach ($list as $key => $value) {
+            // Determine user role for button visibility
+            $userRole = strtolower(session()->get('loggedIn')['role'] ?? '');
+            $addPaymentBtn = '';
+            if ($userRole === 'admin' || $userRole === 'superadmin' || $userRole === 'supper admin') {
+                $addPaymentBtn = '<button class="btn btn-sm btn-primary payments-btn me-1" data-order-id="' . $value['id'] . '" title="Add Payment"><i class="fa fa-plus"></i> Add Payment</button>';
+            }
+            $changeStatusBtn = '<button class="btn btn-sm btn-primary change-status-btn" data-order-id="' . $value['id'] . '" title="Change Status"><i class="fa fa-exchange-alt"></i> Change Status</button>';
+            $actionBtns = '<div class="d-flex align-items-center">' . $addPaymentBtn . $changeStatusBtn . '</div>';
             $rows[] = [
-                '<button class="btn btn-sm btn-success payments-btn" data-order-id="' . $value['id'] . '" title="Add Payment"><i class="fa fa-plus"></i> Add Payment</button>',
+                $actionBtns,
                 $value['id'],
-                $value['firstName'] . " " . $value['lastName'],
+                $value['firstName'] . " " . $value['lastName'].  $userRole ,
                 $value['display'],
                 $value['billboardName'],
                 $value['billboardArea'],
@@ -435,5 +443,30 @@ class Orders extends BaseController
             return $this->response->setJSON(['status' => 'error', 'message' => 'Unable to add payment']);
         }
         return $this->response->setJSON(['status' => 'success', 'message' => 'Payment added successfully']);
+    }
+
+    // AJAX: Get all statuses for the status dropdown
+    public function getOrderStatuses()
+    {
+        $model = new \App\Models\OrderStatusModel();
+        $statuses = $model->findAll();
+        return $this->response->setJSON(['status' => 'success', 'statuses' => $statuses]);
+    }
+
+    // AJAX: Update the status of an order
+    public function updateOrderStatus()
+    {
+        $orderId = $this->request->getPost('order_id');
+        $statusId = $this->request->getPost('status_id');
+        if (!$orderId || !$statusId) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Order ID and Status ID are required.']);
+        }
+        $orderModel = new \App\Models\OrderModel();
+        $order = $orderModel->find($orderId);
+        if (!$order) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Order not found.']);
+        }
+        $orderModel->update($orderId, ['status_id' => $statusId]);
+        return $this->response->setJSON(['status' => 'success', 'message' => 'Order status updated successfully.']);
     }
 }

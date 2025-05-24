@@ -15,21 +15,21 @@
                     <table class="table table-hover" id="dtOrders">
                         <thead>
                             <tr>
-                                <th>Add Payment</th>
+                                <th style="white-space:nowrap;">Add Payment</th>
                                 <th style="display:none;">Order ID</th>
-                                <th>Client Name</th>
-                                <th>Display</th>
-                                <th>Hoarding Name</th>
-                                <th>Hoarding Area</th>
-                                <th>Booking Status</th>
-                                <th>Reservation Start</th>
-                                <th>Reservation End</th>
-                                <th>Price</th>
-                                <th>Total Cost</th>
-                                <th>Paid Amount</th>
-                                <th>Payment Due Date</th>
-                                <th>Booking Placed At</th>
-                                <th>Actions</th>
+                                <th style="white-space:nowrap;">Client Name</th>
+                                <th style="white-space:nowrap;">Display</th>
+                                <th style="white-space:nowrap;">Hoarding Name</th>
+                                <th style="white-space:nowrap;">Hoarding Area</th>
+                                <th style="white-space:nowrap;">Booking Status</th>
+                                <th style="white-space:nowrap;">Reservation Start</th>
+                                <th style="white-space:nowrap;">Reservation End</th>
+                                <th style="white-space:nowrap;">Price</th>
+                                <th style="white-space:nowrap;">Total Cost</th>
+                                <th style="white-space:nowrap;">Paid Amount</th>
+                                <th style="white-space:nowrap;">Payment Due Date</th>
+                                <th style="white-space:nowrap;">Booking Placed At</th>
+                                <th style="white-space:nowrap;">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -95,11 +95,38 @@
     </div>
   </div>
 </div>
+
+<!-- Change Status Modal -->
+<div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="statusModalLabel">Change Booking Status</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="changeStatusForm">
+          <input type="hidden" name="order_id" id="statusOrderId">
+          <div class="mb-3">
+            <label for="statusSelect" class="form-label">Select Status</label>
+            <select class="form-select" id="statusSelect" name="status_id" required>
+              <option value="">Loading...</option>
+            </select>
+          </div>
+          <div id="changeStatusMsg" class="mb-2"></div>
+          <button type="submit" class="btn btn-primary">Update Status</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 <?= $this->endSection() ?>
 
 
 <?= $this->section('scripts') ?>
 <script>
+    // Assume userRole is available as a JS variable (e.g., 'admin', 'sales')
+    var userRole = "<?= session()->get('loggedIn')['role'] ?? '' ?>";
     $(document).ready(function () {
         var table = $('#dtOrders').DataTable({
             processing: true,
@@ -142,53 +169,61 @@
             }
         });
 
-        // Handle Payments button click
-        $(document).on('click', '.payments-btn', function() {
+        // Add Change Status button to each row (after table draw)
+        table.on('draw', function() {
+            $('#dtOrders tbody tr').each(function() {
+                var $row = $(this);
+                var orderId = $row.find('td:eq(1)').text(); // hidden Order ID
+                // Add Payment button only for admin, superadmin, or supper admin (case-insensitive)
+                if (!["admin", "superadmin", "supper admin"].includes(userRole.toLowerCase())) {
+                    $row.find('.payments-btn').hide();
+                }
+                // Add Change Status button if not already present
+                if ($row.find('.change-status-btn').length === 0 && orderId) {
+                    var btn = '<button class="btn btn-sm btn-primary change-status-btn ms-1" data-order-id="' + orderId + '" title="Change Status"><i class="fa fa-exchange-alt"></i> Change Status</button>';
+                    $row.find('td:last').append(btn);
+                }
+            });
+        });
+
+        // Handle Change Status button click
+        $(document).on('click', '.change-status-btn', function() {
             var orderId = $(this).data('order-id');
-            $('#paymentOrderId').val(orderId);
-            $('#addPaymentForm')[0].reset();
-            $('#addPaymentMsg').html('');
-            loadPaymentHistory(orderId);
-            var modal = new bootstrap.Modal(document.getElementById('paymentModal'));
+            $('#statusOrderId').val(orderId);
+            $('#changeStatusMsg').html('');
+            // Load statuses
+            $.get('<?= base_url('admin/orders/getOrderStatuses') ?>', function(resp) {
+                if (resp.status === 'success') {
+                    var options = '';
+                    resp.statuses.forEach(function(s) {
+                        options += '<option value="' + s.id + '">' + s.name + '</option>';
+                    });
+                    $('#statusSelect').html(options);
+                    // Optionally, set current status as selected (if you have it in the row)
+                } else {
+                    $('#statusSelect').html('<option value="">Unable to load statuses</option>');
+                }
+            });
+            var modal = new bootstrap.Modal(document.getElementById('statusModal'));
             modal.show();
         });
 
-        // Load payment history
-        function loadPaymentHistory(orderId) {
-            $('#paymentHistoryBody').html('<tr><td colspan="4" class="text-center">Loading...</td></tr>');
-            $.get('<?= base_url('admin/orders/getPayments') ?>/' + orderId, function(resp) {
-                if (resp.status === 'success' && resp.payments.length > 0) {
-                    var rows = '';
-                    resp.payments.forEach(function(p) {
-                        rows += '<tr>' +
-                            '<td>' + (p.created_at ? p.created_at : '-') + '</td>' +
-                            '<td>' + p.amount + '</td>' +
-                            '<td>' + (p.payment_method ? p.payment_method : '-') + '</td>' +
-                            '<td>' + (p.notes ? p.notes : '-') + '</td>' +
-                            '</tr>';
-                    });
-                    $('#paymentHistoryBody').html(rows);
-                } else {
-                    $('#paymentHistoryBody').html('<tr><td colspan="4" class="text-center">No payments found.</td></tr>');
-                }
-            });
-        }
-
-        // Handle add payment form submit
-        $('#addPaymentForm').on('submit', function(e) {
+        // Handle status change form submit
+        $('#changeStatusForm').on('submit', function(e) {
             e.preventDefault();
             var form = $(this);
             var data = form.serialize();
-            // Add CSRF token
             data += '&<?= csrf_token() ?>=<?= csrf_hash() ?>';
-            $('#addPaymentMsg').html('');
-            $.post('<?= base_url('admin/orders/addBookingPayment') ?>', data, function(resp) {
+            $('#changeStatusMsg').html('');
+            $.post('<?= base_url('admin/orders/updateOrderStatus') ?>', data, function(resp) {
                 if (resp.status === 'success') {
-                    $('#addPaymentMsg').html('<span class="text-success">' + resp.message + '</span>');
-                    loadPaymentHistory($('#paymentOrderId').val());
-                    form[0].reset();
+                    $('#changeStatusMsg').html('<span class="text-success">' + resp.message + '</span>');
+                    setTimeout(function() {
+                        $('#statusModal').modal('hide');
+                        table.ajax.reload(null, false);
+                    }, 1000);
                 } else {
-                    $('#addPaymentMsg').html('<span class="text-danger">' + resp.message + '</span>');
+                    $('#changeStatusMsg').html('<span class="text-danger">' + resp.message + '</span>');
                 }
             });
         });
