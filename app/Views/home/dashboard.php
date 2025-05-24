@@ -243,7 +243,7 @@
         <div class="col-md-4">
             <div class="card stat-card h-100" style="background: linear-gradient(45deg, #4158D0, #C850C0);">
                 <div class="card-body text-white">
-                    <h6 class="text-white-50 mb-2">Total Bookings</h6>
+                    <h6 class="text-white mb-2">Total Bookings</h6>
                     <h3 class="mb-0 text-white"><?= number_format($totalBookings ?? 0) ?></h3>
                 </div>
             </div>
@@ -251,7 +251,7 @@
         <div class="col-md-4">
             <div class="card stat-card h-100" style="background: linear-gradient(45deg, #00b09b, #96c93d);">
                 <div class="card-body text-white">
-                    <h6 class="text-white-50 mb-2">Active Bookings</h6>
+                    <h6 class="text-white mb-2">Active Bookings</h6>
                     <h3 class="mb-0 text-white"><?= number_format($activeBookings ?? 0) ?></h3>
                 </div>
             </div>
@@ -259,7 +259,7 @@
         <div class="col-md-4">
             <div class="card stat-card h-100" style="background: linear-gradient(45deg, #ff0844, #ffb199);">
                 <div class="card-body text-white">
-                    <h6 class="text-white-50 mb-2">Total Expenses</h6>
+                    <h6 class="text-white mb-2">Total Expenses</h6>
                     <h3 class="mb-0 text-white">Rs.<?= number_format($totalExpenses ?? 0, 2) ?></h3>
                 </div>
             </div>
@@ -269,7 +269,7 @@
         <div class="col-md-4">
             <div class="card stat-card h-100" style="background: linear-gradient(45deg, #4facfe, #00f2fe);">
                 <div class="card-body text-white">
-                    <h6 class="text-white-50 mb-2">Total Hoardings</h6>
+                    <h6 class="text-white mb-2">Total Hoardings</h6>
                     <h3 class="mb-0 text-white"><?= number_format($totalHoardings ?? 0) ?></h3>
                 </div>
             </div>
@@ -277,7 +277,7 @@
         <div class="col-md-4">
             <div class="card stat-card h-100" style="background: linear-gradient(45deg, #00b09b, #388e3c);">
                 <div class="card-body text-white">
-                    <h6 class="text-white-50 mb-2">Active Hoardings</h6>
+                    <h6 class="text-white mb-2">Active Hoardings</h6>
                     <h3 class="mb-0 text-white"><?= number_format($activeHoardings ?? 0) ?></h3>
                 </div>
             </div>
@@ -285,7 +285,7 @@
         <div class="col-md-4">
             <div class="card stat-card h-100" style="background: linear-gradient(45deg, #f6d365, #fda085);">
                 <div class="card-body text-white">
-                    <h6 class="text-white-50 mb-2">Total Revenue</h6>
+                    <h6 class="text-white mb-2">Total Revenue</h6>
                     <h3 class="mb-0 text-white">Rs.<?= number_format($totalRevenue ?? 0, 2) ?></h3>
                 </div>
             </div>
