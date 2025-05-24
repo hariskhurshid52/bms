@@ -522,10 +522,21 @@ class Orders extends BaseController
         ], true);
         // Save line items
         foreach ($items as $item) {
+            // If description is a booking id, fetch the hoarding name and size
+            $desc = $item['description'];
+            $size = $item['size'];
+            if (is_numeric($desc)) {
+                $orderModel = new \App\Models\OrderModel();
+                $billboardModel = new \App\Models\BillboardModel();
+                $booking = $orderModel->find($desc);
+                $billboard = $booking ? $billboardModel->find($booking['billboard_id']) : null;
+                $desc = $billboard['name'] ?? $desc;
+                $size = $billboard['area'] ?? $size;
+            }
             $invoiceItemModel->insert([
                 'invoice_id' => $invoiceId,
-                'description' => $item['description'],
-                'size' => $item['size'],
+                'description' => $desc,
+                'size' => $size,
                 'sqft' => $item['sqft'],
                 'from_date' => $item['from'],
                 'to_date' => $item['to'],
@@ -579,6 +590,11 @@ class Orders extends BaseController
             $billboard = $billboardModel->find($booking['billboard_id']);
             $booking['billboard_name'] = $billboard['name'] ?? '';
             $booking['size'] = $billboard['area'] ?? '';
+            $booking['width'] = $billboard['width'] ?? '';
+            $booking['height'] = $billboard['height'] ?? '';
+            $booking['type'] = $billboard['billboard_type_id'] ?? '';
+            $booking['start_date'] = $booking['start_date'] ?? '';
+            $booking['end_date'] = $booking['end_date'] ?? '';
         }
         unset($booking);
         return $this->response->setJSON(['bookings' => $bookings]);

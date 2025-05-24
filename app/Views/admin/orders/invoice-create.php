@@ -114,7 +114,7 @@ function populateBookingDropdown(rowIdx) {
     let $dropdown = $(`select[name='items[${rowIdx}][description]']`);
     $dropdown.empty().append('<option value="">Select Booking</option>');
     clientBookings.forEach(function(b) {
-        $dropdown.append(`<option value="${b.id}" data-size="${b.size}" data-from="${b.start_date}" data-to="${b.end_date}" data-amount="${b.amount}" data-sqft="${b.sqft || ''}">${b.billboard_name} (${b.size})</option>`);
+        $dropdown.append(`<option value="${b.id}" data-size="${b.size}" data-from="${b.start_date}" data-to="${b.end_date}" data-amount="${b.amount}" data-sqft="${b.sqft || ''}" data-height="${b.height}" data-width="${b.width}">${b.billboard_name} (${b.size})</option>`);
     });
 }
 
@@ -135,7 +135,7 @@ $('#client').on('change', function() {
             let rowIdx = idx;
             let $dropdown = $('<select class="form-control booking-dropdown" data-row="'+rowIdx+'" name="items['+rowIdx+'][description]" required><option value="">Select Booking</option></select>');
             clientBookings.forEach(function(b) {
-                $dropdown.append(`<option value="${b.id}" data-size="${b.size}" data-from="${b.start_date}" data-to="${b.end_date}" data-amount="${b.amount}" data-sqft="${b.sqft || ''}">${b.billboard_name} (${b.size})</option>`);
+                $dropdown.append(`<option value="${b.id}" data-size="${b.size}" data-from="${b.start_date}" data-to="${b.end_date}" data-amount="${b.amount}" data-sqft="${b.sqft || ''}" data-height="${b.height}" data-width="${b.width}">${b.billboard_name} (${b.size})</option>`);
             });
             $descCell.html($dropdown);
         });
@@ -145,11 +145,13 @@ $('#client').on('change', function() {
 $(document).on('change', '.booking-dropdown', function() {
     let selected = $(this).find('option:selected');
     let rowIdx = $(this).data('row');
-    let size = selected.data('size') || '';
+    let height = selected.data('height') || '';
+    let width = selected.data('width') || '';
+    let size = (height && width) ? `${height}x${width}` : '';
+    let sqft = (height && width) ? (parseFloat(height) * parseFloat(width)) : '';
     let from = selected.data('from') || '';
     let to = selected.data('to') || '';
     let amount = selected.data('amount') || '';
-    let sqft = selected.data('sqft') || '';
     $(`input[name='items[${rowIdx}][size]']`).val(size);
     $(`input[name='items[${rowIdx}][from]']`).val(from);
     $(`input[name='items[${rowIdx}][to]']`).val(to);

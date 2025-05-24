@@ -165,12 +165,7 @@ $current_route = isset($current_route['as']) ? $current_route['as'] : 'dashboard
                                 <a href="<?= route_to('admin.orders.list') ?>">List All</a>
                             </li>
                             <?php if (session()->get('loggedIn')['roleId'] == 1): ?>
-                            <li>
-                                <a href="<?= base_url('admin/orders/invoice-create') ?>">Create Invoice</a>
-                            </li>
-                            <li>
-                                <a href="<?= base_url('admin/orders/invoice-list') ?>">Invoices</a>
-                            </li>
+                            <!-- Invoice menu items moved to separate section -->
                             <?php endif; ?>
                         </ul>
                     </div>
@@ -214,6 +209,21 @@ $current_route = isset($current_route['as']) ? $current_route['as'] : 'dashboard
                         <a href="<?= route_to('admin.report.clientWise') ?>">
                             <i class="ri-user-3-line"></i>
                             <span> Client Wise Report </span>
+                        </a>
+                    </li>
+                <?php endif; ?>
+                <?php if (session()->get('loggedIn')['roleId'] == 1): ?>
+                    <li class="menu-title mt-2">Invoices</li>
+                    <li>
+                        <a href="<?= base_url('admin/orders/invoice-create') ?>">
+                            <i class="ri-file-list-3-line"></i>
+                            <span> Create Invoice </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?= base_url('admin/orders/invoice-list') ?>">
+                            <i class="ri-file-list-2-line"></i>
+                            <span> Invoices </span>
                         </a>
                     </li>
                 <?php endif; ?>
