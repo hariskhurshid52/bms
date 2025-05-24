@@ -92,8 +92,8 @@
                                 <input type="number" class="form-control" id="totalCost" name="totalCost" value="<?= old('totalCost', '0.00') ?>"/>
                             </div>
                             <div class="col-md-4 mb-2">
-                                <label for="taxAmount" class="form-label"> <strong class="text-danger">*</strong> Tax 16(%)</label>
-                                <input type="number" step="0.01" readonly class="form-control" id="taxAmount" name="taxAmount" value="<?= old('taxAmount', '0.00') ?>"/>
+                                <label for="taxAmount" class="form-label"> <strong class="text-danger">*</strong> Tax</label>
+                                <input type="number" step="0.01"  class="form-control" id="taxAmount" name="taxAmount" value="<?= old('taxAmount', '0.00') ?>"/>
                             </div>
                             <div class="col-md-3 mb-2">
                                 <label for="totalPriceInclTax" class="form-label"> <strong class="text-danger">*</strong> Total Price Including Tax</label>

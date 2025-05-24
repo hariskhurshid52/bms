@@ -227,6 +227,36 @@
                 }
             });
         });
+
+        // Handle .payments-btn click
+        $(document).on('click', '.payments-btn', function() {
+            var orderId = $(this).data('order-id');
+            $('#paymentOrderId').val(orderId);
+            $('#addPaymentMsg').html('');
+            // Load payment history via AJAX
+            $('#paymentHistoryBody').html('<tr><td colspan="4" class="text-center">Loading...</td></tr>');
+            $.get('<?= base_url('admin/orders/getPayments') ?>/' + orderId, function(response) {
+                if (response.status === 'success') {
+                    var rows = '';
+                    if (response.payments.length) {
+                        response.payments.forEach(function(payment) {
+                            rows += '<tr>' +
+                                '<td>' + (payment.created_at ? payment.created_at.substr(0, 10) : '') + '</td>' +
+                                '<td>' + payment.amount + '</td>' +
+                                '<td>' + (payment.payment_method || payment.addtional_info || '') + '</td>' +
+                                '<td>' + (payment.notes || '') + '</td>' +
+                                '</tr>';
+                        });
+                    } else {
+                        rows = '<tr><td colspan="4" class="text-center">No payments found.</td></tr>';
+                    }
+                    $('#paymentHistoryBody').html(rows);
+                } else {
+                    $('#paymentHistoryBody').html('<tr><td colspan="4" class="text-danger">Error loading payments.</td></tr>');
+                }
+            });
+            $('#paymentModal').modal('show');
+        });
     });
 </script>
 <?= $this->endSection() ?>

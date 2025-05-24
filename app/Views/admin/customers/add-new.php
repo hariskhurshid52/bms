@@ -54,7 +54,7 @@
                             <div class="col-md-6 mb-2">
                                 <label for="customerType" class="form-label">Client Type</label>
                                 <select name="customerType" id="customerType" class="form-control" required>
-                                    <?php foreach ([ 'customer' => 'Client','agency' => 'Agency'] as $k => $v): ?>
+                                    <?php foreach ([ 'customer' => 'Client','agency' => 'Agency', 'advertisor' => 'Advertisor'] as $k => $v): ?>
                                         <option value="<?= $k ?>"><?= $v ?></option>
                                     <?php endforeach; ?>
                                 </select>

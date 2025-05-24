@@ -51,7 +51,7 @@
                     </div>
 
                     <!-- Section: Size & Dimensions -->
-                    <div class="form-section-title"><i class="bi bi-arrows-angle-expand"></i> Size & Dimensions</div>
+                    <div class="form-section-title"><i class="bi bi-arrows-angle-expand"></i> Size</div>
                     <div class="row">
                         <div class="col-md-4 mb-2">
                             <label for="width" class="form-label"> <strong class="text-danger">*</strong> Width</label>
@@ -61,7 +61,7 @@
                             <label for="height" class="form-label"> <strong class="text-danger">*</strong> Height</label>
                             <input type="number" class="form-control" id="height" name="height" value="<?= $billboard['height']; ?>" required>
                         </div>
-                        <div class="col-md-4 mb-2">
+                        <div class="col-md-4 mb-2" style="display: none;">
                             <label for="size_type" class="form-label"> <strong class="text-danger">*</strong> Size Type</label>
                             <select name="size_type" id="size_type" class="form-control" required>
                                 <?php foreach (['ft' => 'Feet', 'in' => 'Inches', 'cm' => 'Centimeters', 'm' => 'Meters'] as $k => $v): ?>
