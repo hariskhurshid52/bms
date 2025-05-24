@@ -16,17 +16,17 @@ $theme_url = base_url() . 'assets/';
 
     <!-- Mobile App/Progressive Web App Meta -->
     <link rel="icon" href="<?= base_url('assets/images/logo.png') ?>" type="image/png">
-    <link rel="apple-touch-icon" href="<?= base_url('assets/images/logo.png') ?>">
-    <link rel="apple-touch-icon" sizes="192x192" href="<?= base_url('assets/images/logo-sm.png') ?>">
-    <link rel="apple-touch-icon" sizes="512x512" href="<?= base_url('assets/images/logo.png') ?>">
+    <link rel="apple-touch-icon" href="<?= base_url('assets/images/logos/logo-login.png') ?>">
+    <link rel="apple-touch-icon" sizes="192x192" href="<?= base_url('assets/images/logos/logo-login.png') ?>">
+    <link rel="apple-touch-icon" sizes="512x512" href="<?= base_url('assets/images/logos/logo-login.png') ?>">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <link rel="apple-touch-startup-image" href="<?= base_url('assets/images/logo.png') ?>" media="(device-width: 320px) and (device-height: 568px)">
-    <link rel="apple-touch-startup-image" href="<?= base_url('assets/images/logo.png') ?>" media="(device-width: 375px) and (device-height: 667px)">
-    <link rel="apple-touch-startup-image" href="<?= base_url('assets/images/logo.png') ?>" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)">
-    <link rel="apple-touch-startup-image" href="<?= base_url('assets/images/logo.png') ?>" media="(device-width: 375px) and (device-height: 812px)">
-    <link rel="apple-touch-startup-image" href="<?= base_url('assets/images/logo.png') ?>" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)">
-    <link rel="apple-touch-startup-image" href="<?= base_url('assets/images/logo.png') ?>" media="(min-device-width: 768px) and (max-device-width: 1024px) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="<?= base_url('assets/images/logos/logo-login.png') ?>" media="(device-width: 320px) and (device-height: 568px)">
+    <link rel="apple-touch-startup-image" href="<?= base_url('assets/images/logos/logo-login.png') ?>" media="(device-width: 375px) and (device-height: 667px)">
+    <link rel="apple-touch-startup-image" href="<?= base_url('assets/images/logos/logo-login.png') ?>" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)">
+    <link rel="apple-touch-startup-image" href="<?= base_url('assets/images/logos/logo-login.png') ?>" media="(device-width: 375px) and (device-height: 812px)">
+    <link rel="apple-touch-startup-image" href="<?= base_url('assets/images/logos/logo-login.png') ?>" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)">
+    <link rel="apple-touch-startup-image" href="<?= base_url('assets/images/logos/logo-login.png') ?>" media="(min-device-width: 768px) and (max-device-width: 1024px) and (orientation: portrait)">
 
     <!-- App favicon -->
     <link rel="shortcut icon" href="<?= $theme_url ?>assets/images/favicon.ico">
