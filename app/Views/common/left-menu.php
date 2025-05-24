@@ -164,7 +164,14 @@ $current_route = isset($current_route['as']) ? $current_route['as'] : 'dashboard
                             <li>
                                 <a href="<?= route_to('admin.orders.list') ?>">List All</a>
                             </li>
-
+                            <?php if (session()->get('loggedIn')['roleId'] == 1): ?>
+                            <li>
+                                <a href="<?= base_url('admin/orders/invoice-create') ?>">Create Invoice</a>
+                            </li>
+                            <li>
+                                <a href="<?= base_url('admin/orders/invoice-list') ?>">Invoices</a>
+                            </li>
+                            <?php endif; ?>
                         </ul>
                     </div>
                 </li>

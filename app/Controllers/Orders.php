@@ -475,4 +475,112 @@ class Orders extends BaseController
         $orderModel->update($orderId, ['status_id' => $statusId]);
         return $this->response->setJSON(['status' => 'success', 'message' => 'Order status updated successfully.']);
     }
+
+    // Show the invoice creation form
+    public function createInvoice()
+    {
+        $customerModel = new \App\Models\CustomerModel();
+        $customers = $customerModel->findAll();
+        // Generate next invoice number (simple example: last+1)
+        $invoiceModel = new \App\Models\InvoiceModel();
+        $lastInvoice = $invoiceModel->orderBy('id', 'desc')->first();
+        $nextInvoiceNumber = $lastInvoice && !empty($lastInvoice['invoice_number']) ? 'INV-' . (intval(preg_replace('/\D/', '', $lastInvoice['invoice_number'])) + 1) : 'INV-1001';
+        return view('admin/orders/invoice-create', [
+            'customers' => $customers,
+            'nextInvoiceNumber' => $nextInvoiceNumber
+        ]);
+    }
+
+    // Save the invoice and its line items
+    public function saveInvoice()
+    {
+        $inputs = $this->request->getPost();
+        $invoiceModel = new \App\Models\InvoiceModel();
+        $invoiceItemModel = new \App\Models\InvoiceItemModel();
+        $customerId = $inputs['client_id'];
+        $invoiceNumber = $inputs['invoice_number'];
+        $invoiceDate = $inputs['invoice_date'];
+        $poNumber = $inputs['po_number'] ?? null;
+        $salesTax = $inputs['sales_tax'] ?? 0;
+        $amountWords = $inputs['amount_words'] ?? '';
+        $items = $inputs['items'] ?? [];
+        $subTotal = 0;
+        foreach ($items as $item) {
+            $subTotal += floatval($item['amount'] ?? 0);
+        }
+        $grandTotal = $subTotal + floatval($salesTax);
+        // Save invoice header
+        $invoiceId = $invoiceModel->insert([
+            'invoice_number' => $invoiceNumber,
+            'customer_id' => $customerId,
+            'invoice_date' => $invoiceDate,
+            'po_number' => $poNumber,
+            'amount_words' => $amountWords,
+            'sub_total' => $subTotal,
+            'sales_tax' => $salesTax,
+            'grand_total' => $grandTotal,
+        ], true);
+        // Save line items
+        foreach ($items as $item) {
+            $invoiceItemModel->insert([
+                'invoice_id' => $invoiceId,
+                'description' => $item['description'],
+                'size' => $item['size'],
+                'sqft' => $item['sqft'],
+                'from_date' => $item['from'],
+                'to_date' => $item['to'],
+                'amount' => $item['amount'],
+            ]);
+        }
+        return redirect()->route('admin.orders.invoiceList')->with('postBack', ['status' => 'success', 'message' => 'Invoice created successfully']);
+    }
+
+    // List all invoices
+    public function invoiceList()
+    {
+        $invoiceModel = new \App\Models\InvoiceModel();
+        $customerModel = new \App\Models\CustomerModel();
+        $invoices = $invoiceModel->orderBy('created_at', 'desc')->findAll();
+        foreach ($invoices as &$inv) {
+            $inv['customer'] = $customerModel->find($inv['customer_id']);
+        }
+        unset($inv);
+        return view('admin/orders/invoice-list', ['invoices' => $invoices]);
+    }
+
+    // View/print a single invoice
+    public function viewInvoice($invoice_number)
+    {
+        $invoiceModel = new \App\Models\InvoiceModel();
+        $invoiceItemModel = new \App\Models\InvoiceItemModel();
+        $invoice = $invoiceModel->where('invoice_number', $invoice_number)->first();
+        if (!$invoice) {
+            return redirect()->back()->with('postBack', ['status' => 'error', 'message' => 'Invoice not found']);
+        }
+        $items = $invoiceItemModel->where('invoice_id', $invoice['id'])->findAll();
+        $customerModel = new \App\Models\CustomerModel();
+        $customer = $customerModel->find($invoice['customer_id']);
+        return view('admin/orders/invoice-view', [
+            'invoice' => $invoice,
+            'items' => $items,
+            'customer' => $customer,
+        ]);
+    }
+
+    // AJAX: Get all bookings for a client
+    public function getClientBookings($clientId)
+    {
+        $orderModel = new \App\Models\OrderModel();
+        $billboardModel = new \App\Models\BillboardModel();
+        $bookings = $orderModel
+            ->where('customer_id', $clientId)
+            ->findAll();
+        foreach ($bookings as &$booking) {
+            $billboard = $billboardModel->find($booking['billboard_id']);
+            $booking['billboard_name'] = $billboard['name'] ?? '';
+            $booking['size'] = $billboard['area'] ?? '';
+        }
+        unset($booking);
+        return $this->response->setJSON(['bookings' => $bookings]);
+    }
 }
