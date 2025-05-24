@@ -41,6 +41,20 @@
     .stat-card.maintenance { background: linear-gradient(45deg, #f6d365, #fda085); }
     .stat-card .stat-label { font-size: 1.05rem; opacity: 0.8; margin-bottom: 6px; }
     .stat-card .stat-value { font-size: 2.1rem; font-weight: 700; }
+
+    @keyframes blink { /* Add blinking animation */
+        0% { opacity: 1; }
+        50% { opacity: 0; }
+        100% { opacity: 1; }
+    }
+
+    .blinking-notification {
+        animation: blink 1s linear infinite;
+        font-size: 0.8rem; /* Adjust size as needed */
+        font-weight: bold;
+        color: #ffc107; /* Warning color */
+        margin-left: 5px;
+    }
 </style>
 <?= $this->endSection() ?>
 
@@ -105,7 +119,24 @@
                         <img src="<?= base_url('assets/images/placeholder.png') ?>" class="board-card-img" alt="No Image Available">
                     <?php endif; ?>
                     <div class="card-body">
-                        <h5 class="card-title mb-1"><?= esc($board['name']) ?></h5>
+                        <h5 class="card-title mb-1">
+                            <?= esc($board['name']) ?>
+                            <?php
+                                // Check if the last booking ends within the next 5 days
+                                $showNotification = false;
+                                if (!empty($board['last_booking_end_date'])) {
+                                    $endDate = strtotime($board['last_booking_end_date']);
+                                    $today = time();
+                                    $fiveDaysLater = strtotime('+5 days');
+                                    if ($endDate > $today && $endDate <= $fiveDaysLater) {
+                                        $showNotification = true;
+                                    }
+                                }
+                            ?>
+                            <?php if ($showNotification): ?>
+                                <span class="blinking-notification"><i class="bi bi-exclamation-circle-fill"></i> Vacating Soon</span>
+                            <?php endif; ?>
+                        </h5>
                         <div class="mb-2 text-muted" style="font-size:0.97rem;">
                             <i class="bi bi-geo-alt"></i> <?= esc($board['address']) ?>
                         </div>
