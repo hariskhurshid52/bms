@@ -237,8 +237,59 @@ class Users extends BaseController
             return redirect()->back()->withInput()->with('postBack', ['status' => 'error', 'message' => array_values($model->errors())[0]]);
         }
 
-
         return redirect()->back()->withInput()->with('postBack', ['status' => 'error', 'message' => 'Unable to add customer']);
+    }
+
+    public function saveCustomerAjax()
+    {
+        if (!$this->request->isAJAX()) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Invalid request method']);
+        }
+
+        $rules = [
+            'firstName' => Validation::$REQUIRED,
+            'email' => Validation::$REQUIRED,
+            'phone' => Validation::$REQUIRED,
+            'address_line_1' => Validation::$REQUIRED,
+        ];
+        $validation = \Config\Services::validation();
+        if (!$this->validate($rules)) {
+            $errors = $validation->getErrors();
+            return $this->response->setJSON(['status' => 'error', 'message' => ucfirst(array_values($errors)[0])]);
+        }
+
+        $inputs = $this->request->getPost();
+        $insData = [
+            'first_name' => $inputs['firstName'],
+            'email' => $inputs['email'],
+            'phone' => $inputs['phone'],
+            'contact_person' => $inputs['contactPerson'],
+            'address_line_1' => $inputs['address_line_1'],
+            'customer_type' => $inputs['customerType'],
+            'added_by' => $this->userId
+        ];
+
+        $model = new CustomerModel();
+        $saved = $model->save($insData);
+        
+        if ($saved) {
+            $customer = $model->find($model->getInsertID());
+            return $this->response->setJSON([
+                'status' => 'success', 
+                'message' => 'Customer added successfully',
+                'data' => $customer
+            ]);
+        } elseif (!empty($model->errors())) {
+            return $this->response->setJSON([
+                'status' => 'error', 
+                'message' => array_values($model->errors())[0]
+            ]);
+        }
+
+        return $this->response->setJSON([
+            'status' => 'error', 
+            'message' => 'Unable to add customer'
+        ]);
     }
 
     public function dtCustomersList($customerId = false)

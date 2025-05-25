@@ -49,13 +49,18 @@
                             </div>
                             <div class="col-md-12 mb-2">
                                 <label for="customer" class="form-label"> <strong class="text-danger">*</strong> Select Client</label>
-                                <select class="form-control select2" id="customer" name="customer">
-                                    <?php foreach ($customers as $customer): ?>
-                                        <option value="<?= $customer['id'] ?>" <?= old('customer') == $customer['id'] ? 'selected' : '' ?>>
-                                            <?= $customer['first_name'] . ' ' . ($customer['customer_type'] === "agency" ? ' (Agency) ':'') ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
+                                <div class="input-group">
+                                    <select class="form-control select2" id="customer" name="customer">
+                                        <?php foreach ($customers as $customer): ?>
+                                            <option value="<?= $customer['id'] ?>" <?= old('customer') == $customer['id'] ? 'selected' : '' ?>>
+                                                <?= $customer['first_name'] . ' ' . ($customer['customer_type'] === "agency" ? ' (Agency) ':'') ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addClientModal">
+                                        <i class="bi bi-plus-circle"></i> Add Client
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <!-- Section: Reservation Dates -->
@@ -131,13 +136,62 @@
             </div>
         </div>
     </div>
+
+<!-- Add Client Modal -->
+<div class="modal fade" id="addClientModal" tabindex="-1" aria-labelledby="addClientModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addClientModalLabel">Add New Client</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="quickAddClientForm">
+                    <?= csrf_field() ?>
+                    <div class="mb-3">
+                        <label for="firstName" class="form-label"> <strong class="text-danger">*</strong> Client Name</label>
+                        <input type="text" class="form-control" id="firstName" name="firstName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label"> <strong class="text-danger">*</strong> Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label"> <strong class="text-danger">*</strong> Phone</label>
+                        <input type="text" class="form-control" id="phone" name="phone" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="contactPerson" class="form-label">Contact Person</label>
+                        <input type="text" class="form-control" id="contactPerson" name="contactPerson">
+                    </div>
+                    <div class="mb-3">
+                        <label for="address_line_1" class="form-label"> <strong class="text-danger">*</strong> Billing Address</label>
+                        <textarea class="form-control" id="address_line_1" name="address_line_1" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="customerType" class="form-label">Client Type</label>
+                        <select name="customerType" id="customerType" class="form-control" required>
+                                    <?php foreach ([ 'customer' => 'Client','agency' => 'Agency', 'advertisor' => 'Advertisor'] as $k => $v): ?>
+                                        <option value="<?= $k ?>"><?= $v ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="saveClientBtn">Save Client</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
     <script src="<?= base_url() ?>assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
     <script>
         $(document).ready(function () {
-
             $("#billboard").change(function () {
                 getBillboards(id = $(this).val())
             })
@@ -155,25 +209,66 @@
 
             $('#totalCost').keyup(function(){
                 calculateTotalPrice();
-                
             })
             $('#taxPerc').change(function(){
                 calculateTotalPrice();
-                
             })
+
+            // Handle quick add client form submission
+            $('#saveClientBtn').click(function() {
+                const formData = new FormData($('#quickAddClientForm')[0]);
+                
+                $.ajax({
+                    url: '<?= route_to('admin.customer.store.ajax') ?>',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            // Add new option to select
+                            const newOption = new Option(
+                                response.data.first_name + ' ' + (response.data.customer_type === 'agency' ? ' (Agency) ' : ''),
+                                response.data.id,
+                                true,
+                                true
+                            );
+                            $('#customer').append(newOption).trigger('change');
+                            
+                            // Close modal and reset form
+                            $('#addClientModal').modal('hide');
+                            $('#quickAddClientForm')[0].reset();
+                            
+                            // Show success message
+                            showSuccessToast('Client added successfully');
+                        } else {
+                            showDangerToast(response.message || 'Failed to add client');
+                        }
+                    },
+                    error: function(xhr) {
+                        showDangerToast('An error occurred while adding the client');
+                    }
+                });
+            });
+
+            // Reset form when modal is closed
+            $('#addClientModal').on('hidden.bs.modal', function () {
+                $('#quickAddClientForm')[0].reset();
+            });
         });
 
         const calculateTotalPrice = () => {
             const totalCost = parseFloat($("#totalCost").val());
-                const taxPerc = $('#taxPerc').val();
-                if (!isNaN(totalCost)) {
-                    const tax = (totalCost * taxPerc / 100).toFixed(2);            
-                    const totalWithTax = (totalCost + parseFloat(tax)).toFixed(2); 
-                    $('#totalPriceInclTax').val(totalWithTax);
-                } else {
-                    $('#totalPriceInclTax').val('0.00');
-                }
+            const taxPerc = $('#taxPerc').val();
+            if (!isNaN(totalCost)) {
+                const tax = (totalCost * taxPerc / 100).toFixed(2);            
+                const totalWithTax = (totalCost + parseFloat(tax)).toFixed(2); 
+                $('#totalPriceInclTax').val(totalWithTax);
+            } else {
+                $('#totalPriceInclTax').val('0.00');
+            }
         }
+
         const getBillboards = (id) => {
             if (!id) {
                 return
@@ -185,15 +280,10 @@
             }).then((response) => {
                 if (response.data) {
                     $('.booking-price').html(`<sup class="text-info" ><i>min booking price : ${response.data.booking_price} PKR </i></sup>`)
-
-                    
                 }
-
             }).catch(err => {
                 console.log(err)
             })
         }
-
-
     </script>
 <?= $this->endSection() ?>

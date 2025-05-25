@@ -29,6 +29,7 @@ $routes->group( '/',['filter' => ['auth', 'auth']], function ($routes) {
 
     $routes->get('customer/create', [Users::class, 'createCustoemr'], ['as' => 'admin.customer.create']);
     $routes->post('customer/save', [Users::class, 'saveCustomerInfo'], ['as' => 'admin.customer.store']);
+    $routes->post('customer/save-ajax', [Users::class, 'saveCustomerAjax'], ['as' => 'admin.customer.store.ajax']);
     $routes->get('customers/list-all', [Users::class, 'customersList'], ['as' => 'admin.customers.list']);
     $routes->post('customers/listing', [Users::class, 'dtCustomersList'], ['as' => 'admin.customers.dtList']);
     $routes->get('customer/edit/(:num)', [Users::class, 'editCustomer'], ['as' => 'admin.customers.edit']);
