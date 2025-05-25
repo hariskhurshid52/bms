@@ -32,7 +32,6 @@
         justify-content: center;
         align-items: flex-start;
         padding: 24px 32px;
-        font-size: 1.1rem;
     }
     .stat-card.total { background: linear-gradient(45deg, #4158D0, #C850C0); }
     .stat-card.available { background: linear-gradient(45deg, #00b09b, #96c93d); }
@@ -99,41 +98,41 @@
 <div class="container-fluid" style="margin-top: 32px;">
     <!-- Status Summary Cards -->
     <div class="row mb-4">
-        <div class="col">
+        <div class="col-12 col-sm-6 col-md mb-3">
             <div class="stat-card total">
-                <div class="stat-label">Total</div>
-                <div class="stat-value"><?= $statusCounts['total'] ?></div>
+                <div class="stat-label small">Total</div>
+                <div class="stat-value display-6"><?= $statusCounts['total'] ?></div>
             </div>
         </div>
-        <div class="col">
+        <div class="col-12 col-sm-6 col-md mb-3">
             <div class="stat-card available">
-                <div class="stat-label">Available</div>
-                <div class="stat-value"><?= $statusCounts['available'] ?></div>
+                <div class="stat-label small">Available</div>
+                <div class="stat-value display-6"><?= $statusCounts['available'] ?></div>
             </div>
         </div>
-        <div class="col">
+        <div class="col-12 col-sm-6 col-md mb-3">
             <div class="stat-card booked">
-                <div class="stat-label">Booked</div>
-                <div class="stat-value"><?= $statusCounts['booked'] ?></div>
+                <div class="stat-label small">Booked</div>
+                <div class="stat-value display-6"><?= $statusCounts['booked'] ?></div>
             </div>
         </div>
-        <div class="col">
+        <div class="col-12 col-sm-6 col-md mb-3">
             <div class="stat-card inactive">
-                <div class="stat-label">Inactive</div>
-                <div class="stat-value"><?= $statusCounts['inactive'] ?></div>
+                <div class="stat-label small">Inactive</div>
+                <div class="stat-value display-6"><?= $statusCounts['inactive'] ?></div>
             </div>
         </div>
-        <div class="col">
+        <div class="col-12 col-sm-6 col-md mb-3">
             <div class="stat-card maintenance">
-                <div class="stat-label">Under Maintenance</div>
-                <div class="stat-value"><?= $statusCounts['under_maintenance'] ?></div>
+                <div class="stat-label small">Under Maintenance</div>
+                <div class="stat-value display-6"><?= $statusCounts['under_maintenance'] ?></div>
             </div>
         </div>
     </div>
 
     <!-- Filter Bar -->
     <div class="row mb-3">
-        <div class="col-md-3">
+        <div class="col-12 col-md-3 mb-2 mb-md-0">
             <select class="form-select" id="statusFilter">
                 <option value="">All Status</option>
                 <option value="active">Available</option>
@@ -142,7 +141,7 @@
                 <option value="under_maintenance">Under Maintenance</option>
             </select>
         </div>
-        <div class="col-md-3">
+        <div class="col-12 col-md-3">
             <input type="text" class="form-control" id="areaFilter" placeholder="Search by Area/Location">
         </div>
     </div>
@@ -150,7 +149,7 @@
     <!-- Board Cards Grid -->
     <div class="row" id="boardsGrid">
         <?php foreach ($boards as $board): ?>
-            <div class="col-md-4 mb-4 board-card" data-status="<?= $board['status'] ?>" data-area="<?= strtolower($board['address']) ?>">
+            <div class="col-12 col-md-4 mb-4 board-card" data-status="<?= $board['status'] ?>" data-area="<?= strtolower($board['address']) ?>">
                 <div class="card h-100">
                     <?php if (!empty($board['images'])): ?>
                         <img src="<?= $board['images'][0] ?>" class="board-card-img" data-board="<?= $board['id'] ?>" style="cursor: pointer;" alt="Board Image">

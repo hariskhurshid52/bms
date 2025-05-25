@@ -141,8 +141,6 @@ class Users extends BaseController
 
         $roleModel = new RoleModel();
         $data['roles'] = $roleModel->findAll();
-
-        $data['roles'] = $roleModel->findAll();
         $data['user'] = $user;
         return view("admin/users/edit", $data);
     }
