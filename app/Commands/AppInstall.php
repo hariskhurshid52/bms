@@ -80,6 +80,7 @@ class AppInstall extends BaseCommand
             $seeder->call('StatesTableSeeder');
             $seeder->call('CitiesTableSeeder');
             $seeder->call('BillboardTypes');
+            $seeder->call('OrderStatusSeeder');
 
             CLI::write('Seeders executed successfully!', 'green');
         } catch (\Throwable $e) {
