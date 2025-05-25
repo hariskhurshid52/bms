@@ -74,7 +74,7 @@ class Home extends BaseController
         $activeBookings = $this->orderModel->where('status_id', 'active')->countAllResults();
         $totalExpenses = $this->expenseModel->selectSum('amount')->first()['amount'] ?? 0;
         $totalHoardings = $this->billboardModel->countAll();
-        $activeHoardings = $this->billboardModel->where('status', 'active')->countAllResults();
+        $activeHoardings = $this->billboardModel->where('status', 'available')->countAllResults();
         $totalRevenue = $this->orderModel->selectSum('amount')->first()['amount'] ?? 0;
 
         // Calculate booking growth (active bookings this month vs last month)
@@ -518,10 +518,10 @@ class Home extends BaseController
         }
 
         return [
-            'active' => $query->where('status', 'active')->countAllResults(),
-            'booked' => $query->where('status', 'booked')->countAllResults(),
+            'available' => $query->where('status', 'available')->countAllResults(),
+            'not_available' => $query->where('status', 'not_available')->countAllResults(),
             'under_maintenance' => $query->where('status', 'under_maintenance')->countAllResults(),
-            'inactive' => $query->where('status', 'inactive')->countAllResults()
+            'booked' => $query->where('status', 'booked')->countAllResults()
         ];
     }
 
@@ -1443,10 +1443,10 @@ class Home extends BaseController
         // Count by status
         $statusCounts = [
             'total' => count($boards),
-            'available' => count(array_filter($boards, fn($b) => $b['status'] == 'active')),
-            'booked' => count(array_filter($boards, fn($b) => $b['status'] == 'booked')),
-            'inactive' => count(array_filter($boards, fn($b) => $b['status'] == 'inactive')),
+            'available' => count(array_filter($boards, fn($b) => $b['status'] == 'available')),
+            'not_available' => count(array_filter($boards, fn($b) => $b['status'] == 'not_available')),
             'under_maintenance' => count(array_filter($boards, fn($b) => $b['status'] == 'under_maintenance')),
+            'booked' => count(array_filter($boards, fn($b) => $b['status'] == 'booked')),
         ];
         return [
             'boards' => $boards,
