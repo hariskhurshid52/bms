@@ -143,9 +143,14 @@
             })
 
             <?php if (old('billboard')): ?>
-            getBillboards(id = '<?= old('billboard') ?>')
-            <?php elseif(isset($billboards[array_keys($billboards)[0]][0]['id'])): ?>
-            getBillboards('<?=$billboards[array_keys($billboards)[0]][0]['id'] ?>')
+                getBillboards('<?= old('billboard') ?>');
+            <?php elseif (!empty($billboards)): ?>
+                <?php
+                $firstType = array_key_first($billboards);
+                $firstBillboard = !empty($billboards[$firstType]) ? $billboards[$firstType][0]['id'] : null;
+                if ($firstBillboard): ?>
+                    getBillboards('<?= $firstBillboard ?>');
+                <?php endif; ?>
             <?php endif; ?>
 
             $('#totalCost').keyup(function(){
