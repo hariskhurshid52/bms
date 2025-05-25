@@ -126,6 +126,27 @@ $current_route = isset($current_route['as']) ? $current_route['as'] : 'dashboard
                             </ul>
                         </div>
                     </li>
+                <?php else: ?>
+                    <li class="menu-title mt-2">Customers</li>
+                    <li>
+                        <a href="#sidebarEmail" data-bs-toggle="collapse" aria-expanded="false"
+                           aria-controls="sidebarEmail">
+                            <i class="ri-user-3-line"></i>
+                            <span> Clients </span>
+                            <span class="menu-arrow"></span>
+                        </a>
+                        <div class="collapse" id="sidebarEmail">
+                            <ul class="nav-second-level">
+                                <li>
+                                    <a href="<?= route_to('admin.customer.create') ?>">Add New</a>
+                                </li>
+                                <li>
+                                    <a href="<?= route_to('admin.customers.list') ?>">List All</a>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </li>
                 <?php endif; ?>
                 <li class="menu-title mt-2">Ads & Hoardings</li>
                 <li>

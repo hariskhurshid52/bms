@@ -135,10 +135,10 @@
         <div class="col-12 col-md-3 mb-2 mb-md-0">
             <select class="form-select" id="statusFilter">
                 <option value="">All Status</option>
-                <option value="active">Available</option>
-                <option value="booked">Booked</option>
-                <option value="inactive">Inactive</option>
+                <option value="available">Available</option>
+                <option value="not_available">Not Available</option>
                 <option value="under_maintenance">Under Maintenance</option>
+                <option value="booked">Booked</option>
             </select>
         </div>
         <div class="col-12 col-md-3">
@@ -178,19 +178,19 @@
                             <i class="bi bi-geo-alt"></i> <?= esc($board['address']) ?>
                         </div>
                         <span class="board-status-badge bg-<?=
-                            $board['status'] == 'active' ? 'success' :
+                            $board['status'] == 'available' ? 'success' :
                             ($board['status'] == 'booked' ? 'warning' :
-                            ($board['status'] == 'inactive' ? 'secondary' : 'info'))
+                            ($board['status'] == 'not_available' ? 'secondary' : 'info'))
                         ?> text-white">
                             <?=
-                                $board['status'] == 'active' ? 'Available' :
+                                $board['status'] == 'available' ? 'Available' :
                                 ($board['status'] == 'booked' ? 'Booked' :
-                                ($board['status'] == 'inactive' ? 'Inactive' : 'Under Maintenance'))
+                                ($board['status'] == 'not_available' ? 'Not Available' : 'Under Maintenance'))
                             ?>
                         </span>
                     </div>
                     <div class="card-footer text-center">
-                        <?php if ($board['status'] == 'active'): ?>
+                        <?php if ($board['status'] == 'available'): ?>
                             <a href="<?= route_to('admin.order.create') ?>?billboard=<?= $board['id'] ?>" class="btn btn-success">Book Now</a>
                         <?php else: ?>
                             <button class="btn btn-secondary" disabled>Not Available</button>

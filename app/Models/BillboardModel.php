@@ -47,7 +47,7 @@ class BillboardModel extends Model
         'width' => 'required|max_length[100]',
         'size_type' => 'required|in_list[ft,m,in,cm]',
         'billboard_type_id' => 'required|integer|is_not_unique[billboard_types.id]',
-        'status' => 'required|in_list[active,inactive,under_maintenance,booked]',
+        'status' => 'required|in_list[available,not_available,under_maintenance,booked]',
         'installation_date' => 'permit_empty|valid_date',
         'updated_at' => 'permit_empty|valid_date',
         'annual_increase' => 'permit_empty|integer',
@@ -86,7 +86,7 @@ class BillboardModel extends Model
         ],
         'status' => [
             'required' => 'The status is required.',
-            'in_list' => 'The status must be one of the following: active, inactive, under_maintenance.'
+            'in_list' => 'The status must be one of the following: available, not_available, under_maintenance.'
         ],
         'installation_date' => [
             'valid_date' => 'The installation date must be a valid date.',

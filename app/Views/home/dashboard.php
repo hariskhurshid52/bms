@@ -276,7 +276,7 @@
         </div>
         <div class="col-md-4">
             <div class="card stat-card h-100" style="background: linear-gradient(45deg, #00b09b, #388e3c);">
-                <a href="<?= route_to('admin.billboard.list') ?>?status=active" class="card-body text-white">
+                <a href="<?= route_to('admin.billboard.list') ?>?status=available" class="card-body text-white">
                     <h6 class="text-white mb-2">Active Hoardings</h6>
                     <h3 class="mb-0 text-white"><?= number_format($activeHoardings ?? 0) ?></h3>
                 </a>

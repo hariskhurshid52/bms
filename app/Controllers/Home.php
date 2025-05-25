@@ -861,13 +861,21 @@ class Home extends BaseController
 
         foreach ($billboards as $billboard) {
             if (!empty($billboard['latitude']) && !empty($billboard['longitude'])) {
+                $status = match($billboard['status']) {
+                    'available' => 'Available',
+                    'not_available' => 'Not Available',
+                    'under_maintenance' => 'Under Maintenance',
+                    'booked' => 'Booked',
+                    default => ucfirst($billboard['status'])
+                };
+                
                 $locations[] = [
                     'name' => $billboard['name'],
                     'lat' => $billboard['latitude'],
                     'lng' => $billboard['longitude'],
                     'revenue' => $billboard['revenue'] ?? 0,
                     'bookings' => $billboard['bookings'] ?? 0,
-                    'status' => ucfirst($billboard['status'])
+                    'status' => $status
                 ];
                 $totalLat += $billboard['latitude'];
                 $totalLng += $billboard['longitude'];

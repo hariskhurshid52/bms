@@ -139,9 +139,10 @@
                         <p>
                             <?php
                             $statusLabels = [
-                                'active' => 'Active',
-                                'inactive' => 'Inactive',
-                                'under_maintenance' => 'Under Maintenance'
+                                'available' => 'Available',
+                                'not_available' => 'Not Available',
+                                'under_maintenance' => 'Under Maintenance',
+                                'booked' => 'Booked'
                             ];
                             echo esc($statusLabels[$billboard['status']] ?? $billboard['status']);
                             ?>
