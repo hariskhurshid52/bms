@@ -1443,14 +1443,17 @@ class Home extends BaseController
             $board['last_booking_end_date'] = $lastBooking['end_date'] ?? null;
         }
         unset($board);
-        // Count by status
+
+        // Count by status using the same query as getBillboardStatusDistribution
+        $query = $this->billboardModel;
         $statusCounts = [
-            'total' => count($boards),
-            'available' => count(array_filter($boards, fn($b) => $b['status'] == 'available')),
-            'not_available' => count(array_filter($boards, fn($b) => $b['status'] == 'not_available')),
-            'under_maintenance' => count(array_filter($boards, fn($b) => $b['status'] == 'under_maintenance')),
-            'booked' => count(array_filter($boards, fn($b) => $b['status'] == 'booked')),
+            'total' => $query->countAll(),
+            'available' => $query->where('status', 'available')->countAllResults(),
+            'not_available' => $query->where('status', 'not_available')->countAllResults(),
+            'under_maintenance' => $query->where('status', 'under_maintenance')->countAllResults(),
+            'booked' => $query->where('status', 'booked')->countAllResults()
         ];
+
         return [
             'boards' => $boards,
             'statusCounts' => $statusCounts,
