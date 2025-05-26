@@ -133,3 +133,4 @@ LICENSE
 .dccache
 .env
 public/uploads
+composer.lock
