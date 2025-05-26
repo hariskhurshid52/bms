@@ -55,7 +55,11 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-body">
-                <h4 class="header-title">Client Wise Report</h4>
+                <h4 class="header-title">Client Wise Report
+                <a href="<?= current_url() . '?' . http_build_query(array_merge($_GET, ['export' => 'excel'])) ?>" class="btn btn-success pull-right btn-sm">
+                    <i class="bi bi-file-earmark-excel"></i> Export to Excel
+                </a>
+                </h4>
                 <hr />
                 <!-- Filter Card -->
                 <div class="filter-card mb-4">

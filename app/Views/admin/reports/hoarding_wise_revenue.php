@@ -4,11 +4,12 @@
     .filter-card {
         background: #fff;
         border-radius: 16px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
         padding: 24px 24px 8px 24px;
         margin-bottom: 24px;
         border: 1px solid #e9ecef;
     }
+
     .filter-card .card-header {
         background: none;
         border: none;
@@ -20,23 +21,29 @@
         gap: 10px;
         padding-left: 0;
     }
+
     .filter-card .form-label {
         font-weight: 500;
         color: #495057;
     }
-    .filter-card .form-control, .filter-card .form-select {
+
+    .filter-card .form-control,
+    .filter-card .form-select {
         border-radius: 8px;
     }
+
     .filter-card .input-group-text {
         background: #f1f3f4;
         border: none;
         color: #888;
     }
+
     .filter-card .filter-actions {
         display: flex;
         align-items: end;
         gap: 10px;
     }
+
     .filter-card .btn-clear {
         background: #f8f9fa;
         color: #6c757d;
@@ -44,6 +51,7 @@
         border-radius: 8px;
         font-weight: 500;
     }
+
     .filter-card .btn-clear:hover {
         background: #e9ecef;
         color: #222;
@@ -55,8 +63,13 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-body">
-                <h4 class="header-title">Hoarding Wise Revenue Report</h4>
+                <h4 class="header-title">Hoarding Wise Revenue Report
+                <a href="<?= current_url() . '?' . http_build_query(array_merge($_GET, ['export' => 'excel'])) ?>" class="btn btn-success pull-right btn-sm">
+                    <i class="bi bi-file-earmark-excel"></i> Export to Excel
+                </a>
+                </h4>
                 <hr />
+               
                 <!-- Filter Card -->
                 <div class="filter-card mb-4">
                     <div class="card-header pb-0 mb-3">
@@ -100,7 +113,8 @@
                                 <label for="filterArea" class="form-label">Area</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-plus-square"></i></span>
-                                    <input type="text" class="form-control" id="filterArea" name="area" value="<?= esc($filters['area']) ?>" placeholder="Area">
+                                    <input type="text" class="form-control" id="filterArea" name="area"
+                                        value="<?= esc($filters['area']) ?>" placeholder="Area">
                                 </div>
                             </div>
                             <div class="col-md-2">
@@ -121,8 +135,10 @@
                                     <span class="input-group-text"><i class="bi bi-info-circle"></i></span>
                                     <select class="form-select" id="filterStatus" name="status">
                                         <option value="">All Status</option>
-                                        <option value="active" <?= $filters['status'] == 'active' ? 'selected' : '' ?>>Active</option>
-                                        <option value="inactive" <?= $filters['status'] == 'inactive' ? 'selected' : '' ?>>Inactive</option>
+                                        <option value="active" <?= $filters['status'] == 'active' ? 'selected' : '' ?>>
+                                            Active</option>
+                                        <option value="inactive" <?= $filters['status'] == 'inactive' ? 'selected' : '' ?>>
+                                            Inactive</option>
                                         <option value="under_maintenance" <?= $filters['status'] == 'under_maintenance' ? 'selected' : '' ?>>Under Maintenance</option>
                                     </select>
                                 </div>
@@ -130,18 +146,26 @@
                             <div class="col-md-2">
                                 <label for="filterDateFrom" class="form-label">Start Date</label>
                                 <div class="input-group position-relative datepicker" id="revenueReportStartPicker">
-                                    <input autocomplete="off" data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-autoclose="true" data-date-container="#revenueReportStartPicker" type="text" class="form-control" id="filterDateFrom" name="date_from" readonly value="<?= esc($filters['date_from']) ?>">
+                                    <input autocomplete="off" data-provide="datepicker" data-date-format="yyyy-mm-dd"
+                                        data-date-autoclose="true" data-date-container="#revenueReportStartPicker"
+                                        type="text" class="form-control" id="filterDateFrom" name="date_from" readonly
+                                        value="<?= esc($filters['date_from']) ?>">
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <label for="filterDateTo" class="form-label">End Date</label>
                                 <div class="input-group position-relative datepicker" id="revenueReportEndPicker">
-                                    <input autocomplete="off" data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-autoclose="true" data-date-container="#revenueReportEndPicker" type="text" class="form-control" id="filterDateTo" name="date_to" readonly value="<?= esc($filters['date_to']) ?>">
+                                    <input autocomplete="off" data-provide="datepicker" data-date-format="yyyy-mm-dd"
+                                        data-date-autoclose="true" data-date-container="#revenueReportEndPicker"
+                                        type="text" class="form-control" id="filterDateTo" name="date_to" readonly
+                                        value="<?= esc($filters['date_to']) ?>">
                                 </div>
                             </div>
                             <div class="col-md-2 filter-actions">
-                                <button type="submit" class="btn btn-primary w-100"><i class="bi bi-funnel"></i> Apply</button>
-                                <a href="<?= current_url() ?>" class="btn btn-clear w-100 ms-2"><i class="bi bi-x"></i> Clear</a>
+                                <button type="submit" class="btn btn-primary w-100"><i class="bi bi-funnel"></i>
+                                    Apply</button>
+                                <a href="<?= current_url() ?>" class="btn btn-clear w-100 ms-2"><i class="bi bi-x"></i>
+                                    Clear</a>
                             </div>
                         </div>
                     </form>
@@ -178,6 +202,7 @@
                                 <td><?= number_format($totals['total_cost']) ?></td>
                                 <td><?= number_format($totals['received']) ?></td>
                                 <td><?= number_format($totals['balance']) ?></td>
+                                
                             </tr>
                         </tfoot>
                     </table>
@@ -186,4 +211,4 @@
         </div>
     </div>
 </div>
-<?= $this->endSection() ?> 
+<?= $this->endSection() ?>

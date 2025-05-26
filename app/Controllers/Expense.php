@@ -22,7 +22,7 @@ class Expense extends BaseController
         $mdBillboards = new BillboardModel();
         $list = $mdBillboards
             ->join('billboard_types', 'billboard_types.id = billboards.billboard_type_id')
-            ->where('status', 'active')
+            ->where('status', 'available')
             ->select('billboards.id as id,billboards.name, billboard_types.name as typeName,billboards.area')
             ->findAll();
 

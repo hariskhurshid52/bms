@@ -10,6 +10,8 @@ use App\Models\BillboardTypeModel;
 use App\Models\CustomerModel;
 use App\Models\ExpenseModel;
 use CodeIgniter\Controller;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class ReportController extends Controller
 {
@@ -32,32 +34,35 @@ class ReportController extends Controller
         $client = $this->request->getGet('client');
         $hoarding = $this->request->getGet('hoarding');
 
-        // Build order query with filters (city, area, type, status, date range, client, hoarding)
-        $orderQuery = $orderModel;
+        // Build order query with filters
+        $orderQuery = $orderModel->join('billboards', 'orders.billboard_id = billboards.id');
+        
+        // Apply filters
         if ($city) {
-            $orderQuery = $orderQuery->join('billboards', 'orders.billboard_id = billboards.id')->where('billboards.city_id', $city);
+            $orderQuery->where('billboards.city_id', $city);
         }
         if ($area) {
-            $orderQuery = $orderQuery->join('billboards b2', 'orders.billboard_id = b2.id')->like('b2.area', $area);
+            $orderQuery->like('billboards.area', $area);
         }
         if ($type) {
-            $orderQuery = $orderQuery->join('billboards b3', 'orders.billboard_id = b3.id')->where('b3.billboard_type_id', $type);
+            $orderQuery->where('billboards.billboard_type_id', $type);
         }
         if ($status) {
-            $orderQuery = $orderQuery->join('billboards b4', 'orders.billboard_id = b4.id')->where('b4.status', $status);
+            $orderQuery->where('billboards.status', $status);
         }
         if ($date_from) {
-            $orderQuery = $orderQuery->where('orders.start_date >=', $date_from);
+            $orderQuery->where('orders.start_date >=', $date_from);
         }
         if ($date_to) {
-            $orderQuery = $orderQuery->where('orders.end_date <=', $date_to);
+            $orderQuery->where('orders.end_date <=', $date_to);
         }
         if ($client) {
-            $orderQuery = $orderQuery->where('orders.customer_id', $client);
+            $orderQuery->where('orders.customer_id', $client);
         }
         if ($hoarding) {
-            $orderQuery = $orderQuery->where('orders.billboard_id', $hoarding);
+            $orderQuery->where('orders.billboard_id', $hoarding);
         }
+        
         $orders = $orderQuery->findAll();
 
         // Get all customers and billboards for mapping and dropdowns
@@ -106,6 +111,52 @@ class ReportController extends Controller
         // For dropdowns
         $cities = $cityModel->findAll();
         $types = $typeModel->findAll();
+
+        if ($this->request->getGet('export') === 'excel') {
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+
+            // Header
+            $sheet->fromArray(['Client', 'Display', 'Start Date', 'End Date', 'Total Cost', 'Received', 'Balance'], null, 'A1');
+            $sheet->getStyle('A1:G1')->getFont()->setBold(true); // Make header bold
+
+            // Data
+            $rowNum = 2;
+            foreach ($reportData as $row) {
+                $sheet->fromArray([
+                    $row['client'],
+                    $row['display'],
+                    date('d-M-y', strtotime($row['start_date'])),
+                    date('d-M-y', strtotime($row['end_date'])),
+                    $row['total_cost'],
+                    $row['received'],
+                    $row['balance'] > 0 ? $row['balance'] : '-'
+                ], null, 'A' . $rowNum++);
+            }
+
+            // Totals row
+            $sheet->setCellValue('D' . $rowNum, 'Total:-');
+            $sheet->setCellValue('E' . $rowNum, $totalCostSum);
+            $sheet->setCellValue('F' . $rowNum, $receivedSum);
+            $sheet->setCellValue('G' . $rowNum, $balanceSum);
+
+            // Format as currency (optional)
+            foreach (['E', 'F', 'G'] as $col) {
+                $sheet->getStyle($col . '2:' . $col . $rowNum)->getNumberFormat()->setFormatCode('#,##0');
+            }
+
+            // Add borders to all cells
+            $sheet->getStyle('A1:G' . $rowNum)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+            // Output
+            $filename = 'Revenue_Report_' . date('Ymd_His') . '.xlsx';
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header("Content-Disposition: attachment; filename=\"$filename\"");
+            $writer = new Xlsx($spreadsheet);
+            $writer->save('php://output');
+            exit;
+        }
+
         return view('admin/reports/hoarding_wise_revenue', [
             'reportData' => $reportData,
             'cities' => $cities,
@@ -149,31 +200,33 @@ class ReportController extends Controller
         $hoarding = $this->request->getGet('hoarding');
 
         // Build expense query with filters
-        $expenseQuery = $expenseModel;
+        $expenseQuery = $expenseModel->join('billboards', 'expenses.billboard_id = billboards.id');
+        
+        // Apply filters
         if ($city) {
-            $expenseQuery = $expenseQuery->join('billboards', 'expenses.billboard_id = billboards.id')->where('billboards.city_id', $city);
+            $expenseQuery->where('billboards.city_id', $city);
         }
         if ($area) {
-            $expenseQuery = $expenseQuery->join('billboards b2', 'expenses.billboard_id = b2.id')->like('b2.area', $area);
+            $expenseQuery->like('billboards.area', $area);
         }
         if ($type) {
-            $expenseQuery = $expenseQuery->join('billboards b3', 'expenses.billboard_id = b3.id')->where('b3.billboard_type_id', $type);
+            $expenseQuery->where('billboards.billboard_type_id', $type);
         }
         if ($status) {
-            $expenseQuery = $expenseQuery->join('billboards b4', 'expenses.billboard_id = b4.id')->where('b4.status', $status);
+            $expenseQuery->where('billboards.status', $status);
         }
         if ($date_from) {
-            $expenseQuery = $expenseQuery->where('expenses.expense_date >=', $date_from);
+            $expenseQuery->where('expenses.expense_date >=', $date_from);
         }
         if ($date_to) {
-            $expenseQuery = $expenseQuery->where('expenses.expense_date <=', $date_to);
+            $expenseQuery->where('expenses.expense_date <=', $date_to);
         }
         if ($hoarding) {
-            $expenseQuery = $expenseQuery->where('expenses.billboard_id', $hoarding);
+            $expenseQuery->where('expenses.billboard_id', $hoarding);
         }
         // Client filter: join with orders to find expenses related to a client's bookings
         if ($client) {
-            $expenseQuery = $expenseQuery->join('orders', 'orders.billboard_id = expenses.billboard_id', 'left')->where('orders.customer_id', $client);
+            $expenseQuery->join('orders', 'orders.billboard_id = expenses.billboard_id AND orders.customer_id = ' . $client);
         }
         $expenses = $expenseQuery->findAll();
 
@@ -193,13 +246,53 @@ class ReportController extends Controller
             }
             $reportData[] = [
                 'date' => $expense['expense_date'],
-                'detail' => $expense['addtional_info'],
+                'detail' => $expense['additional_info'] 
+                    ?? $expense['addtional_info'] 
+                    ?? '-',
                 'amount' => $expense['amount'],
                 'hoarding' => $hoardingName,
             ];
         }
         $cities = $cityModel->findAll();
         $types = $typeModel->findAll();
+
+        if ($this->request->getGet('export') === 'excel') {
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+
+            // Header
+            $sheet->fromArray(['Date', 'Expense Detail', 'Amount'], null, 'A1');
+            $sheet->getStyle('A1:C1')->getFont()->setBold(true); // Make header bold
+
+            // Data
+            $rowNum = 2;
+            foreach ($reportData as $row) {
+                $sheet->fromArray([
+                    date('d-M-y', strtotime($row['date'])),
+                    $row['detail'],
+                    $row['amount']
+                ], null, 'A' . $rowNum++);
+            }
+
+            // Totals row
+            $sheet->setCellValue('B' . $rowNum, 'Total');
+            $sheet->setCellValue('C' . $rowNum, $totalAmount);
+
+            // Format as currency (optional)
+            $sheet->getStyle('C2:C' . $rowNum)->getNumberFormat()->setFormatCode('#,##0');
+
+            // Add borders to all cells
+            $sheet->getStyle('A1:C' . $rowNum)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+            // Output
+            $filename = 'Expense_Report_' . date('Ymd_His') . '.xlsx';
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header("Content-Disposition: attachment; filename=\"$filename\"");
+            $writer = new Xlsx($spreadsheet);
+            $writer->save('php://output');
+            exit;
+        }
+
         return view('admin/reports/hoarding_wise_expense', [
             'reportData' => $reportData,
             'cities' => $cities,
@@ -227,25 +320,58 @@ class ReportController extends Controller
         $paymentModel = new PaymentModel();
         $customerModel = new CustomerModel();
 
-        // Filters
+        // Get filter values
         $client = $this->request->getGet('client');
         $date_from = $this->request->getGet('date_from');
         $date_to = $this->request->getGet('date_to');
 
-        $customers = $customerModel->findAll();
-        $billboards = $billboardModel->findAll();
+        // Validate dates
+        if ($date_from && !strtotime($date_from)) {
+            return redirect()->back()->with('error', 'Invalid start date format');
+        }
+        if ($date_to && !strtotime($date_to)) {
+            return redirect()->back()->with('error', 'Invalid end date format');
+        }
+        if ($date_from && $date_to && strtotime($date_from) > strtotime($date_to)) {
+            return redirect()->back()->with('error', 'Start date cannot be after end date');
+        }
 
-        $orders = [];
+        // Get all customers for dropdown
+        $customers = $customerModel->findAll();
+        
+        // If client is selected, validate it exists
         if ($client) {
-            $orderQuery = $orderModel->where('customer_id', $client);
-            if ($date_from) $orderQuery = $orderQuery->where('start_date >=', $date_from);
-            if ($date_to) $orderQuery = $orderQuery->where('end_date <=', $date_to);
-            $orders = $orderQuery->findAll();
-        } else {
-            $orderQuery = $orderModel;
-            if ($date_from) $orderQuery = $orderQuery->where('start_date >=', $date_from);
-            if ($date_to) $orderQuery = $orderQuery->where('end_date <=', $date_to);
-            $orders = $orderQuery->findAll();
+            $clientExists = false;
+            foreach ($customers as $c) {
+                if ($c['id'] == $client) {
+                    $clientExists = true;
+                    $clientName = $c['company_name'] ?: ($c['first_name'] . ' ' . $c['last_name']);
+                    break;
+                }
+            }
+            if (!$clientExists) {
+                return redirect()->back()->with('error', 'Invalid client selected');
+            }
+        }
+
+        // Build query
+        $orderQuery = $orderModel->join('billboards', 'orders.billboard_id = billboards.id');
+        if ($client) {
+            $orderQuery->where('orders.customer_id', $client);
+        }
+        if ($date_from) {
+            $orderQuery->where('orders.start_date >=', $date_from);
+        }
+        if ($date_to) {
+            $orderQuery->where('orders.end_date <=', $date_to);
+        }
+        $orders = $orderQuery->findAll();
+
+        // Get all billboards for mapping
+        $billboards = $billboardModel->findAll();
+        $billboardMap = [];
+        foreach ($billboards as $b) {
+            $billboardMap[$b['id']] = $b;
         }
 
         $reportData = [];
@@ -255,20 +381,11 @@ class ReportController extends Controller
         foreach ($orders as $order) {
             $display = $order['display'] ?? '-';
             $hoarding = '-';
-            foreach ($billboards as $b) {
-                if ($b['id'] == $order['billboard_id']) {
-                    $hoarding = ($b['height'] ?? '-') . 'x' . ($b['width'] ?? '-');
-                    break;
-                }
+            if (isset($billboardMap[$order['billboard_id']])) {
+                $b = $billboardMap[$order['billboard_id']];
+                $hoarding = ($b['height'] ?? '-') . 'x' . ($b['width'] ?? '-');
             }
-            // Find client name for this order
-            $clientNameRow = '-';
-            foreach ($customers as $c) {
-                if ($c['id'] == $order['customer_id']) {
-                    $clientNameRow = $c['company_name'] ?: ($c['first_name'] . ' ' . $c['last_name']);
-                    break;
-                }
-            }
+            
             $cost = $order['amount'];
             $received = 0;
             $payments = $paymentModel->where('order_id', $order['id'])->findAll();
@@ -279,8 +396,9 @@ class ReportController extends Controller
             $totalCost += $cost;
             $totalReceived += $received;
             $totalBalance += $balance;
+            
             $reportData[] = [
-                'client' => $clientNameRow,
+                'client' => $clientName ?? '-',
                 'display' => $display,
                 'hoarding' => $hoarding,
                 'start_date' => $order['start_date'],
@@ -290,13 +408,61 @@ class ReportController extends Controller
                 'balance' => $balance,
             ];
         }
-        // Get client name
-        $clientName = '';
-        foreach ($customers as $c) {
-            if ($c['id'] == $client) {
-                $clientName = $c['company_name'] ?: ($c['first_name'] . ' ' . $c['last_name']);
-                break;
+        // Prepare filters for export (ensure $filters is always defined)
+        $filters = [
+            'client' => $client,
+            'date_from' => $date_from,
+            'date_to' => $date_to,
+        ];
+        if ($this->request->getGet('export') === 'excel') {
+            $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+
+            // Top info
+            $sheet->setCellValue('A1', 'Client');
+            $sheet->setCellValue('B1', $clientName ?? '-');
+            $sheet->setCellValue('A2', 'Report');
+            $sheet->setCellValue('B2', 'From ' . (($filters['date_from'] ?? '') ? date('d-m-Y', strtotime($filters['date_from'])) : '...') . ' to ' . (($filters['date_to'] ?? '') ? date('d-m-Y', strtotime($filters['date_to'])) : '...'));
+
+            // Table header
+            $sheet->fromArray(['Display', 'Hoarding', 'Start Date', 'End Date', 'Cost', 'Received', 'Balance'], null, 'A4');
+            $sheet->getStyle('A4:G4')->getFont()->setBold(true);
+
+            // Data
+            $rowNum = 5;
+            foreach ($reportData as $row) {
+                $sheet->fromArray([
+                    $row['display'],
+                    $row['hoarding'],
+                    date('d-M-y', strtotime($row['start_date'])),
+                    date('d-M-y', strtotime($row['end_date'])),
+                    $row['cost'],
+                    $row['received'],
+                    $row['balance'] > 0 ? $row['balance'] : '-'
+                ], null, 'A' . $rowNum++);
             }
+
+            // Totals row
+            $sheet->setCellValue('D' . $rowNum, 'Total:-');
+            $sheet->setCellValue('E' . $rowNum, $totals['cost'] ?? 0);
+            $sheet->setCellValue('F' . $rowNum, $totals['received'] ?? 0);
+            $sheet->setCellValue('G' . $rowNum, $totals['balance'] ?? 0);
+
+            // Format as currency
+            foreach (['E', 'F', 'G'] as $col) {
+                $sheet->getStyle($col . '5:' . $col . $rowNum)->getNumberFormat()->setFormatCode('#,##0');
+            }
+
+            // Add borders to all table cells
+            $sheet->getStyle('A4:G' . $rowNum)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+            // Output
+            $filename = 'Client_Wise_Report_' . date('Ymd_His') . '.xlsx';
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header("Content-Disposition: attachment; filename=\"$filename\"");
+            $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+            $writer->save('php://output');
+            exit;
         }
         return view('admin/reports/client_wise_report', [
             'reportData' => $reportData,
@@ -306,7 +472,7 @@ class ReportController extends Controller
                 'date_from' => $date_from,
                 'date_to' => $date_to,
             ],
-            'clientName' => $clientName,
+            'clientName' => $clientName ?? '',
             'totals' => [
                 'cost' => $totalCost,
                 'received' => $totalReceived,

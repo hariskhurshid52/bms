@@ -8,7 +8,7 @@ $theme_url = base_url() . 'assets/';
 <head>
     <?= csrf_meta() ?>
     <meta charset="utf-8" />
-    <title>Log In | Sign In to Pakistan Hoarding CRM</title>
+    <title>Log In | Sign In to Sign Pakistan CRM </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
     <meta content="Coderthemes" name="author" />
