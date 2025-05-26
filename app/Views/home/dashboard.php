@@ -523,22 +523,23 @@ new Chart(document.getElementById('topBookingCustomersChart'), {
     }
 });
 // Boards Status Pie Chart
-const totalBoards = <?= (int)($totalHoardings ?? 0) ?>;
-const bookedBoards = <?= (int)($activeHoardings ?? 0) ?>;
-const availableBoards = totalBoards - bookedBoards;
+const billboardStatus = <?= json_encode($billboardStatus ?? []) ?>;
 new Chart(document.getElementById('boardsStatusChart'), {
     type: 'pie',
     data: {
         labels: ['Available', 'Booked'],
         datasets: [{
-            data: [availableBoards, bookedBoards],
-            backgroundColor: ['#00b09b', '#ff0844']
+            data: [
+                billboardStatus.available || 0,
+                billboardStatus.booked || 0
+            ],
+            backgroundColor: ['#00b09b', 'green']
         }]
     },
     options: {
         plugins: {
             legend: { display: true, position: 'top' },
-            title: { display: true, text: 'Total Available Board vs Booked Board' }
+            title: { display: true, text: 'Available vs Booked Boards' }
         }
     }
 });

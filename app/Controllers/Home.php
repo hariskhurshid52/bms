@@ -515,16 +515,16 @@ class Home extends BaseController
         $userId = $this->user['userId'];
         $isAdmin = $this->user['roleId'] == 1;
 
-        $query = $this->billboardModel;
+        $baseQuery = $this->billboardModel;
         if (!$isAdmin) {
-            $query->where('added_by', $userId);
+            $baseQuery->where('added_by', $userId);
         }
 
         return [
-            'available' => $query->where('status', 'available')->countAllResults(),
-            'not_available' => $query->where('status', 'not_available')->countAllResults(),
-            'under_maintenance' => $query->where('status', 'under_maintenance')->countAllResults(),
-            'booked' => $query->where('status', 'booked')->countAllResults()
+            'available' => (clone $baseQuery)->where('status', 'available')->countAllResults(),
+            'not_available' => (clone $baseQuery)->where('status', 'not_available')->countAllResults(),
+            'under_maintenance' => (clone $baseQuery)->where('status', 'under_maintenance')->countAllResults(),
+            'booked' => (clone $baseQuery)->where('status', 'booked')->countAllResults()
         ];
     }
 
@@ -644,10 +644,10 @@ class Home extends BaseController
     protected function getStatusColor($status)
     {
         $colors = [
-            'active' => 'success',
-            'booked' => 'primary',
-            'under_maintenance' => 'warning',
-            'inactive' => 'danger'
+            'available' => 'success',
+            'not_available' => 'secondary',
+            'under_maintenance' => 'info',
+            'booked' => 'warning'
         ];
         return $colors[$status] ?? 'secondary';
     }
@@ -1444,14 +1444,14 @@ class Home extends BaseController
         }
         unset($board);
 
-        // Count by status using the same query as getBillboardStatusDistribution
-        $query = $this->billboardModel;
+        // Count by status using fresh queries for each count
+        $baseQuery = $this->billboardModel;
         $statusCounts = [
-            'total' => $query->countAll(),
-            'available' => $query->where('status', 'available')->countAllResults(),
-            'not_available' => $query->where('status', 'not_available')->countAllResults(),
-            'under_maintenance' => $query->where('status', 'under_maintenance')->countAllResults(),
-            'booked' => $query->where('status', 'booked')->countAllResults()
+            'total' => $baseQuery->countAll(),
+            'available' => (clone $baseQuery)->where('status', 'available')->countAllResults(),
+            'not_available' => (clone $baseQuery)->where('status', 'not_available')->countAllResults(),
+            'under_maintenance' => (clone $baseQuery)->where('status', 'under_maintenance')->countAllResults(),
+            'booked' => (clone $baseQuery)->where('status', 'booked')->countAllResults()
         ];
 
         return [
