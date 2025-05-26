@@ -147,7 +147,13 @@ class Billboards extends BaseController
         $rows = [];
         $imageModel = new BillboardImageModel();
         foreach ($list as $key => $value) {
-            $statusClass = $value['status'] == "active" ? 'success' : ($value['status'] == "inactive" ? 'danger' : 'warning');
+            $statusClass = match($value['status']) {
+                'available' => 'success',
+                'not_available' => 'secondary',
+                'under_maintenance' => 'info',
+                'booked' => 'warning',
+                default => 'secondary'
+            };
             // Fetch all images for this billboard
             $images = $imageModel->where('billboard_id', $value['id'])->findAll();
             $imageUrls = array_map(function($img) {
