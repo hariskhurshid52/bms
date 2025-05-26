@@ -42,11 +42,12 @@ class Home extends BaseController
 
     public function index()
     {
-        if ($this->user['roleId'] == 2) {
-            return redirect()->to(route_to('marketing-dashboard'));
+        if ($this->user['roleId'] == 1) {
+            $data = $this->getDashboardData();
+             return view("home/dashboard", $data);
         }
-        $data = $this->getDashboardData();
-        return view("home/dashboard", $data);
+        return redirect()->to(route_to('marketing-dashboard'));
+       
     }
 
     public function marketingDashboard()
@@ -57,11 +58,11 @@ class Home extends BaseController
 
     public function home()
     {
-        if ($this->user['roleId'] == 2) {
-            return redirect()->to(route_to('marketing-dashboard'));
+        if ($this->user['roleId'] == 1) {
+            $data = $this->getDashboardData();
+             return view("home/dashboard", $data);
         }
-        $data = $this->getDashboardData();
-        return view("home/dashboard", $data);
+        return redirect()->to(route_to('marketing-dashboard'));
     }
 
     protected function getDashboardData()
