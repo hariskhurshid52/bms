@@ -35,7 +35,7 @@
     <table class="table table-bordered invoice-table align-middle mt-3">
         <thead class="table-light">
             <tr>
-                <th>Description</th>
+                <th>Location</th>
                 <th>Size</th>
                 <th>Sq. Ft.</th>
                 <th>From</th>

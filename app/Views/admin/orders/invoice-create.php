@@ -99,7 +99,7 @@
                 <table class="table table-bordered table-striped table-hover invoice-table align-middle">
                     <thead class="table-light">
                         <tr>
-                            <th>Description</th>
+                            <th>Location</th>
                             <th>Size</th>
                             <th>Sq. Ft.</th>
                             <th>From</th>
