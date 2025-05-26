@@ -34,6 +34,14 @@ class ReportController extends Controller
         $client = $this->request->getGet('client');
         $hoarding = $this->request->getGet('hoarding');
 
+        // Set default date range to current month if not provided
+        if (empty($date_from)) {
+            $date_from = date('Y-m-01');
+        }
+        if (empty($date_to)) {
+            $date_to = date('Y-m-d');
+        }
+
         // Build order query with filters
         $orderQuery = $orderModel->join('billboards', 'orders.billboard_id = billboards.id');
         
@@ -199,6 +207,14 @@ class ReportController extends Controller
         $client = $this->request->getGet('client');
         $hoarding = $this->request->getGet('hoarding');
 
+        // Set default date range to current month if not provided
+        if (empty($date_from)) {
+            $date_from = date('Y-m-01');
+        }
+        if (empty($date_to)) {
+            $date_to = date('Y-m-d');
+        }
+
         // Build expense query with filters
         $expenseQuery = $expenseModel->join('billboards', 'expenses.billboard_id = billboards.id');
         
@@ -324,6 +340,14 @@ class ReportController extends Controller
         $client = $this->request->getGet('client');
         $date_from = $this->request->getGet('date_from');
         $date_to = $this->request->getGet('date_to');
+
+        // Set default date range to current month if not provided
+        if (empty($date_from)) {
+            $date_from = date('Y-m-01');
+        }
+        if (empty($date_to)) {
+            $date_to = date('Y-m-d');
+        }
 
         // Validate dates
         if ($date_from && !strtotime($date_from)) {
