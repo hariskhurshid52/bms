@@ -57,7 +57,7 @@
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
-                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addClientModal">
+                                    <button type="button" class="btn btn-primary btn-sm mt-1" data-bs-toggle="modal" data-bs-target="#addClientModal">
                                         <i class="bi bi-plus-circle"></i> Add Client
                                     </button>
                                 </div>

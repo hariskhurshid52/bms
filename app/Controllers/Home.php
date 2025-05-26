@@ -57,6 +57,9 @@ class Home extends BaseController
 
     public function home()
     {
+        if ($this->user['roleId'] == 2) {
+            return redirect()->to(route_to('marketing-dashboard'));
+        }
         $data = $this->getDashboardData();
         return view("home/dashboard", $data);
     }

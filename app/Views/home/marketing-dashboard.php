@@ -118,8 +118,8 @@
         </div>
         <div class="col-12 col-sm-6 col-md mb-3">
             <div class="stat-card inactive">
-                <div class="stat-label small">Inactive</div>
-                <div class="stat-value display-6"><?= $statusCounts['inactive'] ?></div>
+                <div class="stat-label small">Not Available</div>
+                <div class="stat-value display-6"><?= $statusCounts['not_available'] ?></div>
             </div>
         </div>
         <div class="col-12 col-sm-6 col-md mb-3">
