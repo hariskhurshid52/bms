@@ -154,6 +154,9 @@ class Billboards extends BaseController
         }
 
         $totalRecords = $builder->countAllResults(false);
+        // Count filtered records before applying pagination limits
+        $filteredRecords = $totalRecords;
+        
         $builder->limit($inputs['length'], $inputs['start'])
             ->orderBy('billboards.id', 'DESC');
 
@@ -199,7 +202,7 @@ class Billboards extends BaseController
         return response()->setJSON([
             "draw" => intval($inputs['draw']),
             "recordsTotal" => $totalRecords,
-            "recordsFiltered" => count($rows),
+            "recordsFiltered" => $filteredRecords,
             "data" => $rows,
         ]);
     }
