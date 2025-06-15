@@ -81,6 +81,22 @@ class Billboards extends BaseController
        
         $save = $model->insert($insData);
         if ($save) {
+            // Get the newly inserted billboard ID
+            $billboardId = $model->insertID();
+            
+            // Handle multiple images
+            $imageUrls = json_decode($inputs['image_urls'] ?? '[]', true);
+            $imageModel = new BillboardImageModel();
+            
+            // Add all images to the billboard_images table
+            foreach ($imageUrls as $url) {
+                $imageModel->insert([
+                    'billboard_id' => $billboardId,
+                    'image_url' => $url,
+                    'created_at' => date('Y-m-d H:i:s'),
+                ]);
+            }
+            
             return redirect()->route('admin.billboard.list')->with('postBack', ['status' => 'success', 'message' => 'Billboard saved successfully']);
         }
         return redirect()->back()->withInput()->with('postBack', ['status' => 'danger', 'message' => 'Failed to save billboard']);
