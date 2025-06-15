@@ -693,10 +693,12 @@ class Home extends BaseController
 
             ];
         }
+        // Use total as the filteredRecords count
+        $filteredRecords = $total;
         return response()->setJSON([
             "draw" => intval($input['draw']),
             "recordsTotal" => $total,
-            "recordsFiltered" => count($rows),
+            "recordsFiltered" => $filteredRecords,
             "data" => $rows,
         ]);
     }

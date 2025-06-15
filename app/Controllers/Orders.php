@@ -182,6 +182,9 @@ class Orders extends BaseController
 
         $totalRecords = $builder->countAllResults(false);
         log_message('debug', 'Orders dtList - Total Records: ' . $totalRecords);
+        
+        // Store filtered count before applying pagination limits
+        $filteredRecords = $totalRecords;
 
         $builder->limit($inputs['length'], $inputs['start'])
             ->orderBy('orders.id', 'DESC');
@@ -224,7 +227,7 @@ class Orders extends BaseController
         $response = [
             "draw" => intval($inputs['draw']),
             "recordsTotal" => $totalRecords,
-            "recordsFiltered" => count($rows),
+            "recordsFiltered" => $filteredRecords,
             "data" => $rows,
         ];
         log_message('debug', 'Orders dtList - Response: ' . json_encode($response));

@@ -99,6 +99,10 @@ class Expense extends BaseController
                 ->groupEnd();
         }
         $totalRecords = $builder->countAllResults(false);
+        
+        // Store filtered count before applying pagination limits
+        $filteredRecords = $totalRecords;
+        
         $builder->limit($inputs['length'], $inputs['start'])->groupBy('expenses.id')
             ->orderBy('expenses.id', 'DESC');
 
@@ -130,7 +134,7 @@ class Expense extends BaseController
         return response()->setJSON([
             "draw" => intval($inputs['draw']),
             "recordsTotal" => $totalRecords,
-            "recordsFiltered" => count($rows),
+            "recordsFiltered" => $filteredRecords,
             "data" => $rows,
         ]);
     }

@@ -86,43 +86,59 @@ class Users extends BaseController
         $inputs = $this->request->getPost();
         $model = new UsersModel();
 
-        $builder = $model->builder()
-            ->join('roles', 'roles.id = users.role_id', 'left')
-            ->join('users as ua', 'ua.id = users.added_by', type: 'left');;
+        $builder = $model->builder();
+        $builder->select('users.*, roles.name as role_name, roles.description as role_description');
+        $builder->join('roles', 'roles.id = users.role_id');
 
         if (!empty($inputs['search']['value'])) {
-            $searchValue = $inputs['search']['value'];
+            $search = $inputs['search']['value'];
             $builder->groupStart()
-                ->like('users.name', $searchValue)
-                ->like('users.email', $searchValue)
-                ->like('users.username', $searchValue)
-                ->orLike('roles.role_name', $searchValue)
+                ->like('users.name', $search)
+                ->orLike('users.username', $search)
+                ->orLike('users.email', $search)
+                ->orLike('roles.name', $search)
+                ->orLike('roles.description', $search)
                 ->groupEnd();
         }
-        $totalRecords = $builder->countAllResults(false);
-        $builder->limit($inputs['length'], $inputs['start'])
-            ->orderBy('users.id', 'DESC');
 
-        $list = $builder->select('
-                users.*, roles.role_name as roleName
-               
-            ')->get()->getResultArray();
+        $totalRecords = $builder->countAllResults(false);
+        
+        // Store filtered count before applying pagination limits
+        $filteredRecords = $totalRecords;
+
+        $builder->limit($inputs['length'], $inputs['start']);
+        if (!empty($inputs['order'])) {
+            $columns = ['users.id', 'users.name', 'users.email', 'users.username', 'roles.name', 'users.created_at', 'users.status'];
+            $dir = $inputs['order'][0]['dir'];
+            $column = $columns[$inputs['order'][0]['column']];
+            $builder->orderBy($column, $dir);
+        } else {
+            $builder->orderBy('users.id', 'DESC');
+        }
+
+        $list = $builder->get()->getResultArray();
         $rows = [];
         foreach ($list as $key => $value) {
+            $statusClass = $value['status'] === 'active' ? 'success' : 'danger';
             $rows[] = [
+                $value['id'],
                 $value['name'],
                 $value['email'],
-                $value['roleName'],
+                $value['username'],
+                $value['role_name'],
                 date('d-m-Y', strtotime($value['created_at'])),
-                '<div class="btn-group" role="group" aria-label="Actions">'
-                . '<a href="' . route_to('admin.users.edit', $value['id']) . '" class="btn btn-sm btn-outline-primary" title="Edit"><i class="fa fa-edit"></i></a>'
-                . '</div>',
+                '<span class="badge bg-' . $statusClass . '">' . ucfirst($value['status']) . '</span>',
+                '<div class="btn-group" role="group" aria-label="Actions">
+                    <a href="' . route_to('admin.user.edit', $value['id']) . '" class="btn btn-sm btn-outline-primary">
+                        <i class="fa fa-edit"></i>
+                    </a>
+                </div>'
             ];
         }
         return response()->setJSON([
             "draw" => intval($inputs['draw']),
             "recordsTotal" => $totalRecords,
-            "recordsFiltered" => count($rows),
+            "recordsFiltered" => $filteredRecords,
             "data" => $rows,
         ]);
     }
@@ -298,7 +314,6 @@ class Users extends BaseController
         $model = new CustomerModel();
 
         $builder = $model->builder()
-
             ->join('users', 'users.id = customers.added_by', 'left');
 
         if (!empty($inputs['search']['value'])) {
@@ -317,31 +332,46 @@ class Users extends BaseController
                 ->like('states.name', $searchValue)
                 ->groupEnd();
         }
+
         $totalRecords = $builder->countAllResults(false);
+        
+        // Store filtered count before applying pagination limits
+        $filteredRecords = $totalRecords;
+
         $builder->limit($inputs['length'], $inputs['start'])
             ->orderBy('customers.id', 'DESC');
 
         $list = $builder->select('
-                customers.*
-               
+                customers.*,
+                users.name as addedByName
             ')->get()->getResultArray();
+            
         $rows = [];
         foreach ($list as $key => $value) {
             $rows[] = [
-                $value['first_name'] ,
+                $value['first_name'] . " " . $value['last_name'],
                 $value['email'],
                 $value['phone'],
-                ucfirst($value['customer_type']),
+                $value['address_line_1'],
+                $value['company_name'],
+                $value['customer_type'],
+                $value['addedByName'],
                 date('d-m-Y', strtotime($value['created_at'])),
-                '<div class="btn-group" role="group" aria-label="Actions">'
-                . '<a href="' . route_to('admin.customers.edit', $value['id']) . '" class="btn btn-sm btn-outline-primary" title="Edit"><i class="fa fa-edit"></i></a>'
-                . '</div>',
+                '<div class="btn-group" role="group" aria-label="Actions">
+                    <a href="' . route_to('admin.customer.edit', $value['id']) . '" class="btn btn-sm btn-outline-primary" title="Edit">
+                        <i class="fa fa-edit"></i>
+                    </a>
+                    <a href="' . route_to('admin.customer.detail', $value['id']) . '" class="btn btn-sm btn-outline-success" title="View">
+                        <i class="fa fa-eye"></i>
+                    </a>
+                </div>'
             ];
         }
+        
         return response()->setJSON([
             "draw" => intval($inputs['draw']),
             "recordsTotal" => $totalRecords,
-            "recordsFiltered" => count($rows),
+            "recordsFiltered" => $filteredRecords,
             "data" => $rows,
         ]);
     }
